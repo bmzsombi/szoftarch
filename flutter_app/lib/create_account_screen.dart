@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/login_widgets.dart';
+import 'package:flutter_app/custom_widgets.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({super.key});
@@ -21,7 +21,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   }
 
   void createAccountButtonPressed() {
-    //TODO : account creation
     setState(() {
       errorText = "Example error text";
     });
@@ -42,25 +41,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  IconButton(
-                    onPressed: backButtonPressed, 
-                    icon: const Icon(
-                      size: 32.0,
-                      Icons.arrow_back
-                    )
-                  ),
-                ],
-              ),
-            ),
             ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: Image.asset(
