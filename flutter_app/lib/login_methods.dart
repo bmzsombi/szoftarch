@@ -1,7 +1,0 @@
-void loginButtonPressed() {
-
-}
-
-void createAccountButtonPressed() {
-
-}

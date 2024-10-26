@@ -24,7 +24,7 @@ class LoginScreenText extends StatelessWidget {
         shadows: const [
           Shadow(
             offset: Offset(1.0, 1.0),
-            color: Colors.black,
+            color: Colors.grey,
             blurRadius: 0.2
           )
         ]
@@ -67,32 +67,27 @@ class LoginScreenButton extends StatelessWidget {
   }
 }
 
-class LoginScreenInputField extends StatelessWidget {
-  const LoginScreenInputField({
+class ErrorText extends StatelessWidget {
+  const ErrorText({
     super.key,
-    required this.labelText,
-    required this.hintText,
-    required this.isPasswordField
+    required this.errorText,
+    required this.fontSize
   });
 
-  final String labelText;
-  final String hintText;
-  final bool isPasswordField;
+  final String errorText;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 8.0),
-      child: TextField(
-        obscureText: isPasswordField,
-        decoration: InputDecoration(
-          labelText: labelText,
-          hintText: hintText,
-          border: const OutlineInputBorder(
-            borderSide: BorderSide(),
-            borderRadius: BorderRadius.all(Radius.circular(10.0))
-          )
-        ),
+    return Text(
+      errorText,
+      style: TextStyle(
+        color: Colors.red,
+        fontSize: fontSize,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 0.2,
+        wordSpacing: 2.0,
+        fontStyle: FontStyle.normal,
       ),
     );
   }

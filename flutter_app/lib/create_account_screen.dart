@@ -1,30 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/create_account_screen.dart';
 import 'package:flutter_app/login_widgets.dart';
 
-class Loginscreen extends StatefulWidget {
-  const Loginscreen({super.key});
+class CreateAccountScreen extends StatefulWidget {
+  const CreateAccountScreen({super.key});
 
   @override
-  State<Loginscreen> createState() => _LoginscreenState();
+  State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
 
-class _LoginscreenState extends State<Loginscreen> {
+class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   bool switchOn = false;
   String errorText = '';
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
+  void backButtonPressed() {
+    Navigator.pop(context);
+  }
+
+  void createAccountButtonPressed() {
+    //TODO : account creation
+    setState(() {
+      errorText = "Example error text";
+    });
+  }
 
   void toggleSwitch(bool value) {
     setState(() {
       switchOn = value;
-    });
-  }
-
-  void loginButtonPressed() {
-    setState(() {
-      errorText = "Example error test";
     });
   }
 
@@ -34,14 +39,6 @@ class _LoginscreenState extends State<Loginscreen> {
     });
   }
 
-  void createAccountButtonPressed() {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => const CreateAccountScreen(),
-    ));
-
-    setErrorText('');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +46,21 @@ class _LoginscreenState extends State<Loginscreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  IconButton(
+                    onPressed: backButtonPressed, 
+                    icon: const Icon(
+                      size: 32.0,
+                      Icons.arrow_back
+                    )
+                  ),
+                ],
+              ),
+            ),
             ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: Image.asset(
@@ -91,6 +102,22 @@ class _LoginscreenState extends State<Loginscreen> {
               ),
             ),
             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
+              child: TextField(
+                onChanged: (text) { setErrorText(''); },
+                obscureText: true,
+                controller: confirmPasswordController,
+                decoration: const InputDecoration(
+                  labelText: "Confirm password",
+                  hintText: "Enter your password again",
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(),
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                  )
+                ),
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 10.0),
               child: Row(
                 children: <Widget>[
@@ -103,12 +130,10 @@ class _LoginscreenState extends State<Loginscreen> {
                 ],
               ),
             ),
-            LoginScreenButton(text: 'Login', onPressed: loginButtonPressed, fontSize: 24.0),
+            const Spacer(),
+            LoginScreenButton(text: 'Create account', onPressed: createAccountButtonPressed, fontSize: 24.0),
             const Spacer(),
             ErrorText(errorText: errorText, fontSize: 24.0),
-            const Spacer(),
-            const LoginScreenText(text: "Don't have an account yet?", fontSize: 18.0),
-            LoginScreenButton(text: 'Create account', onPressed: createAccountButtonPressed, fontSize: 24.0),
             const Spacer()
           ],
         ),
