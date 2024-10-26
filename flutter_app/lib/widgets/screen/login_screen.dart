@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/device_list_screen.dart';
-import 'package:flutter_app/create_account_screen.dart';
-import 'package:flutter_app/custom_widgets.dart';
+import 'package:flutter_app/widgets/screen/create_account_screen.dart';
+import 'package:flutter_app/widgets/common/custom_widgets.dart';
+import 'package:flutter_app/widgets/screen/device_list_screen.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});

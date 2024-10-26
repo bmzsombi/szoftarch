@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'custom_widgets.dart';
+import '../common/custom_widgets.dart';
+import '/utils/device_utils.dart';
 
 class ModifyDeviceConfigScreen extends StatefulWidget {
   const ModifyDeviceConfigScreen({
@@ -15,8 +17,18 @@ class ModifyDeviceConfigScreen extends StatefulWidget {
 
 class _ModifyDeviceConfigScreenState extends State<ModifyDeviceConfigScreen> {
   String errorText = '';
+  File? configFile;
+  String configFileName = '';
 
-  void browseFilePressed() {}
+  void browseFilePressed() async {
+    File? f = await pickConfigFile();
+    if (f != null) {
+      setState(() {
+        configFile = f;
+        configFileName = f.path;
+      });
+    }
+  }
 
   void modifyDevicePressed() {}
 
@@ -49,7 +61,7 @@ class _ModifyDeviceConfigScreenState extends State<ModifyDeviceConfigScreen> {
                       AppText(text: 'New configuration file', fontSize: 24.0, textColor: Colors.black)
                     ],
                   ),
-                  ConfigUploadRow(text: 'Browse', onPressed: browseFilePressed, fontSize: 12.0, textColor: Colors.white, backgroundColor: Colors.black)
+                  ConfigUploadRow(text: 'Browse', onPressed: browseFilePressed, fontSize: 12.0, textColor: Colors.white, backgroundColor: Colors.black, fileText: configFileName)
                 ],
               ),
             ),

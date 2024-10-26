@@ -161,6 +161,7 @@ class ConfigUploadRow extends StatelessWidget {
   const ConfigUploadRow({
     super.key,
     required this.text,
+    required this.fileText,
     required this.onPressed,
     required this.fontSize,
     required this.textColor,
@@ -168,6 +169,7 @@ class ConfigUploadRow extends StatelessWidget {
   });
 
   final String text;
+  final String fileText;
   final VoidCallback onPressed;
   final double fontSize;
   final Color textColor;
@@ -184,7 +186,7 @@ class ConfigUploadRow extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black)
             ),
-            child: const AppText(text: '', fontSize: 18.0, textColor: Colors.grey),
+            child: AppText(text: fileText, fontSize: 18.0, textColor: Colors.grey),
           ),
         ),
         const Spacer(
