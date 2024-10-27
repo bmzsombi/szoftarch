@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class MyApp2 extends StatelessWidget {
-  const MyApp2({super.key});
+class UserPage extends StatelessWidget {
+  const UserPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'My Little Plants',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -26,39 +26,72 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<Widget> plantList = [];
+  double screenWidth = 0;
+  double screenHeight = 0;
 
-  void _incrementCounter() {
+  double plantButtonWidth = 150;
+  double plantButtonHeight = 150;
+
+  void addPlant(){
     setState(() {
-      _counter++;
+      plantList.add(
+        SizedBox(
+          width: plantButtonWidth,
+          height: plantButtonHeight,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              // Add new plant action
+            },
+            icon: const Icon(Icons.add),
+            label: const Text(" "),
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(100, 50),
+              maximumSize: const Size(300, 150),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
+          ),
+        )
+      );
+      plantList.add(
+        const SizedBox(
+          width: 20,
+        )
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
+
+    if (screenHeight*0.15<=150) {
+      plantButtonHeight = 150;
+    } else if (screenHeight*0.15 >= 250) {
+      plantButtonHeight = 250;
+    }
+    else {
+      plantButtonHeight = screenHeight * 0.15;
+    }
+
+    if (screenWidth*0.15<=150) {
+      plantButtonWidth = 150;
+    } else if (screenWidth*0.15 >= 250) {
+      plantButtonWidth = 250;
+    }
+    else {
+      plantButtonWidth = screenWidth * 0.15;
+    }
+
     return Scaffold(
+      backgroundColor: Colors.lightBlue,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
       drawer: Drawer(
         child: ListView(
@@ -79,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: const Text('Item 2'),
+              title: const Text('Sensors'),
               onTap: () {
                 // Update the state of the app.
                 // ...
@@ -87,6 +120,55 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Container(
+          height: screenHeight,
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color.fromARGB(52, 158, 158, 158), width: 2.0), // Szürke színű, 2 pixel vastag keret
+            borderRadius: BorderRadius.circular(10.0), // Opcionális: kerekített sarkok
+            color: Colors.white
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [ 
+                Row(
+                  children: [
+                    SizedBox(
+                      width: plantButtonWidth,
+                      height: plantButtonHeight,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          addPlant();
+                        },
+                        icon: const Icon(Icons.add),
+                        label: const Text("Add new"),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(100, 50),
+                          maximumSize: const Size(300, 150),
+                          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
+                ),
+                const Divider(
+                  color: Colors.grey, // Elválasztó vonal színe
+                  thickness: 1.0, // Elválasztó vonal vastagsága
+                  height: 32.0, // Térköz a vonal körül
+                ),
+                Row(
+                  children: plantList,
+                )
+              ]
+            ),
+          )
+        )
       ),
     );
   }
