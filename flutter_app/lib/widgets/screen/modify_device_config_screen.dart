@@ -6,9 +6,11 @@ import '/utils/device_utils.dart';
 class ModifyDeviceConfigScreen extends StatefulWidget {
   const ModifyDeviceConfigScreen({
     super.key,
-    required this.deviceName,
+    required this.deviceId,
+    required this.deviceName
   });
 
+  final int deviceId;
   final String deviceName;
 
   @override

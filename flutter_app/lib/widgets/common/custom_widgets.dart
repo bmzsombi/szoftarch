@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/widgets/screen/modify_device_config_screen.dart';
 
 class LoginScreenText extends StatelessWidget {
   const LoginScreenText({
@@ -201,3 +202,53 @@ class ConfigUploadRow extends StatelessWidget {
   }
 }
 
+class DeviceButtonText extends StatelessWidget {
+  const DeviceButtonText({
+    super.key,
+    required this.text,
+    required this.fontSize
+  });
+
+  final String text;
+  final double fontSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: fontSize,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+}
+
+class DeviceButton extends StatelessWidget {
+  const DeviceButton({
+    super.key,
+    required this.deviceId,
+    required this.deviceName,
+    required this.fontSize
+  });
+
+  final int deviceId;
+  final String deviceName;
+  final double fontSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) => ModifyDeviceConfigScreen(deviceId: deviceId, deviceName: deviceName)
+        ))
+      },
+      child: DeviceButtonText(
+        text: deviceName,
+        fontSize: fontSize
+      )
+    );
+  }
+}
