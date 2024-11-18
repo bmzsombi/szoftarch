@@ -1,0 +1,14 @@
+version: '3'
+services:
+  szoftarch-backend:
+    build:
+      context: szoftarch.backend
+    image: springapp:latest
+    ports:
+      - "5000:5000"
+    networks:
+      - szoftarch-nw
+
+networks:
+  szoftarch-nw:
+    driver: bridge
