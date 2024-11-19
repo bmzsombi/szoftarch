@@ -1,10 +1,6 @@
 package backend;
 
-import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -21,6 +17,11 @@ public class RestHandler
     @GetMapping("/plants")
     public Plants getPlant(){
         return storage.getPlants();
+    }
+
+    @GetMapping("/plants/{id}")
+    public Plant getPlant(@PathVariable int id){
+        return storage.getPlants().getPlant(id);
     }
 
     @PostMapping("/users")

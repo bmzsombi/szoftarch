@@ -1,0 +1,8 @@
+backend\RestHandler.class
+backend\Plants.class
+backend\User.class
+backend\Users.class
+backend\Plant.class
+backend\EntityStorage.class
+backend\Application.class
+backend\UserRole.class

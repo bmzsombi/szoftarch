@@ -1,10 +1,13 @@
 package backend;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Plant {
     @JsonProperty
     private String name, type;
+
+    public Plant() {}
 
     public Plant(String name, String type) {
         this.name = name;
@@ -22,6 +25,7 @@ public class Plant {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
