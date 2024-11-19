@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/screen/modify_device_config_screen.dart';
+import 'package:flutter_app/utils/device_utils.dart';
 
 class LoginScreenText extends StatelessWidget {
   const LoginScreenText({
@@ -219,7 +220,7 @@ class DeviceButtonText extends StatelessWidget {
       style: TextStyle(
         fontSize: fontSize,
         color: Colors.black,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.bold
       ),
     );
   }
@@ -249,6 +250,36 @@ class DeviceButton extends StatelessWidget {
         text: deviceName,
         fontSize: fontSize
       )
+    );
+  }
+}
+
+class DeviceListView extends StatelessWidget {
+  const DeviceListView({
+    super.key,
+    required this.devices,
+    required this.padding,
+    required this.fontSize
+  });
+
+  final List<Device> devices;
+  final double padding;
+  final double fontSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: devices.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.all(padding),
+          child: DeviceButton(
+            deviceId: devices[index].id,
+            deviceName: devices[index].name,
+            fontSize: fontSize,
+          ),
+        );
+      }
     );
   }
 }

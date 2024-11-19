@@ -56,3 +56,18 @@ Future<File?> pickConfigFile() async {
     return null;
   }
 }
+
+List<Device> searchDevices(String term, List<Device> allDevices) {
+
+  if (term.isEmpty) {
+    return allDevices;
+  } 
+
+  List<Device> searchedDevices = [];
+  for (Device d in allDevices) {
+    if (d.name.contains(term)) {
+      searchedDevices.add(d);
+    }
+  }
+  return searchedDevices;
+}
