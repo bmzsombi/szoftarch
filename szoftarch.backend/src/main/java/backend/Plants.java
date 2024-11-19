@@ -3,6 +3,7 @@ package backend;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Plants {
@@ -19,5 +20,9 @@ public class Plants {
 
     public void removePlant(Plant p) {
         plants.remove(p);
+    }
+
+    public Plant getPlant(int i) {
+        return plants.get(i);
     }
 }
