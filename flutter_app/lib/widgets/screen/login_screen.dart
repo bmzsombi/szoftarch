@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/create_account_screen.dart';
-import 'package:flutter_app/login_widgets.dart';
+import 'package:flutter_app/widgets/screen/create_account_screen.dart';
+import 'package:flutter_app/widgets/common/custom_widgets.dart';
+import 'package:flutter_app/widgets/screen/device_list_screen.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
@@ -23,9 +24,17 @@ class _LoginscreenState extends State<Loginscreen> {
   }
 
   void loginButtonPressed() {
-    setState(() {
-      errorText = "Example error test";
-    });
+
+    if (userNameController.text == 'user' && passwordController.text == 'pass') {
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) => const DeviceListScreen(),
+      ));
+    }
+    else {
+      setState(() {
+        errorText = "Example error test";
+      });
+    }
   }
 
   void setErrorText(String e) {
