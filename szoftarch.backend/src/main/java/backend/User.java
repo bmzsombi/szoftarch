@@ -6,7 +6,7 @@ import java.awt.*;
 
 public class User {
     @JsonProperty
-    private String name;
+    private String username;
     @JsonProperty
     private String password;
     @JsonProperty
@@ -16,9 +16,13 @@ public class User {
 
     public User(){}
 
-    public User(String name, String email, UserRole role) {
-        this.name = name;
+    public User(String username, String email, UserRole role) {
+        this.username = username;
         this.email = email;
         this.role = role;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

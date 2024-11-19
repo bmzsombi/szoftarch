@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/common/custom_widgets.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({super.key});
@@ -20,9 +22,26 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     Navigator.pop(context);
   }
 
-  void createAccountButtonPressed() {
+  void createAccountButtonPressed() async {
+    var url = Uri.http('127.0.0.1:5000', 'api/users');
+    var response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode({
+          "username": "doodle",
+          "password": "blue",
+          "email": "asd@asd",
+          "role": "manufacturer"
+        })
+    );
+    print('Response status: ${response.statusCode}');
+    //print('Response body: ${response.body}');
+
     setState(() {
       errorText = "Example error text";
+      
     });
   }
 
