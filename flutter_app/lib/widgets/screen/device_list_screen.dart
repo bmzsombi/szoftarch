@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/utils/device_utils.dart';
 import 'package:flutter_app/widgets/common/custom_widgets.dart';
 import 'package:flutter_app/widgets/screen/add_new_device_screen.dart';
+import 'package:flutter_app/widgets/screen/login_screen.dart';
+import 'package:flutter_app/widgets/screen/plant_list_screen.dart';
 
 class DeviceListScreen extends StatefulWidget {
   const DeviceListScreen({super.key});
@@ -35,16 +37,30 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
     ));
   }
 
+  void exitPressed(){
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => const Loginscreen(),
+    ));
+  }
+
+  void loadDeviceListScreen(){
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => const DeviceListScreen(),
+    ));
+  }
+
+  void loadPlantListScreen(){
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => const PlantListScreen(),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.logout)
-        ),
+        backgroundColor: Colors.green,
         title: const Center(
           child: Padding(
             padding: EdgeInsets.only(right: 8.0),
@@ -58,6 +74,51 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
             iconSize: 32.0,
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.lightGreen,
+              ),
+              child: Text('My Little Plants'),
+            ),
+            ListTile(
+              title: const Text('My Plants'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                loadPlantListScreen();
+              },
+            ),
+            ListTile(
+              title: const Text('Sensors'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                //loadDeviceListScreen();
+              },
+            ),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  //Navigator.pop(context); // Kilépés a képernyőről
+                  exitPressed();
+                },
+                icon: const Icon(Icons.logout),
+                label: const Text('Logout'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  minimumSize: const Size(double.infinity, 50), // Gomb szélesség kitöltése
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: FutureBuilder(
         future: shouldFetch ? fetchDeviceList() : null,
