@@ -3,7 +3,7 @@ package backend.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import backend.Plant;
+import backend.Model.Plant;
 import backend.Repository.PlantRepository;
 
 @Service

@@ -1,11 +1,14 @@
-C:\Users\KarakasDávid\Documents\Egyetemi stuff\Szoftverarchitektúrák\szoftarch\szoftarch.backend\src\main\java\backend\EntityStorage.java
-C:\Users\KarakasDávid\Documents\Egyetemi stuff\Szoftverarchitektúrák\szoftarch\szoftarch.backend\src\main\java\backend\Controller\PlantController.java
-C:\Users\KarakasDávid\Documents\Egyetemi stuff\Szoftverarchitektúrák\szoftarch\szoftarch.backend\src\main\java\backend\Application.java
-C:\Users\KarakasDávid\Documents\Egyetemi stuff\Szoftverarchitektúrák\szoftarch\szoftarch.backend\src\main\java\backend\UserRole.java
-C:\Users\KarakasDávid\Documents\Egyetemi stuff\Szoftverarchitektúrák\szoftarch\szoftarch.backend\src\main\java\backend\Plant.java
-C:\Users\KarakasDávid\Documents\Egyetemi stuff\Szoftverarchitektúrák\szoftarch\szoftarch.backend\src\main\java\backend\Plants.java
-C:\Users\KarakasDávid\Documents\Egyetemi stuff\Szoftverarchitektúrák\szoftarch\szoftarch.backend\src\main\java\backend\RestHandler.java
-C:\Users\KarakasDávid\Documents\Egyetemi stuff\Szoftverarchitektúrák\szoftarch\szoftarch.backend\src\main\java\backend\Service\PlantService.java
-C:\Users\KarakasDávid\Documents\Egyetemi stuff\Szoftverarchitektúrák\szoftarch\szoftarch.backend\src\main\java\backend\Users.java
-C:\Users\KarakasDávid\Documents\Egyetemi stuff\Szoftverarchitektúrák\szoftarch\szoftarch.backend\src\main\java\backend\User.java
-C:\Users\KarakasDávid\Documents\Egyetemi stuff\Szoftverarchitektúrák\szoftarch\szoftarch.backend\src\main\java\backend\Repository\PlantRepository.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\Service\UserService.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\Controller\UserController.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\Plants.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\Plant.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\Users.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\Repository\PlantRepository.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\Repository\UserRepository.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\User.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\Application.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\Service\PlantService.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\UserRole.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\EntityStorage.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\RestHandler.java
+C:\szoftarch\szoftarch.backend\src\main\java\backend\Controller\PlantController.java

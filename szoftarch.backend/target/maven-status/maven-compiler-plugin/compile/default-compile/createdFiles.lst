@@ -1,8 +1,11 @@
+backend\Controller\PlantController.class
+backend\User.class
+backend\Plant.class
+backend\Service\PlantService.class
+backend\Repository\PlantRepository.class
 backend\RestHandler.class
 backend\Plants.class
-backend\User.class
 backend\Users.class
-backend\Plant.class
 backend\EntityStorage.class
 backend\Application.class
 backend\UserRole.class
