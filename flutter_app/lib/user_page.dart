@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'add_plant.dart';
+import 'plant.dart';
+import 'plant_popup.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key});
@@ -33,33 +36,59 @@ class _MyHomePageState extends State<MyHomePage> {
   double plantButtonWidth = 150;
   double plantButtonHeight = 150;
 
-  void addPlant(){
+  void showAddPlantPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AddPlantPopup(
+        onAdd: (plantName, plantType) => addPlant(plantName, plantType),
+      ),
+    );
+  }
+
+  void _showPlantDetails(Plant plant) {
+    showDialog(
+      context: context,
+      builder: (context) => PlantDetailsPopup(plant: plant, screenHeight: screenHeight, screenWidth: screenWidth),
+    );
+  }
+
+  void addPlant(String plantName, String plantType) {
     setState(() {
       plantList.add(
         SizedBox(
           width: plantButtonWidth,
           height: plantButtonHeight,
-          child: ElevatedButton.icon(
+          child: ElevatedButton(
             onPressed: () {
-              // Add new plant action
+              // A növény részleteinek megjelenítése a gombra kattintva
+              final plant = Plant(
+                name: plantName,
+                type: plantType,
+                humidity: '60%',
+                light: 'Medium',
+                soilMoisture: 'High',
+                pumpState: 'On',
+                temperature: '22°C',
+              );
+              _showPlantDetails(plant);
             },
-            icon: const Icon(Icons.add),
-            label: const Text(" "),
             style: ElevatedButton.styleFrom(
-              minimumSize: const Size(100, 50),
-              maximumSize: const Size(300, 150),
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
             ),
+            child: Text(
+              plantName,
+              textAlign: TextAlign.center,
+            ),
           ),
-        )
+        ),
       );
       plantList.add(
         const SizedBox(
           width: 20,
-        )
+        ),
       );
     });
   }
@@ -69,23 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
 
-    if (screenHeight*0.15<=150) {
-      plantButtonHeight = 150;
-    } else if (screenHeight*0.15 >= 250) {
-      plantButtonHeight = 250;
-    }
-    else {
-      plantButtonHeight = screenHeight * 0.15;
-    }
-
-    if (screenWidth*0.15<=150) {
-      plantButtonWidth = 150;
-    } else if (screenWidth*0.15 >= 250) {
-      plantButtonWidth = 250;
-    }
-    else {
-      plantButtonWidth = screenWidth * 0.15;
-    }
+    plantButtonHeight = screenHeight * 0.15;
+    plantButtonWidth = screenWidth * 0.15;
 
     return Scaffold(
       backgroundColor: Colors.lightBlue,
@@ -95,7 +109,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       drawer: Drawer(
         child: ListView(
-          // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
@@ -141,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: plantButtonHeight,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          addPlant();
+                          showAddPlantPopup(context);
                         },
                         icon: const Icon(Icons.add),
                         label: const Text("Add new"),
@@ -162,9 +175,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   thickness: 1.0, // Elválasztó vonal vastagsága
                   height: 32.0, // Térköz a vonal körül
                 ),
-                Row(
-                  children: plantList,
-                )
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Wrap(
+                      spacing: 10.0, // Vízszintes távolság az elemek között
+                      runSpacing: 10.0, // Függőleges távolság az elemek között
+                      children: plantList,
+                    ),
+                  ),
+                ),
               ]
             ),
           )
