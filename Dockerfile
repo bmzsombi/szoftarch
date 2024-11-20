@@ -29,7 +29,7 @@ RUN flutter config --enable-web
 RUN mkdir /app/
 COPY flutter_app/ /app/
 WORKDIR /app/
-RUN flutter build windows
+RUN flutter build web
 
 # Record the exposed port
 EXPOSE 9000

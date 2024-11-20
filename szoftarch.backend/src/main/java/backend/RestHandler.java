@@ -24,7 +24,6 @@ public class RestHandler
         return storage.getPlants().getPlant(id);
     }
 
-    @CrossOrigin("http://localhost:5000")
     @PostMapping("/users")
     public void addUser(@RequestBody User user){
         System.out.println(user.getUsername());
