@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'plant.dart'; // A növény modell importálása
+import '../../utils/plant.dart'; // A növény modell importálása
 
 class PlantDetailsPopup extends StatefulWidget {
   final Plant plant;

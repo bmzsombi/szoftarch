@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'add_plant.dart';
-import 'plant.dart';
-import 'plant_popup.dart';
+import '../popup/add_plantpopup.dart';
+import '../../utils/plant.dart';
+import '../popup/plantdetails_popup.dart';
+import '../screen/device_list_screen.dart';
+import '../screen/login_screen.dart';
 
-class UserPage extends StatelessWidget {
-  const UserPage({super.key});
+class PlantListScreen extends StatelessWidget {
+  const PlantListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +95,24 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void exitPressed(){
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => const Loginscreen(),
+    ));
+  }
+
+  void loadDeviceListScreen(){
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => const DeviceListScreen(),
+    ));
+  }
+
+  void loadPlantListScreen(){
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => const PlantListScreen(),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
@@ -102,9 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
     plantButtonWidth = screenWidth * 0.15;
 
     return Scaffold(
-      backgroundColor: Colors.lightBlue,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.green,
         title: Text(widget.title),
       ),
       drawer: Drawer(
@@ -113,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.lightGreen,
               ),
               child: Text('My Little Plants'),
             ),
@@ -122,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
+                //loadPlantListScreen();
               },
             ),
             ListTile(
@@ -129,7 +150,24 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
+                loadDeviceListScreen();
               },
+            ),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  //Navigator.pop(context); // Kilépés a képernyőről
+                  exitPressed();
+                },
+                icon: const Icon(Icons.logout),
+                label: const Text('Logout'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  minimumSize: const Size(double.infinity, 50), // Gomb szélesség kitöltése
+                ),
+              ),
             ),
           ],
         ),
