@@ -20,6 +20,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
   szoftarch-backend:
     build:
       context: ./szoftarch.backend
@@ -36,7 +37,7 @@ services:
     environment:
       DB_URL: jdbc:mysql://szoftarch-db:3306/plant_care
       DB_USER: user
-      DB_PASSWORD: teszt  
+      DB_PASSWORD: teszt
 
 networks:
   szoftarch-nw:

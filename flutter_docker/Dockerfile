@@ -13,6 +13,7 @@ ENV FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
 # download Flutter SDK from Flutter Github repo
 RUN git clone https://github.com/flutter/flutter.git /usr/local/flutter
+#COPY /flutter/ /usr/local/flutter
 
 # Set flutter environment path
 ENV PATH="/usr/local/flutter/bin:/usr/local/flutter/bin/cache/dart-sdk/bin:${PATH}"
@@ -27,7 +28,7 @@ RUN flutter config --enable-web
 
 # Copy files to container and build
 RUN mkdir /app/
-COPY flutter_app/ /app/
+COPY /flutter_app/ /app/
 WORKDIR /app/
 RUN flutter build web
 
