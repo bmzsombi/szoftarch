@@ -2,6 +2,8 @@ package backend;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import backend.Model.Plant;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -5,22 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54baaed2-bb11-45f5-8fec-4d3512bca4c2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../flutter_app/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/linux/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/linux/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/linux/flutter/generated_plugins.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/windows/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/windows/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/windows/flutter/generated_plugins.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/backend/Application.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/backend/Application.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/backend/EntityStorage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/backend/EntityStorage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/backend/Plant.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/backend/Plant.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/backend/Plants.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/backend/Plants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/backend/RestHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/backend/RestHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/backend/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/backend/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/backend/UserRole.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/backend/UserRole.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/backend/Users.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/backend/Users.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/backend/RestHandlerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/backend/RestHandlerTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/assets/app_logo.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/utils/account_utils.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/utils/device_utils.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/utils/plant.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/common/custom_widgets.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/popup/add_plantpopup.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/popup/plantdetails_popup.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/add_new_device_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/create_account_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/device_list_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/login_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/modify_device_config_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/plant_list_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../flutter_app/server/server.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/backend/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/android/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/test/widget_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/test/widget_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/backend/RestHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/backend/RestHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,21 +59,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/bmzso.JENKINS.000/szoftarch/szoftarch.backend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Merging David__backend",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/bmzso.JENKINS.000/szoftarch/szoftarch.backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="szoftarch.backend" />

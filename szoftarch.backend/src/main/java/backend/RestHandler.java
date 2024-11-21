@@ -2,6 +2,9 @@ package backend;
 
 import org.springframework.web.bind.annotation.*;
 
+import backend.Model.Plant;
+import backend.Model.User;
+
 @RestController
 @RequestMapping("/api")
 public class RestHandler
