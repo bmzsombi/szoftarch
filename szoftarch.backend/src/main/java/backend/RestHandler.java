@@ -29,6 +29,7 @@ public class RestHandler
 
     @PostMapping("/users")
     public void addUser(@RequestBody User user){
+        System.out.println(user.getUsername());
         storage.getUsers().addUser(user);
     }
 
