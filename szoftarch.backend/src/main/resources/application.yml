@@ -3,7 +3,7 @@ spring:
     name: szoftarch.backend
 
   datasource:
-    url: jdbc:mysql://localhost:3307/plant_care   # Az adatbázis URL-je
+    url: jdbc:mysql://szoftarch-db:3306/plant_care   # Az adatbázis URL-je
     username: user                                # Az adatbázis felhasználója
     password: teszt                               # Az adatbázis jelszava
     driver-class-name: com.mysql.cj.jdbc.Driver  # A MySQL JDBC driver osztálya
@@ -15,6 +15,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect # MySQL8 dialect
-
 server:
   port: 5000
+
+custom:
+  external-service:
+    address: 'dns:///hm-backend:5000'
