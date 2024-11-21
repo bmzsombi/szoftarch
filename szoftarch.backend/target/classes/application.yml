@@ -1,5 +1,0 @@
-spring:
-  application:
-    name: szoftarch.backend
-server:
-  port: 5000
