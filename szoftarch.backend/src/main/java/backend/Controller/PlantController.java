@@ -22,7 +22,6 @@ public class PlantController {
     @Autowired
     private PlantService plantService;
 
-    // Minden növény lekérése
     @GetMapping("/all")
     public List<Plant> getAllPlants() {
         return plantService.getAllPlants();
@@ -58,7 +57,4 @@ public class PlantController {
         // Plant hozzáadása az adatbázishoz
         return plantService.addPlant(plant);
     }
-
-
-
 }
