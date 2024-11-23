@@ -1,4 +1,7 @@
+import 'dart:ffi';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:developer' as developer;
 import 'dart:io';
@@ -29,29 +32,25 @@ void userLoginRequest() {}
 void manufacturerLoginRequest() {}
 
 void manufacturerGetDevicesRequest() {}
-void manufacturerAddDeviceRequest(File configFile) async {
+Future<Map<String, dynamic>> manufacturerAddDeviceRequest(File configFile) async {
   var uri = Uri.http(validator_url, validatorPath);
-  // MultipartRequest létrehozása
   var request = http.MultipartRequest('POST', uri);
 
   // Fájl hozzáadása
   request.files.add(await http.MultipartFile.fromPath(
-    'file', // Backend által várt kulcs
+    'file',
     configFile.path,
   ));
 
-  // Kérés küldése
   var streamedResponse = await request.send();
 
-  // Válasz feldolgozása
   var response = await http.Response.fromStream(streamedResponse);
 
   if (response.statusCode == 200) {
-    
+    return jsonDecode(response.body);
   } else {
-
+    return jsonDecode(response.body);
   }
-  
 }
 void manufacturerModifyDeviceRequest() {}
 

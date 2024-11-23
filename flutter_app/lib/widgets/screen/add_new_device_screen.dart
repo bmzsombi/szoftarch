@@ -30,10 +30,15 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
     }
   }
 
-  void uploadDevicePressed() {
+  void uploadDevicePressed(BuildContext context) async {
     if (deviceNameController.text.trim().isNotEmpty) {
-      // TODO: manufacturerAddDeviceRequest();
-      manufacturerAddDeviceRequest(configFile!);
+      Map<String, dynamic> result = await manufacturerAddDeviceRequest(configFile!);
+      if (result["success"] == true && context.mounted){
+        Navigator.pop(context);
+      }
+      else {
+        setErrorText(result["message"]);
+      }
     }
     else {
       setErrorText("Device name can't be empty!");
@@ -90,7 +95,7 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
               ),
             ),
             const Spacer(),
-            AppButton(text: 'Upload device', onPressed: uploadDevicePressed, fontSize: 24.0, textColor: Colors.black, backgroundColor: Colors.white),
+            AppButton(text: 'Upload device', onPressed: () => {uploadDevicePressed(context)}, fontSize: 24.0, textColor: Colors.black, backgroundColor: Colors.white),
             const Spacer(),
             ErrorText(errorText: errorText, fontSize: 24.0),
             const Spacer()
