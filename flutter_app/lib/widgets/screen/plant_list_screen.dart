@@ -153,7 +153,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 loadDeviceListScreen();
               },
             ),
-            const Spacer(),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton.icon(
