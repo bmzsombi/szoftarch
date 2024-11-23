@@ -83,6 +83,21 @@ services:
       - linux
       - windows
 
+  # Build-only services
+  device-simulator-builder:
+    build:
+      context: ./iotdevices
+      dockerfile: ./Dockerfile.device-simulator
+    image: device-simulator:latest
+    command: ["true"]
+
+  device-monitor-builder:
+    build:
+      context: ./iotdevices
+      dockerfile: ./Dockerfile.monitor
+    image: device-monitor:latest
+    command: ["true"]
+      
 networks:
   szoftarch-nw:
     driver: bridge
