@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import backend.Model.Eszkoz;
-import backend.Service.EszkozService;
+import backend.Model.Device;
+import backend.Service.DeviceService;
 
 import java.util.List;
 
@@ -14,11 +14,11 @@ import java.util.List;
 public class EszkozController {
  
     @Autowired
-    private EszkozService eszkozService;
+    private DeviceService eszkozService;
 
     @GetMapping("/all")
-    public List<Eszkoz> getAllEszkoz() {
-        List<Eszkoz> eszkozList = eszkozService.getAllEszkoz();
+    public List<Device> getAllEszkoz() {
+        List<Device> eszkozList = eszkozService.getAllEszkoz();
         // Kiírja az összes eszközt a konzolra
         eszkozList.forEach(eszkoz -> System.out.println(eszkoz));
         return eszkozList;
@@ -27,7 +27,7 @@ public class EszkozController {
     // Növény hozzáadása mint plant típus
     @PostMapping("/addType")
     @ResponseStatus(HttpStatus.CREATED)  // A státuszkód '201 Created' lesz
-    public Eszkoz addEszkozType(@RequestBody Eszkoz eszkoz) {
+    public Device addEszkozType(@RequestBody Device eszkoz) {
         return eszkozService.addEszkoz(eszkoz);
     }
     
