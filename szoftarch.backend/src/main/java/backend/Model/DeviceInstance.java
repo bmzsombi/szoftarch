@@ -32,9 +32,10 @@ public class DeviceInstance {
     private String name;
     private String location;
 
-    @Column(name = "user_id")
-    private String userId;
+    @Column(name = "username")
+    private String username;
 
+    // kell-e frontendre
     @Column(name = "installation_date")
     private LocalDateTime installationDate = LocalDateTime.now();
 
@@ -54,10 +55,6 @@ public class DeviceInstance {
 
     public Device getDevice() {
         return device;
-    }
-
-    public Long getDeviceId(){ 
-        return device.getId();
     }
 
     public void setDevice(Device device) {
@@ -80,12 +77,12 @@ public class DeviceInstance {
         this.location = location;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public LocalDateTime getInstallationDate() {
@@ -111,5 +108,7 @@ public class DeviceInstance {
     public void setActuatorStateHistories(List<ActuatorStateHistory> actuatorStateHistories) {
         this.actuatorStateHistories = actuatorStateHistories;
     }
+
+
     
 }
