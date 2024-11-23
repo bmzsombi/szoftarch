@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
+from flask import Flask, request, jsonify
 import yaml
+import os
 import re
+from werkzeug.utils import secure_filename
 from typing import List, Dict, Union, Tuple
 
-"""this file validates the yaml files before they are processed further"""
-
+# Import all the validation functions from your original script
+from typing import List, Dict, Union, Tuple
 
 class ValidationError(Exception):
     pass
@@ -238,11 +241,10 @@ def validate_yaml_config(config: Dict) -> None:
     for i, actuator in enumerate(actuators):
         validate_actuator(actuator, i)
 
-def validate_yaml_file(file_path: str) -> Tuple[bool, str]:
-    """Validate a YAML file against the schema requirements."""
+def validate_yaml_content(content: str) -> Tuple[bool, str]:
+    """Validate YAML content directly from string."""
     try:
-        with open(file_path, 'r') as file:
-            config = yaml.safe_load(file)
+        config = yaml.safe_load(content)
         validate_yaml_config(config)
         return True, "Configuration is valid"
     except ValidationError as e:
@@ -252,16 +254,66 @@ def validate_yaml_file(file_path: str) -> Tuple[bool, str]:
     except Exception as e:
         return False, f"Unexpected error: {str(e)}"
 
-if __name__ == "__main__":
-    import sys
-    if len(sys.argv) != 2:
-        print("Usage: python validator.py <config.yaml>")
-        sys.exit(1)
+# Create Flask application
+app = Flask(__name__)
+
+# Configure upload settings
+UPLOAD_FOLDER = '/tmp/yaml-validator'
+ALLOWED_EXTENSIONS = {'yaml', 'yml'}
+
+# Ensure upload folder exists
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/api/validate', methods=['POST'])
+def validate_yaml():
+    # Check if a file was included in the request
+    if 'file' not in request.files:
+        return jsonify({
+            'success': False,
+            'error': 'No file provided'
+        }), 400
     
-    is_valid, message = validate_yaml_file(sys.argv[1])
-    if is_valid:
-        print("✅", message)
-        sys.exit(0)
-    else:
-        print("❌", message)
-        sys.exit(1)
+    file = request.files['file']
+    
+    # Check if a file was actually selected
+    if file.filename == '':
+        return jsonify({
+            'success': False,
+            'error': 'No file selected'
+        }), 400
+    
+    # Validate file extension
+    if not allowed_file(file.filename):
+        return jsonify({
+            'success': False,
+            'error': 'Invalid file type. Only YAML files (.yaml, .yml) are allowed'
+        }), 400
+    
+    try:
+        # Read and validate the YAML content
+        content = file.read().decode('utf-8')
+        is_valid, message = validate_yaml_content(content)
+        
+        return jsonify({
+            'success': is_valid,
+            'message': message
+        }), 200 if is_valid else 400
+        
+    except UnicodeDecodeError:
+        return jsonify({
+            'success': False,
+            'error': 'File must be valid UTF-8 encoded text'
+        }), 400
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Server error: {str(e)}'
+        }), 500
+
+if __name__ == '__main__':
+    # For development only - use a proper WSGI server in production
+    app.run(host='0.0.0.0', port=5001, debug=True)
