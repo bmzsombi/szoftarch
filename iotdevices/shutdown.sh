@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-cd /home/adam/Documents/BME/MSc/felev2/szoftverarchritekturak/HF/iotdevices/db/
+cd db/
 
 docker compose down --volumes
 
