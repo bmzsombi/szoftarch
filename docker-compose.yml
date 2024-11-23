@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  szoftarch-db:
+    image: mysql:8.0
+    container_name: szoftarch-db
+    environment:
+      MYSQL_ROOT_PASSWORD: david
+      MYSQL_DATABASE: plant_care
+      MYSQL_USER: user
+      MYSQL_PASSWORD: teszt
+    ports:
+      - "3306:3306"
+    networks:
+      szoftarch-nw:
+        aliases:
+          - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pdavid"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  szoftarch-backend:
+    build:
+      context: ./szoftarch.backend
+    image: backend:latest
+    ports:
+      - "5000:5000"
+    networks:
+      szoftarch-nw:
+        aliases:
+          - szoftarch-db
+    depends_on:
+      szoftarch-db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:mysql://szoftarch-db:3306/plant_care
+      DB_USER: user
+      DB_PASSWORD: teszt  
+
+networks:
+  szoftarch-nw:
+    driver: bridge
