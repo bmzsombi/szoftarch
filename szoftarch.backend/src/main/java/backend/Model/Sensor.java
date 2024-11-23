@@ -1,6 +1,9 @@
 package backend.Model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,22 +16,52 @@ import jakarta.persistence.Table;
 @Table(name = "sensor")
 public class Sensor {
 
+    // Üres konstruktor a Hibernate-hez
+    public Sensor() {}
+   
+    public enum DataType {
+        INTEGER, FLOAT
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Kapcsolat az Eszkoz táblával
-    @JoinColumn(name = "eszkoz_id", nullable = false) // Az idegen kulcs neve
-    private Eszkoz eszkoz;
+    @ManyToOne
+    @JoinColumn(name = "device_id", nullable = false)
+    private Device device;
 
+    @Column(nullable = false)
     private String name;
-    private String mertekegyseg;
-    private String tipus;
+
+    private String sensorType;
+
+    @Column(nullable = false)
+    private String unit;
+
+    @Column(nullable = false, name = "data_type")
+    @Enumerated(EnumType.STRING)
+    private DataType dataType;
+
     private Float minValue;
     private Float maxValue;
-    private String endpoint;
-    private String valueCode; 
-    private Integer samplingRate;
+
+    @Column(nullable = false, name = "read_endpoint")
+    private String readEndpoint;
+
+    @Column(nullable = false, name = "value_key")
+    private String valueKey;
+
+    @Column(name = "sampling_interval")
+    private Integer samplingInterval;
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
+    }
 
     public String getName() {
         return name;
@@ -38,20 +71,28 @@ public class Sensor {
         this.name = name;
     }
 
-    public String getMertekegyseg() {
-        return mertekegyseg;
+    public String getSensorType() {
+        return sensorType;
     }
 
-    public void setMertekegyseg(String mertekegyseg) {
-        this.mertekegyseg = mertekegyseg;
+    public void setSensorType(String sensorType) {
+        this.sensorType = sensorType;
     }
 
-    public String getTipus() {
-        return tipus;
+    public String getUnit() {
+        return unit;
     }
 
-    public void setTipus(String tipus) {
-        this.tipus = tipus;
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public DataType getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(DataType dataType) {
+        this.dataType = dataType;
     }
 
     public Float getMinValue() {
@@ -70,45 +111,32 @@ public class Sensor {
         this.maxValue = maxValue;
     }
 
-    public String getEndpoint() {
-        return endpoint;
+    public String getReadEndpoint() {
+        return readEndpoint;
     }
 
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
+    public void setReadEndpoint(String readEndpoint) {
+        this.readEndpoint = readEndpoint;
     }
 
-    public String getValueCode() {
-        return valueCode;
+    public String getValueKey() {
+        return valueKey;
     }
 
-    public void setValueCode(String valueCode) {
-        this.valueCode = valueCode;
+    public void setValueKey(String valueKey) {
+        this.valueKey = valueKey;
     }
 
-    public Integer getSamplingRate() {
-        return samplingRate;
+    public Integer getSamplingInterval() {
+        return samplingInterval;
     }
 
-    public void setSamplingRate(Integer samplingRate) {
-        this.samplingRate = samplingRate;
+    public void setSamplingInterval(Integer samplingInterval) {
+        this.samplingInterval = samplingInterval;
     }
 
-    // Üres konstruktor a Hibernate-hez
-    public Sensor() {}
 
-    // Paraméteres konstruktor
-    public Sensor(Eszkoz eszkoz, String name, String mertekegyseg, String tipus,
-                  Float minValue, Float maxValue, String endpoint, 
-                  String valueCode, Integer samplingRate) {
-        this.eszkoz = eszkoz;
-        this.name = name;
-        this.mertekegyseg = mertekegyseg;
-        this.tipus = tipus;
-        this.minValue = minValue;
-        this.maxValue = maxValue;
-        this.endpoint = endpoint;
-        this.valueCode = valueCode;
-        this.samplingRate = samplingRate;
-    }
+
+
+
 }
