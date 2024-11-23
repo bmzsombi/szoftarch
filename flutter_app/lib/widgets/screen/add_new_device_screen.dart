@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../common/custom_widgets.dart';
 import '/utils/device_utils.dart';
+import 'package:flutter_app/utils/http_requests.dart';
 
 
 class AddNewDeviceScreen extends StatefulWidget {
@@ -29,7 +30,14 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
     }
   }
 
-  void uploadDevicePressed() {}
+  void uploadDevicePressed() {
+    if (deviceNameController.text.trim().isNotEmpty) {
+      // TODO: manufacturerAddDeviceRequest();
+    }
+    else {
+      setErrorText("Device name can't be empty!");
+    }
+  }
 
   void setErrorText(String e) {
     setState(() {
@@ -53,6 +61,7 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
               child: TextField(
+                onChanged: (text) { setErrorText(''); },
                 controller: deviceNameController,
                 decoration: const InputDecoration(
                   labelText: "Device name",
