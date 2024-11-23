@@ -2,6 +2,9 @@ package backend;
 
 import org.springframework.web.bind.annotation.*;
 
+import backend.Model.Plant;
+import backend.Model.User;
+
 @RestController
 @RequestMapping("/api")
 public class RestHandler
@@ -26,6 +29,7 @@ public class RestHandler
 
     @PostMapping("/users")
     public void addUser(@RequestBody User user){
+        System.out.println(user.getUsername());
         storage.getUsers().addUser(user);
     }
 
