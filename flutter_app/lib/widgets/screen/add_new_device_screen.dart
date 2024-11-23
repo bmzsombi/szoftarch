@@ -33,6 +33,7 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
   void uploadDevicePressed() {
     if (deviceNameController.text.trim().isNotEmpty) {
       // TODO: manufacturerAddDeviceRequest();
+      manufacturerAddDeviceRequest(configFile!);
     }
     else {
       setErrorText("Device name can't be empty!");

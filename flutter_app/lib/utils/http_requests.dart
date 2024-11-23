@@ -1,13 +1,16 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:developer' as developer;
+import 'dart:io';
 
-const String url = '127.0.0.1:5000';
+const String backend_url = 'localhost:5000';
+const String validator_url = 'localhost:5001';
+const String validatorPath = 'api/validate';
 const String usersPath = 'api/users';
 const String plantsPath = 'api/plants';
 
 void createAccountRequest(String username_,  String password_, String email_, bool manufacturer_) async {
-  var uri = Uri.http(url, usersPath);
+  var uri = Uri.http(backend_url, usersPath);
   var response = await http.post(
     uri,
     headers: {
@@ -26,7 +29,30 @@ void userLoginRequest() {}
 void manufacturerLoginRequest() {}
 
 void manufacturerGetDevicesRequest() {}
-void manufacturerAddDeviceRequest() {}
+void manufacturerAddDeviceRequest(File configFile) async {
+  var uri = Uri.http(validator_url, validatorPath);
+  // MultipartRequest létrehozása
+  var request = http.MultipartRequest('POST', uri);
+
+  // Fájl hozzáadása
+  request.files.add(await http.MultipartFile.fromPath(
+    'file', // Backend által várt kulcs
+    configFile.path,
+  ));
+
+  // Kérés küldése
+  var streamedResponse = await request.send();
+
+  // Válasz feldolgozása
+  var response = await http.Response.fromStream(streamedResponse);
+
+  if (response.statusCode == 200) {
+    
+  } else {
+
+  }
+  
+}
 void manufacturerModifyDeviceRequest() {}
 
 void userGetPlantsRequest() {}
