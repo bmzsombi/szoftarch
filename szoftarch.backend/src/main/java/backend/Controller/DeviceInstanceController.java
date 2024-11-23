@@ -1,7 +1,10 @@
 package backend.Controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,15 +31,16 @@ public class DeviceInstanceController {
     @PostMapping("/addType")
     @ResponseStatus(HttpStatus.CREATED)
     public DeviceInstance addInstanceServiceType(@RequestBody DeviceInstance deviceInstance) {
-        // Lekérjük a device-t a deviceId alapján
-        Device device = deviceService.getDeviceById(deviceInstance.getDeviceId());
+        Device device = deviceService.getDeviceById(deviceInstance.getId());
         
-        // Beállítjuk a device mezőt
         deviceInstance.setDevice(device);
         //System.out.println("\n Mi az id: " + deviceInstance.getDevice().getId());
         
-        // Elmentjük a DeviceInstance-t
         return deviceInstanceService.addDeviceInstanceRepository(deviceInstance);
     }
 
+    @GetMapping("/all")
+    public List<DeviceInstance> getAllDeviceInstance() {
+        return deviceInstanceService.getAllDeviceInstance();
+    }
 }

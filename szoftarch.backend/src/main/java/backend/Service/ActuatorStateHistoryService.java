@@ -1,5 +1,7 @@
 package backend.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +18,9 @@ public class ActuatorStateHistoryService {
     // Növény hozzáadása
     public ActuatorStateHistory addActuatorStateHistory(ActuatorStateHistory actuatorStateHistory) {
         return actuatorStateHistoryRepository.save(actuatorStateHistory); // A save() automatikusan elvégzi a mentést az adatbázisba
+    }
+
+    public List<ActuatorStateHistory> getAllActuatorStateHistory() {
+        return actuatorStateHistoryRepository.findAll();
     }
 }

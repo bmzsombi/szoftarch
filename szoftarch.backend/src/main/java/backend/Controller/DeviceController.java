@@ -10,25 +10,22 @@ import backend.Service.DeviceService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/eszkoz")
-public class EszkozController {
+@RequestMapping("/device")
+public class DeviceController {
  
     @Autowired
-    private DeviceService eszkozService;
+    private DeviceService deviceService;
 
     @GetMapping("/all")
-    public List<Device> getAllEszkoz() {
-        List<Device> eszkozList = eszkozService.getAllEszkoz();
-        // Kiírja az összes eszközt a konzolra
-        eszkozList.forEach(eszkoz -> System.out.println(eszkoz));
-        return eszkozList;
+    public List<Device> getAllDevice() {
+        return deviceService.getAllDevice();
     }
 
     // Növény hozzáadása mint plant típus
     @PostMapping("/addType")
     @ResponseStatus(HttpStatus.CREATED)  // A státuszkód '201 Created' lesz
-    public Device addEszkozType(@RequestBody Device eszkoz) {
-        return eszkozService.addEszkoz(eszkoz);
+    public Device adddeviceType(@RequestBody Device device) {
+        return deviceService.addDevice(device);
     }
     
 }

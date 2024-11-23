@@ -15,19 +15,20 @@ public class DeviceService {
     private DeviceRepository eszkozRepository;
 
     // Növény hozzáadása
-    public Device addEszkoz(Device eszkoz) {
+    public Device addDevice(Device eszkoz) {
         return eszkozRepository.save(eszkoz);
     }
 
-    public List<Device> getAllEszkoz() {
-        return eszkozRepository.findAll();
-    }
 
     public Device getDeviceById(Long deviceId) {
         // Ha nem találjuk az adott id-val rendelkező Device-ot, akkor egy kivételt dobunk
         return eszkozRepository.findById(deviceId)
             .orElseThrow(() -> new RuntimeException("Device not found with id " + deviceId));
     
+    }
+
+    public List<Device> getAllDevice() {
+        return eszkozRepository.findAll();
     }
     
 }

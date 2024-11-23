@@ -1,5 +1,7 @@
 package backend.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +17,9 @@ public class SensorService {
     // Növény hozzáadása
     public Sensor addSensor(Sensor sensor) {
         return sensorRepository.save(sensor); // A save() automatikusan elvégzi a mentést az adatbázisba
+    }
+
+    public List<Sensor> getAllSensors() {
+        return sensorRepository.findAll();
     }
 }
