@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import backend.DTO.SensorMeasurementDTO;
 import backend.Model.DeviceInstance;
+import backend.Model.Sensor;
 import backend.Model.SensorMeasurement;
-import backend.Repository.DeviceInstanceRepository;
 import backend.Service.DeviceInstanceService;
 import backend.Service.SensorMeasurementService;
+import backend.Service.SensorService;
 
 @RestController
 @RequestMapping("/sensorMeasurement")
@@ -25,21 +27,25 @@ public class SensorMeasurementController {
     private SensorMeasurementService sensorMeasurementService;
 
     @Autowired
-    private DeviceInstanceRepository deviceInstanceRepository;
+    private DeviceInstanceService deviceInstanceService;
+
+    @Autowired
+    private SensorService sensorService;
 
     @PostMapping("/addType")
     @ResponseStatus(HttpStatus.CREATED) // A státuszkód '201 Created' lesz
-    public SensorMeasurement addSensorMeasurementType(@RequestBody SensorMeasurement sensorMeasurement) {
-
-        DeviceInstance instance = deviceInstanceRepository.findById(sensorMeasurement.getInstance().getId())
-            .orElseThrow(() -> new IllegalArgumentException("DeviceInstance not found with ID: " + sensorMeasurement.getInstance().getId()));
-
+    public SensorMeasurement addSensorMeasurementType(@RequestBody SensorMeasurementDTO sensorMeasurementDTO) {
+        DeviceInstance instance = deviceInstanceService.findById(sensorMeasurementDTO.getInstanceId());
+        Sensor sensor = sensorService.findById(sensorMeasurementDTO.getSensorId());
+        
+        SensorMeasurement sensorMeasurement = new SensorMeasurement();
         sensorMeasurement.setInstance(instance);
-
-
+        sensorMeasurement.setSensor(sensor);
+        sensorMeasurement.setValue(sensorMeasurementDTO.getValue());
+        sensorMeasurement.setTimestamp(sensorMeasurementDTO.getTimestamp());
+        
         return sensorMeasurementService.addSensorMeasurement(sensorMeasurement);
     }
-
 
     // Minden növény lekérése
     @GetMapping("/all")
