@@ -22,5 +22,12 @@ public class DeviceService {
     public List<Device> getAllEszkoz() {
         return eszkozRepository.findAll();
     }
+
+    public Device getDeviceById(Long deviceId) {
+        // Ha nem találjuk az adott id-val rendelkező Device-ot, akkor egy kivételt dobunk
+        return eszkozRepository.findById(deviceId)
+            .orElseThrow(() -> new RuntimeException("Device not found with id " + deviceId));
+    
+    }
     
 }

@@ -3,6 +3,8 @@ package backend.Model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,10 +22,11 @@ public class DeviceInstance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "device_id", nullable = false)
+    @JsonIgnore
     private Device device;
 
     private String name;
@@ -41,16 +44,20 @@ public class DeviceInstance {
     @OneToMany(mappedBy = "instance", cascade = CascadeType.ALL)
     private List<ActuatorStateHistory> actuatorStateHistories;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     public Device getDevice() {
         return device;
+    }
+
+    public Long getDeviceId(){ 
+        return device.getId();
     }
 
     public void setDevice(Device device) {
