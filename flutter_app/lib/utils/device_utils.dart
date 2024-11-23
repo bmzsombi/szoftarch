@@ -71,3 +71,28 @@ List<Device> searchDevices(String term, List<Device> allDevices) {
   }
   return searchedDevices;
 }
+
+class DropdownDeviceItem {
+  final String manufacturer;
+  final String model;
+  final String firmwareVersion;
+
+  DropdownDeviceItem({
+    required this.manufacturer,
+    required this.model,
+    required this.firmwareVersion,
+  });
+
+  @override
+  String toString() {
+    return '$manufacturer $model ($firmwareVersion)';
+  }
+
+  factory DropdownDeviceItem.fromJson(Map<String, dynamic> json) {
+    return DropdownDeviceItem(
+      manufacturer: json['manufacturer'],
+      model: json['model'],
+      firmwareVersion: json['firmwareVersion'],
+    );
+  }
+}

@@ -23,14 +23,21 @@ class _LoginscreenState extends State<Loginscreen> {
     });
   }
 
-  void loginButtonPressed() {
+  void loginButtonPressed() async {
     if (userNameController.text.trim().isNotEmpty && passwordController.text.trim().isNotEmpty) {
-      if (switchOn) {
-        // TODO: manufacturerLoginRequest();
-      }
-      else {
-        // TODO: userLoginRequest();
-      }
+      String username = userNameController.text.trim();
+      String password = passwordController.text.trim();
+      int loginResult = await loginRequest(username, password);
+      
+      setState(() {
+        switch (loginResult) {
+          case 1: setErrorText('user login sikerult'); break; // user login;
+          case 2: setErrorText('manufacturer login sikerult'); break; // manufacturer login;
+          case 0: setErrorText('Unexpected error!');
+          case -1: setErrorText('User not found!');
+          default: setErrorText('default'); break;
+        }
+      });
     }
     else if (userNameController.text.trim().isEmpty) {
       setErrorText("Username can't be empty!");
@@ -102,16 +109,16 @@ class _LoginscreenState extends State<Loginscreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 10.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 64.0, vertical: 10.0),
               child: Row(
                 children: <Widget>[
-                  const LoginScreenText(text: 'Manufacturer', fontSize: 24.0),
-                  const Spacer(),
-                  Switch(
-                    value: switchOn,
-                    onChanged: (value) { toggleSwitch(value); setErrorText(''); },
-                  )
+                  LoginScreenText(text: 'Manufacturer', fontSize: 24.0),
+                  Spacer(),
+                  // Switch(
+                  //   value: switchOn,
+                  //   onChanged: (value) { toggleSwitch(value); setErrorText(''); },
+                  // )
                 ],
               ),
             ),

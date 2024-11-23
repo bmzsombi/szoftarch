@@ -1,13 +1,14 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:developer' as developer;
+import 'package:flutter_app/utils/device_utils.dart';
 
-const String url = '127.0.0.1:5000';
-const String usersPath = 'api/users';
-const String plantsPath = 'api/plants';
+const String url = 'localhost:5000';
+const String createAccountPath = 'users/addType';
+const String loginPath = 'users/loginFull';
+const String deviceTypesPath = 'device/all';
 
-void createAccountRequest(String username_,  String password_, String email_, bool manufacturer_) async {
-  var uri = Uri.http(url, usersPath);
+Future<int> createAccountRequest(String username_, String email_, String password_, bool manufacturer_) async {
+  var uri = Uri.http(url, createAccountPath);
   var response = await http.post(
     uri,
     headers: {
@@ -20,10 +21,43 @@ void createAccountRequest(String username_,  String password_, String email_, bo
       "role": manufacturer_ ? "manufacturer" : "user"
     })
   );
-  developer.log(response.statusCode.toString());
+  if (response.statusCode == 201) {
+    return 1;
+  }
+  else {
+    return -1;
+  }
 }
-void userLoginRequest() {}
-void manufacturerLoginRequest() {}
+
+Future<int> loginRequest(String username_, String password_) async {
+  var uri = Uri.http(url, loginPath);
+    var response = await http.post(
+    uri,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: jsonEncode({
+      "username": username_,
+      "password": password_,
+    })
+  );
+
+  if (response.statusCode == 200) {
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    if (decodedResponse["role"] == "user") {   // user found
+      return 1;
+    }
+    else if (decodedResponse["role"] == "manufacturer") { // manufacturer found
+      return 2;
+    }
+    else {
+      return 0;   // "role" attribute is incorrect
+    }
+  }
+  else {
+    return -1; // user/manufacturer not found
+  }
+}
 
 void manufacturerGetDevicesRequest() {}
 void manufacturerAddDeviceRequest() {}
@@ -35,3 +69,19 @@ void userGetPlantSensorsRequest() {}
 void userGetSensorDetailsRequest() {}
 void userAddPlantRequest() {}
 void userAddSensorRequest() {}
+
+
+
+Future<List<DropdownDeviceItem>> userGetDeviceTypesRequest() async{
+  var uri = Uri.http(url, deviceTypesPath);
+  var response = await http.get(uri, headers: {
+      "Content-Type": "application/json",
+  });
+  if (response.statusCode == 200) {
+    List<dynamic> jsonList = jsonDecode(response.body);
+    return jsonList.map((json) => DropdownDeviceItem.fromJson(json)).toList();
+  }
+  else {
+    return [];
+  }
+}
