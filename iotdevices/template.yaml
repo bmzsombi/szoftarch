@@ -1,0 +1,54 @@
+# Device Manufacturer Configuration Schema
+version: "1.0" #Any value, or even its absence is acceptable, its not in fact processed
+
+# Basic device information
+device_info: # required block
+  manufacturer: string #required non-empty string
+  model: string # required non empty string
+  description: string # optional
+  firmware_version: string # required non empty string
+
+# Network configuration
+network: # completely optional
+  default_port: 5683  # optioanl, will default to 5683
+  discovery_enabled: boolean # optional
+
+# Sensors configuration
+# each device must contain at leas one sensor or actuator elements, otherwise it is invalid.
+sensors: # optional
+  - name: string # required
+    type: enum    # optional
+    measurement: # required
+      unit: string  # required
+      data_type: enum  # required, accepted values are INTEGER or FLOAT
+      range: #optional
+        min: number # required if range: key is provided, must be parseable as a float or int
+        max: number # required if range: key is provided, must be parseable as a float or int
+    coap_endpoints: # required
+      read: #required
+        path: string # required, must be a valid url path
+        content_format: string # optional
+        value_key: string  # required
+    sampling: #optional
+      interval: number  # must be int if sampling key is provided
+
+# Actuators configuration
+actuators: # optional, but 1 actuator or sensor is required for the config to be valid
+  - type: enum    # required, One of: PUMP, LIGHT, BLIND
+    name: string # required
+    state: # required
+      data_type: enum  # required, must be BOOLEAN or ENUM
+      possible_values: [string]  # required, if data_type is BOOLEAN, it must have 2 values only. if data_type is ENUM, it may have more then 2 valueas, but not less.
+      on_value: string #optional, required only if type is PUMP or LAMP and data_type is ENUM and possible_values has more than 2 values
+      off_value: string #optional, required only if type is PUMP or LAMP and data_type is ENUM and possible_values has more than 2 values
+      open_value: string #optional, required only if type is BLIND and data_type is ENUM and possible_values has more than 2 values
+      closed_value: string #optional, required only if type is BLIND and data_type is ENUM and possible_values has more than 2 values
+      value_key: string  # required
+    endpoints: #required
+      status: string  # required
+      # For PUMP and LIGHT types, these two are mandatory
+      turn_on: string  # required for types PUMP and LIGHT
+      turn_off: string # required for types PUMP and LIGHT
+      # For BLIND type, these two are mandatory
+      open: string    # required for BLIND type
+      close: string   # required for BLIND type
