@@ -43,11 +43,11 @@ public class OwnActuator {
     @Column(nullable = false, name = "value_key")
     private String valueKey;
 
-    @Column(nullable = false, name = "on_up_key")
-    private String onUpKey;
+    @Column(nullable = false, name = "on_up_value")
+    private String onUpValue;
 
-    @Column(nullable = false, name = "off_down_key")
-    private String offDownKey;
+    @Column(nullable = false, name = "off_down_value")
+    private String offDownValue;
 
     @Column(nullable = false, name = "on_up_endpoint")
     private String onUpEndpoint;
@@ -95,20 +95,20 @@ public class OwnActuator {
         this.valueKey = valueKey;
     }
 
-    public String getOnUpKey() {
-        return onUpKey;
+    public String getOnUpValue() {
+        return onUpValue;
     }
 
-    public void setOnUpKey(String onUpKey) {
-        this.onUpKey = onUpKey;
+    public void setOnUpValue(String onUpKey) {
+        this.onUpValue = onUpKey;
     }
 
-    public String getOffDownKey() {
-        return offDownKey;
+    public String getOffDownValue() {
+        return offDownValue;
     }
 
-    public void setOffDownKey(String offDownKey) {
-        this.offDownKey = offDownKey;
+    public void setOffDownValue(String offDownKey) {
+        this.offDownValue = offDownKey;
     }
 
     public String getOnUpEndpoint() {

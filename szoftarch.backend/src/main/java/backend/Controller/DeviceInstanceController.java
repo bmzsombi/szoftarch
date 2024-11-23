@@ -31,15 +31,16 @@ public class DeviceInstanceController {
     @PostMapping("/addType")
     @ResponseStatus(HttpStatus.CREATED)
     public DeviceInstance addInstanceServiceType(@RequestBody DeviceInstance deviceInstance) {
-        Device device = deviceService.getDeviceById(deviceInstance.getDeviceId());
+        Device device = deviceService.getDeviceById(deviceInstance.getId());
+        
         deviceInstance.setDevice(device);
+        //System.out.println("\n Mi az id: " + deviceInstance.getDevice().getId());
         
         return deviceInstanceService.addDeviceInstanceRepository(deviceInstance);
     }
 
     @GetMapping("/all")
-    public List<DeviceInstance> getAllDDeviceInstance() {
+    public List<DeviceInstance> getAllDeviceInstance() {
         return deviceInstanceService.getAllDeviceInstance();
     }
-
 }
