@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/widgets/common/plant_details.dart';
 import '../popup/add_plantpopup.dart';
 import '../../utils/plant.dart';
-import '../popup/plantdetails_popup.dart';
 import '../screen/device_list_screen.dart';
 import '../screen/login_screen.dart';
 
@@ -42,19 +42,18 @@ class _MyHomePageState extends State<MyHomePage> {
     showDialog(
       context: context,
       builder: (context) => AddPlantPopup(
-        onAdd: (plantName, plantType) => addPlant(plantName, plantType),
+        onAdd: (plantName, plantType) => addPlant(plantName, plantType, "asd"),
       ),
     );
   }
 
-  void _showPlantDetails(Plant plant) {
-    showDialog(
-      context: context,
-      builder: (context) => PlantDetailsPopup(plant: plant, screenHeight: screenHeight, screenWidth: screenWidth),
-    );
+  void _showPlantDetails() {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => const PlantDetails(),
+    ));
   }
 
-  void addPlant(String plantName, String plantType) {
+  void addPlant(String plantScName, String plantCName, String plantCat) {
     setState(() {
       plantList.add(
         SizedBox(
@@ -63,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ElevatedButton(
             onPressed: () {
               // A növény részleteinek megjelenítése a gombra kattintva
+              /*
               final plant = Plant(
                 name: plantName,
                 type: plantType,
@@ -71,8 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 soilMoisture: 'High',
                 pumpState: 'On',
                 temperature: '22°C',
-              );
-              _showPlantDetails(plant);
+              );*/
+              _showPlantDetails();
+              
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -81,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             child: Text(
-              plantName,
+              plantCName,
               textAlign: TextAlign.center,
             ),
           ),
@@ -139,17 +140,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               title: const Text('My Plants'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-                //loadPlantListScreen();
-              },
+              onTap: () {},
             ),
             ListTile(
               title: const Text('Sensors'),
               onTap: () {
-                // Update the state of the app.
-                // ...
                 loadDeviceListScreen();
               },
             ),
@@ -157,7 +152,6 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  //Navigator.pop(context); // Kilépés a képernyőről
                   exitPressed();
                 },
                 icon: const Icon(Icons.logout),

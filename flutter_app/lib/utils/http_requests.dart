@@ -10,9 +10,10 @@ import 'package:flutter_app/utils/device_utils.dart';
 const String backend_url = 'localhost:5000';
 const String validator_url = 'localhost:5001';
 const String validatorPath = 'api/validate';
-const String devicesPath= 'eszkoz/all';
+const String devicesPath= 'device/all';
 const String usersPath = 'api/users';
-const String plantsPath = 'api/plants';
+const String plantsPath = 'plants/all';
+const String addPlantPath = 'plants/addType';
 
 void createAccountRequest(String username_,  String password_, String email_, bool manufacturer_) async {
   var uri = Uri.http(backend_url, usersPath);
@@ -38,7 +39,6 @@ Future<List<Device>> manufacturerGetDevicesRequest() async {
   var response = await http.get(uri);
   if (response.statusCode == 200){
     List<dynamic> jsonresponse = jsonDecode(response.body);
-    //print(jsonresponse.map((data) => Device.fromJson(data)).toList());
     return jsonresponse.map((data) => Device.fromJson(data)).toList();
   }
   else {
@@ -64,9 +64,42 @@ Future<Map<String, dynamic>> manufacturerAddDeviceRequest(File configFile) async
 }
 void manufacturerModifyDeviceRequest() {}
 
-void userGetPlantsRequest() {}
+void userGetPlantsRequest() async {
+  var uri = Uri.http(backend_url, plantsPath);
+  var response = await http.get(uri);
+
+  if (response.statusCode == 200){
+
+  }
+}
 void userGetPlantDetailsRequest() {}
 void userGetPlantSensorsRequest() {}
-void userGetSensorDetailsRequest() {}
-void userAddPlantRequest() {}
+void userGetSensorDetailsRequest() async {}
+void userAddPlantRequest(
+  String scname, String cname, String cat, String maxl, String minl, String maxenvhum, 
+  String minenvhum, String maxsom, String minsom, String maxtemp, String mintemp
+  ) 
+async {
+  var uri = Uri.http(backend_url, addPlantPath);
+  var response = await http.post(
+    uri,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: jsonEncode({
+      "scientific_name": scname,
+      "common_name": cname,
+      "category": cat,
+      "max_light": maxl,
+      "min_light": minl,
+      "max_env_humid": maxenvhum,
+      "min_env_humid": minenvhum,
+      "max_soil_moist": maxsom,
+      "min_soil_moist": minsom,
+      "max_temp": maxtemp,
+      "min_temp": mintemp
+    })
+  );
+  print(response.statusCode.toString());
+}
 void userAddSensorRequest() {}
