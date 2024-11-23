@@ -2,8 +2,8 @@
 
 import sys
 import logging
-import psycopg2
-from psycopg2.extras import DictCursor
+import mysql.connector
+from mysql.connector.cursor import MySQLCursor
 import docker
 from datetime import datetime
 import argparse
@@ -11,15 +11,15 @@ from typing import Optional, Tuple
 
 # Database configuration
 DB_CONFIG = {
-    'dbname': 'plantmonitor',
-    'user': 'postgres',
-    'password': '',
+    'database': 'plant_care',
+    'user': 'user',
+    'password': 'teszt',
     'host': 'localhost',
-    'port': '5432'
+    'port': '3306'
 }
 
 # Docker network name
-DOCKER_NETWORK = 'device_network'
+DOCKER_NETWORK = 'szoftarch-nw'
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("DeviceInstanceManager")
@@ -69,11 +69,11 @@ class InstanceManager:
             raise
 
     def ensure_db_in_network(self):
-        """Ensure the PostgreSQL container is in our network."""
+        """Ensure the MySQL container is in our network."""
         try:
-            self.ensure_container_in_network('postgres_dev')
+            self.ensure_container_in_network('szoftarch-db')
         except docker.errors.NotFound as e:
-            logger.error("PostgreSQL container not found. Make sure it's running!")
+            logger.error("MySQL container not found. Make sure it's running!")
             raise
 
     def ensure_monitor_running(self):
@@ -92,15 +92,15 @@ class InstanceManager:
             monitor = self.docker_client.containers.run(
                 "device-monitor:latest",
                 name=self.MONITOR_CONTAINER_NAME,
-                network=DOCKER_NETWORK,  # Connect to network at creation
+                network=DOCKER_NETWORK,
                 detach=True,
                 restart_policy={"Name": "unless-stopped"},
                 environment={
-                    "DB_HOST": "postgres_dev",
-                    "DB_PORT": "5432",
-                    "DB_NAME": "plantmonitor",
-                    "DB_USER": "postgres",
-                    "DB_PASSWORD": "",
+                    "DB_HOST": "szoftarch-db",
+                    "DB_PORT": "3306",
+                    "DB_NAME": "plant_care",
+                    "DB_USER": "user",
+                    "DB_PASSWORD": "teszt",
                     "POLLING_INTERVAL": "60"
                 }
             )
@@ -112,22 +112,22 @@ class InstanceManager:
             instance_id = self.create_instance(device_id, location, user)
             container_name = f"device_instance_{instance_id}"
             
-            # Create the device container with network at creation
+            # Create the device container
             container = self.docker_client.containers.run(
                 "device-simulator:latest",
                 command=str(device_id),
                 name=container_name,
                 hostname=str(instance_id),
-                network=DOCKER_NETWORK,  # Connect to network at creation
+                network=DOCKER_NETWORK,
                 detach=True,
                 environment={
                     "DEVICE_ID": str(device_id),
                     "INSTANCE_ID": str(instance_id),
-                    "DB_HOST": "postgres_dev",
-                    "DB_PORT": "5432",
-                    "DB_NAME": "plantmonitor",
-                    "DB_USER": "postgres",
-                    "DB_PASSWORD": ""
+                    "DB_HOST": "szoftarch-db",
+                    "DB_PORT": "3306",
+                    "DB_NAME": "plant_care",
+                    "DB_USER": "user",
+                    "DB_PASSWORD": "teszt"
                 }
             )
             
@@ -144,50 +144,59 @@ class InstanceManager:
 
     def create_instance(self, device_id: int, location: str, user: str) -> int:
         """Create a new device instance in the database."""
-        with psycopg2.connect(**DB_CONFIG) as conn:
-            with conn.cursor(cursor_factory=DictCursor) as cur:
-                # Verify device exists
-                cur.execute("SELECT id FROM devices WHERE id = %s", (device_id,))
-                if not cur.fetchone():
-                    raise ValueError(f"Device ID {device_id} not found")
-                
-                # Create instance
-                cur.execute("""
-                    INSERT INTO device_instances 
-                    (device_id, location, user_id, installation_date)
-                    VALUES (%s, %s, %s, %s)
-                    RETURNING id;
-                """, (device_id, location, user, datetime.now()))
-                
-                instance_id = cur.fetchone()[0]
-                conn.commit()
-                logger.info(f"Created device instance with ID: {instance_id}")
-                return instance_id
+        conn = mysql.connector.connect(**DB_CONFIG)
+        try:
+            cursor = conn.cursor(dictionary=True)
+            
+            # Verify device exists
+            cursor.execute("SELECT id FROM device WHERE id = %s", (device_id,))
+            if not cursor.fetchone():
+                raise ValueError(f"Device ID {device_id} not found")
+            
+            # Create instance
+            cursor.execute("""
+                INSERT INTO device_instance 
+                (device_id, location, username, installation_date)
+                VALUES (%s, %s, %s, %s)
+            """, (device_id, location, user, datetime.now()))
+            
+            instance_id = cursor.lastrowid
+            conn.commit()
+            logger.info(f"Created device instance with ID: {instance_id}")
+            return instance_id
+        finally:
+            conn.close()
 
     def delete_instance(self, instance_id: int):
         """Delete a device instance from the database."""
-        with psycopg2.connect(**DB_CONFIG) as conn:
-            with conn.cursor() as cur:
-                cur.execute("DELETE FROM device_instances WHERE id = %s", (instance_id,))
-                if cur.rowcount == 0:
-                    raise ValueError(f"Instance ID {instance_id} not found")
-                conn.commit()
-                logger.info(f"Deleted device instance with ID: {instance_id}")
+        conn = mysql.connector.connect(**DB_CONFIG)
+        try:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM device_instance WHERE id = %s", (instance_id,))
+            if cursor.rowcount == 0:
+                raise ValueError(f"Instance ID {instance_id} not found")
+            conn.commit()
+            logger.info(f"Deleted device instance with ID: {instance_id}")
+        finally:
+            conn.close()
 
     def get_device_info(self, instance_id: int) -> Tuple[int, str]:
         """Get device ID and model for an instance."""
-        with psycopg2.connect(**DB_CONFIG) as conn:
-            with conn.cursor(cursor_factory=DictCursor) as cur:
-                cur.execute("""
-                    SELECT d.id, d.model
-                    FROM devices d
-                    JOIN device_instances di ON d.id = di.device_id
-                    WHERE di.id = %s
-                """, (instance_id,))
-                result = cur.fetchone()
-                if not result:
-                    raise ValueError(f"Instance ID {instance_id} not found")
-                return result['id'], result['model']
+        conn = mysql.connector.connect(**DB_CONFIG)
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT d.id, d.model
+                FROM device d
+                JOIN device_instance di ON d.id = di.device_id
+                WHERE di.id = %s
+            """, (instance_id,))
+            result = cursor.fetchone()
+            if not result:
+                raise ValueError(f"Instance ID {instance_id} not found")
+            return result['id'], result['model']
+        finally:
+            conn.close()
 
     def stop_instance(self, instance_id: int):
         """Stop a device instance."""

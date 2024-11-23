@@ -3,8 +3,7 @@ FROM python:3.9-slim
 
 # Install required system packages
 RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    gcc \
+    python3-mysql.connector \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -18,11 +17,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY device_simulator.py .
 
 # Set environment variables with defaults
-ENV DB_HOST=localhost \
-    DB_PORT=5432 \
-    DB_NAME=plantmonitor \
-    DB_USER=postgres \
-    DB_PASSWORD= \
+ENV DB_HOST=szoftarch-db \
+    DB_PORT=3306 \
+    DB_NAME=plant_care \
+    DB_USER=user \
+    DB_PASSWORD=teszt \
     DEVICE_ID=1 \
     INSTANCE_ID=1
 

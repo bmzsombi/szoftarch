@@ -681,17 +681,28 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
 
 def cleanup_old_components(cursor, device_id: int, current_sensors: Set[str], current_actuators: Set[str]):
     """Remove sensors and actuators that are no longer in the YAML file."""
+    # Convert sets to lists and handle empty cases
+    sensor_names = list(current_sensors) if current_sensors else ['']
+    actuator_names = list(current_actuators) if current_actuators else ['']
+    
+    # For MySQL, we need to use IN with format strings
+    # Create the placeholders for the IN clause
+    sensor_placeholders = ', '.join(['%s'] * len(sensor_names))
+    actuator_placeholders = ', '.join(['%s'] * len(actuator_names))
+    
     # Remove old sensors
-    cursor.execute(
-        "DELETE FROM sensor WHERE device_id = %s AND name NOT IN %s",
-        (device_id, tuple(current_sensors) if current_sensors else ('',))
-    )
+    if sensor_names:
+        sensor_sql = f"DELETE FROM sensor WHERE device_id = %s AND name NOT IN ({sensor_placeholders})"
+        cursor.execute(sensor_sql, [device_id] + sensor_names)
+    else:
+        cursor.execute("DELETE FROM sensor WHERE device_id = %s", (device_id,))
     
     # Remove old actuators
-    cursor.execute(
-        "DELETE FROM actuator WHERE device_id = %s AND name NOT IN %s",
-        (device_id, tuple(current_actuators) if current_actuators else ('',))
-    )
+    if actuator_names:
+        actuator_sql = f"DELETE FROM actuator WHERE device_id = %s AND name NOT IN ({actuator_placeholders})"
+        cursor.execute(actuator_sql, [device_id] + actuator_names)
+    else:
+        cursor.execute("DELETE FROM actuator WHERE device_id = %s", (device_id,))
 
 
 # Configure upload settings

@@ -2,7 +2,7 @@
 \c plantmonitor;
 
 -- Devices table
-CREATE TABLE devices (
+CREATE TABLE device (
     id SERIAL PRIMARY KEY,
     manufacturer VARCHAR(255) NOT NULL,
     model VARCHAR(255) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE devices (
 );
 
 -- Sensors table
-CREATE TABLE sensors (
+CREATE TABLE sensor (
     id SERIAL PRIMARY KEY,
     device_id INTEGER REFERENCES devices(id),
     name VARCHAR(255) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE sensors (
 CREATE TYPE actuator_type AS ENUM ('PUMP', 'LIGHT', 'BLIND');
 
 -- Actuators table
-CREATE TABLE actuators (
+CREATE TABLE actuator (
     id SERIAL PRIMARY KEY,
     device_id INTEGER REFERENCES devices(id),
     name VARCHAR(255) NOT NULL,
@@ -45,17 +45,17 @@ CREATE TABLE actuators (
 );
 
 -- Device instances table
-CREATE TABLE device_instances (
+CREATE TABLE device_instance (
     id SERIAL PRIMARY KEY,
     device_id INTEGER REFERENCES devices(id),
     name VARCHAR(255),
     location VARCHAR(255),
-    user_id VARCHAR(255),
+    username VARCHAR(255),
     installation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Sensor measurements table
-CREATE TABLE sensor_measurements (
+CREATE TABLE sensor_measurement (
     id SERIAL PRIMARY KEY,
     instance_id INTEGER REFERENCES device_instances(id),
     sensor_id INTEGER REFERENCES sensors(id),
@@ -73,9 +73,9 @@ CREATE TABLE actuator_state_history (
 );
 
 -- Add appropriate indexes
-CREATE INDEX idx_sensor_measurements_instance_id ON sensor_measurements(instance_id);
-CREATE INDEX idx_sensor_measurements_timestamp ON sensor_measurements(timestamp);
+CREATE INDEX idx_sensor_measurements_instance_id ON sensor_measurement(instance_id);
+CREATE INDEX idx_sensor_measurements_timestamp ON sensor_measurement(timestamp);
 CREATE INDEX idx_actuator_history_instance_id ON actuator_state_history(instance_id);
 CREATE INDEX idx_actuator_history_timestamp ON actuator_state_history(changed_at);
-CREATE INDEX idx_sensors_device_id ON sensors(device_id);
-CREATE INDEX idx_actuators_device_id ON actuators(device_id);
+CREATE INDEX idx_sensors_device_id ON sensor(device_id);
+CREATE INDEX idx_actuators_device_id ON actuator(device_id);
