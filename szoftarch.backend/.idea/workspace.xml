@@ -5,33 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54baaed2-bb11-45f5-8fec-4d3512bca4c2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/assets/app_logo.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/utils/account_utils.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/utils/device_utils.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/utils/plant.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/common/custom_widgets.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/popup/add_plantpopup.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/popup/plantdetails_popup.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/add_new_device_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/create_account_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/device_list_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/login_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/modify_device_config_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/plant_list_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../flutter_app/server/server.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/backend/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/android/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/test/widget_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/test/widget_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/backend/RestHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/backend/RestHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../iotdevices/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/device_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/device_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/plant_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/plant_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,9 +40,9 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Merging David__backend",
+    "git-widget-placeholder": "zsombor__grind",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/bmzso.JENKINS.000/szoftarch/szoftarch.backend",
+    "last_opened_file_path": "C:/Users/bmzso.JENKINS.000/apa",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -102,6 +79,8 @@
       <workItem from="1732039344108" duration="5724000" />
       <workItem from="1732045887319" duration="96000" />
       <workItem from="1732045991330" duration="3665000" />
+      <workItem from="1732372437179" duration="192000" />
+      <workItem from="1732372637216" duration="37000" />
     </task>
     <servers />
   </component>

@@ -104,7 +104,6 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
                 //loadDeviceListScreen();
               },
             ),
-            const Spacer(),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton.icon(
