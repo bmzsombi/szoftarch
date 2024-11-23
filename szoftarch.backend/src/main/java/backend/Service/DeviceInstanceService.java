@@ -1,5 +1,7 @@
 package backend.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,10 @@ public class DeviceInstanceService {
     // Növény hozzáadása
     public DeviceInstance addDeviceInstanceRepository(DeviceInstance deviceInstanceService) {
         return deviceInstanceRepository.save(deviceInstanceService); // A save() automatikusan elvégzi a mentést az adatbázisba
+    }
+
+    public List<DeviceInstance> getAllDeviceInstance() {
+        return deviceInstanceRepository.findAll();
     }
     
 }
