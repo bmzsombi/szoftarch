@@ -1,0 +1,57 @@
+def get_or_insert_device(cursor, device_info: Dict[str, Any], network: Optional[Dict[str, Any]]) -> int:
+    """Get existing device ID or insert new device and return the ID."""
+    find_sql = """
+    SELECT id FROM devices
+    WHERE manufacturer = %s
+    AND model = %s
+    AND firmware_version = %s;
+    """
+    
+    cursor.execute(find_sql, (
+        device_info['manufacturer'],
+        device_info['model'],
+        device_info['firmware_version']
+    ))
+    
+    result = cursor.fetchone()
+    
+    if result:
+        device_id = result['id']
+        update_sql = """
+        UPDATE devices
+        SET description = %s,
+            port = %s,
+            discovery_enabled = %s
+        WHERE id = %s;
+        """
+        
+        port = network.get('default_port', 5683) if network else 5683
+        discovery_enabled = network.get('discovery_enabled', True) if network else True
+        
+        cursor.execute(update_sql, (
+            device_info.get('description'),
+            port,
+            discovery_enabled,
+            device_id
+        ))
+        
+        return device_id
+    
+    insert_sql = """
+    INSERT INTO devices (manufacturer, model, firmware_version, description, port, discovery_enabled)
+    VALUES (%s, %s, %s, %s, %s, %s);
+    """
+    
+    port = network.get('default_port', 5683) if network else 5683
+    discovery_enabled = network.get('discovery_enabled', True) if network else True
+    
+    cursor.execute(insert_sql, (
+        device_info['manufacturer'],
+        device_info['model'],
+        device_info['firmware_version'],
+        device_info.get('description'),
+        port,
+        discovery_enabled
+    ))
+    
+    return cursor.lastrowid

@@ -46,7 +46,7 @@ def get_or_insert_device(cursor, device_info: Dict[str, Any], network: Optional[
     result = cursor.fetchone()
     
     if result:
-        device_id = result[0]
+        device_id = result['id']
         # Update existing device
         update_sql = """
         UPDATE devices
@@ -72,26 +72,22 @@ def get_or_insert_device(cursor, device_info: Dict[str, Any], network: Optional[
     # If no existing device found, insert new one
     insert_sql = """
     INSERT INTO devices (manufacturer, model, firmware_version, description, port, discovery_enabled)
-    VALUES (%s, %s, %s, %s, %s, %s)
-    RETURNING id;
+    VALUES (%s, %s, %s, %s, %s, %s);
     """
     
     port = network.get('default_port', 5683) if network else 5683
     discovery_enabled = network.get('discovery_enabled', True) if network else True
     
-    values = (
+    cursor.execute(insert_sql, (
         device_info['manufacturer'],
         device_info['model'],
         device_info['firmware_version'],
         device_info.get('description'),
         port,
         discovery_enabled
-    )
+    ))
     
-    cursor.execute(insert_sql, values)
-    device_id = cursor.fetchone()[0]
-    logger.info(f"Inserted new device with ID: {device_id}")
-    return device_id
+    return cursor.lastrowid
 
 def determine_actuator_values(actuator: Dict[str, Any]) -> tuple:
     """Determine on/off or open/close values based on actuator type and state configuration."""
@@ -172,7 +168,7 @@ def get_or_update_sensor(cursor, sensor: Dict[str, Any], device_id: int) -> int:
         result = cursor.fetchone()
         
         if result:
-            sensor_id = result[0]
+            sensor_id = result['id']
             update_sql = """
             UPDATE sensors
             SET sensor_type = %s,
@@ -208,11 +204,10 @@ def get_or_update_sensor(cursor, sensor: Dict[str, Any], device_id: int) -> int:
             device_id, name, sensor_type, unit, data_type,
             min_value, max_value, read_endpoint, value_key, sampling_interval
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        RETURNING id;
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
         
-        values = (
+        cursor.execute(insert_sql, (
             device_id,
             sensor['name'],
             sensor.get('type'),
@@ -223,12 +218,9 @@ def get_or_update_sensor(cursor, sensor: Dict[str, Any], device_id: int) -> int:
             read_endpoint,  # Using normalized path
             value_key,
             sensor.get('sampling', {}).get('interval')
-        )
+        ))
         
-        cursor.execute(insert_sql, values)
-        sensor_id = cursor.fetchone()[0]
-        logger.info(f"Inserted new sensor {sensor['name']} with endpoint: {read_endpoint}")
-        return sensor_id
+        return cursor.lastrowid
         
     except ValueError as e:
         raise ValueError(f"Invalid sensor configuration for {sensor['name']}: {str(e)}")
@@ -261,7 +253,7 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
         result = cursor.fetchone()
         
         if result:
-            actuator_id = result[0]
+            actuator_id = result['id']
             update_sql = """
             UPDATE actuators
             SET type = %s,
@@ -295,11 +287,10 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
             device_id, name, type, status_endpoint, value_key,
             on_up_value, off_down_value, on_up_endpoint, off_down_endpoint
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-        RETURNING id;
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
         
-        values = (
+        cursor.execute(insert_sql, (
             device_id,
             actuator['name'],
             actuator['type'],
@@ -309,12 +300,9 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
             off_down_value,
             on_up_endpoint,
             off_down_endpoint
-        )
+        ))
         
-        cursor.execute(insert_sql, values)
-        actuator_id = cursor.fetchone()[0]
-        logger.info(f"Inserted actuator {actuator['name']} with normalized endpoints")
-        return actuator_id
+        return cursor.lastrowid
         
     except ValueError as e:
         raise ValueError(f"Invalid actuator configuration for {actuator['name']}: {str(e)}")
@@ -344,7 +332,7 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
     on_up_endpoint, off_down_endpoint = determine_actuator_endpoints(actuator)
     
     if result:
-        actuator_id = result[0]
+        actuator_id = result['id']
         # Update existing actuator
         update_sql = """
         UPDATE actuators
@@ -379,11 +367,10 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
         device_id, name, type, status_endpoint, value_key,
         on_up_value, off_down_value, on_up_endpoint, off_down_endpoint
     )
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-    RETURNING id;
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
     """
     
-    values = (
+    cursor.execute(insert_sql, (
         device_id,
         actuator['name'],
         actuator['type'],
@@ -393,12 +380,9 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
         off_down_value,
         on_up_endpoint,
         off_down_endpoint
-    )
+    ))
     
-    cursor.execute(insert_sql, values)
-    actuator_id = cursor.fetchone()[0]
-    logger.info(f"Inserted new actuator with ID: {actuator_id}")
-    return actuator_id
+    return cursor.lastrowid
 
 def cleanup_old_components(cursor, device_id: int, current_sensors: Set[str], current_actuators: Set[str]):
     """Remove sensors and actuators that are no longer in the YAML file."""
