@@ -5,12 +5,24 @@ class Device {
   final int id;
   final String name;
 
-  Device(this.id, this.name);
+  Device({
+    required this.id,
+    required this.name
+  });
+
+  factory Device.fromJson(Map<String, dynamic> json){
+    return Device(
+      id: json['id'],
+      name: json['manufacturer']
+    );
+  }
 }
+
+
 
 List<Device> getDeviceList() {
   final deviceList = <Device>[];
-
+/*
   deviceList.add(Device(1, 'a'));
   deviceList.add(Device(2, 'aa'));
   deviceList.add(Device(3, 'aaa'));
@@ -35,7 +47,7 @@ List<Device> getDeviceList() {
   deviceList.add(Device(1, 'aaa'));
   deviceList.add(Device(2, 'aa'));
   deviceList.add(Device(3, 'a'));
-
+*/
   return deviceList; 
 }
 
