@@ -3,17 +3,18 @@
 import logging
 import mysql.connector
 import docker
+import os
 from datetime import datetime
 from flask import Flask, request, jsonify
-from typing import Optional, Tuple
+from typing import Tuple
 
 # Database configuration
 DB_CONFIG = {
-    'database': 'plant_care',
-    'user': 'user',
-    'password': 'teszt',
-    'host': 'localhost',
-    'port': '3306'
+    'database': os.getenv('DB_NAME', 'plant_care'),
+    'user': os.getenv('DB_USER', 'user'),
+    'password': os.getenv('DB_PASSWORD', 'teszt'),
+    'host': os.getenv('DB_HOST', 'szoftarch-db'),
+    'port': os.getenv('DB_PORT', '3306')
 }
 
 # Docker network name

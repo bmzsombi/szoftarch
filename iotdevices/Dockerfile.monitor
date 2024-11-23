@@ -1,22 +1,21 @@
 FROM python:3.9-slim
 
-# Set working directory
 WORKDIR /app
 
 # Copy requirements first to leverage Docker cache
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements-monitor.txt .
+RUN pip install --no-cache-dir -r requirements-monitor.txt
 
 # Copy the monitor script
 COPY device_monitor.py .
 
 # Set environment variables with defaults
-ENV DB_HOST=szoftarch-db \
-    DB_PORT=3306 \
-    DB_NAME=plant_care \
-    DB_USER=user \
-    DB_PASSWORD=teszt \
-    POLLING_INTERVAL=60
+ENV DB_HOST=szoftarch-db
+ENV DB_PORT=3306
+ENV DB_NAME=plant_care
+ENV DB_USER=user
+ENV DB_PASSWORD=teszt
+ENV POLLING_INTERVAL=60
 
 # Command to run the monitor
-CMD ["python", "device_monitor.py"]
+ENTRYPOINT ["python", "device_monitor.py"]

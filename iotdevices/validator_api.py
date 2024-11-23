@@ -7,12 +7,7 @@ import mysql.connector
 import logging
 import os
 import re
-from typing import Dict, Any, Optional, Set
-import asyncio
-from datetime import datetime
-
-# Import all the validation functions from your original script
-from typing import List, Dict, Union, Tuple
+from typing import Dict, Tuple, Any, Optional, Set
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

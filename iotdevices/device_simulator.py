@@ -7,8 +7,8 @@ import logging
 import mysql.connector
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Dict, Optional
-from aiocoap import resource, Context, Message, CHANGED
+from typing import Optional, Dict, Any 
+from aiocoap import resource, Message
 import random
 
 # Database configuration

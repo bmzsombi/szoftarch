@@ -1,0 +1,5 @@
+uvicorn>=0.15.0
+fastapi>=0.68.0
+pyyaml>=5.4.1
+mysql-connector-python>=8.0.26
+python-multipart>=0.0.5

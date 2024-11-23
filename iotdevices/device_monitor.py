@@ -4,9 +4,7 @@ import asyncio
 import json
 import logging
 import mysql.connector
-from mysql.connector.cursor import MySQLCursor
 import aiocoap
-from datetime import datetime
 import os
 import time
 from typing import List, Dict, Any
