@@ -18,7 +18,7 @@ class _PlantDetailsPopupState extends State<PlantDetailsPopup> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      child: Container(
+      child: SizedBox(
         width: widget.screenWidth * 0.7, // Az ablak szélessége a fő képernyőhöz viszonyítva
         height: widget.screenHeight * 0.6, // Az ablak magassága a fő képernyőhöz viszonyítva
         child: Padding(
