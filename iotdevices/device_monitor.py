@@ -113,10 +113,11 @@ class DeviceMonitor:
         conn = self.db_pool.get_connection()
         try:
             cursor = conn.cursor()
+            # Explicitly include the timestamp in the INSERT
             cursor.execute("""
                 INSERT INTO sensor_measurement 
-                (instance_id, sensor_id, value) 
-                VALUES (%s, %s, %s)
+                (instance_id, sensor_id, value, timestamp) 
+                VALUES (%s, %s, %s, NOW())
             """, (instance_id, sensor_id, value))
             conn.commit()
         finally:
@@ -130,8 +131,8 @@ class DeviceMonitor:
             cursor = conn.cursor()
             cursor.execute("""
                 INSERT INTO actuator_state_history 
-                (instance_id, actuator_id, state) 
-                VALUES (%s, %s, %s)
+                (instance_id, actuator_id, state, changed_at) 
+                VALUES (%s, %s, %s, NOW())
             """, (instance_id, actuator_id, state))
             conn.commit()
         finally:

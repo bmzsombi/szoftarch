@@ -8,9 +8,9 @@ docker stop $(docker ps -q)
 
 docker rm $(docker ps -aq)
 
-docker network prune
+docker network prune -f
 
-docker volume prune
+docker volume prune -f
 
 docker ps -a
 

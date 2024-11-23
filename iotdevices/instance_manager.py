@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-import sys
 import logging
 import mysql.connector
-from mysql.connector.cursor import MySQLCursor
 import docker
 from datetime import datetime
-import argparse
+from flask import Flask, request, jsonify
 from typing import Optional, Tuple
 
 # Database configuration
@@ -23,6 +21,8 @@ DOCKER_NETWORK = 'szoftarch-nw'
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("DeviceInstanceManager")
+
+app = Flask(__name__)
 
 class InstanceManager:
     MONITOR_CONTAINER_NAME = 'device_monitor'
@@ -79,16 +79,11 @@ class InstanceManager:
     def ensure_monitor_running(self):
         """Ensure the monitor container is running and in the network."""
         try:
-            # Try to get existing monitor container
             monitor = self.docker_client.containers.get(self.MONITOR_CONTAINER_NAME)
-            
-            # Check if it's running
             if monitor.status != 'running':
                 monitor.remove()
                 raise docker.errors.NotFound("Monitor not running")
-                
         except docker.errors.NotFound:
-            # Start new monitor container
             monitor = self.docker_client.containers.run(
                 "device-monitor:latest",
                 name=self.MONITOR_CONTAINER_NAME,
@@ -106,13 +101,12 @@ class InstanceManager:
             )
             logger.info("Started device monitor container")
 
-    def start_instance(self, device_id: int, location: str, user: str):
+    def start_instance(self, device_id: int, location: str, user: str, name: str):
         """Start a new device instance."""
         try:
-            instance_id = self.create_instance(device_id, location, user)
+            instance_id = self.create_instance(device_id, location, user, name)
             container_name = f"device_instance_{instance_id}"
             
-            # Create the device container
             container = self.docker_client.containers.run(
                 "device-simulator:latest",
                 command=str(device_id),
@@ -142,7 +136,7 @@ class InstanceManager:
                 pass
             raise
 
-    def create_instance(self, device_id: int, location: str, user: str) -> int:
+    def create_instance(self, device_id: int, location: str, user: str, name: str) -> int:
         """Create a new device instance in the database."""
         conn = mysql.connector.connect(**DB_CONFIG)
         try:
@@ -156,9 +150,9 @@ class InstanceManager:
             # Create instance
             cursor.execute("""
                 INSERT INTO device_instance 
-                (device_id, location, username, installation_date)
-                VALUES (%s, %s, %s, %s)
-            """, (device_id, location, user, datetime.now()))
+                (device_id, location, username, installation_date, name)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (device_id, location, user, datetime.now(), name))
             
             instance_id = cursor.lastrowid
             conn.commit()
@@ -168,16 +162,30 @@ class InstanceManager:
             conn.close()
 
     def delete_instance(self, instance_id: int):
-        """Delete a device instance from the database."""
+        """Delete a device instance and all related historical data from the database."""
         conn = mysql.connector.connect(**DB_CONFIG)
         try:
             cursor = conn.cursor()
+            
+            cursor.execute("DELETE FROM sensor_measurement WHERE instance_id = %s", (instance_id,))
+            logger.info(f"Deleted {cursor.rowcount} sensor measurements for instance {instance_id}")
+            
+            cursor.execute("DELETE FROM actuator_state_history WHERE instance_id = %s", (instance_id,))
+            logger.info(f"Deleted {cursor.rowcount} actuator state records for instance {instance_id}")
+            
             cursor.execute("DELETE FROM device_instance WHERE id = %s", (instance_id,))
             if cursor.rowcount == 0:
                 raise ValueError(f"Instance ID {instance_id} not found")
+                
             conn.commit()
             logger.info(f"Deleted device instance with ID: {instance_id}")
+            
+        except mysql.connector.Error as e:
+            conn.rollback()
+            logger.error(f"Database error deleting instance: {e}")
+            raise
         finally:
+            cursor.close()
             conn.close()
 
     def get_device_info(self, instance_id: int) -> Tuple[int, str]:
@@ -201,10 +209,8 @@ class InstanceManager:
     def stop_instance(self, instance_id: int):
         """Stop a device instance."""
         try:
-            # First verify instance exists and get info
             device_id, model = self.get_device_info(instance_id)
             
-            # Stop and remove container
             container_name = f"device_instance_{instance_id}"
             try:
                 container = self.docker_client.containers.get(container_name)
@@ -214,7 +220,6 @@ class InstanceManager:
             except docker.errors.NotFound:
                 logger.warning(f"Container {container_name} not found")
             
-            # Remove database instance
             self.delete_instance(instance_id)
             logger.info(f"Successfully stopped instance {instance_id}")
             
@@ -222,34 +227,48 @@ class InstanceManager:
             logger.error(f"Failed to stop instance: {str(e)}")
             raise
 
-def main():
-    parser = argparse.ArgumentParser(description='Manage device instances')
-    parser.add_argument('action', choices=['start', 'stop'])
-    parser.add_argument('--device-id', type=int, help='Device ID (required for start)')
-    parser.add_argument('--instance-id', type=int, help='Instance ID (required for stop)')
-    parser.add_argument('--location', help='Device location (required for start)')
-    parser.add_argument('--user', help='User ID (required for start)')
+# Create instance manager
+manager = InstanceManager()
+
+@app.route('/api/instances', methods=['POST'])
+def start_instance():
+    data = request.get_json()
     
-    args = parser.parse_args()
-    
-    manager = InstanceManager()
+    # Validate required fields
+    required_fields = ['device_id', 'location', 'user', 'name']
+    for field in required_fields:
+        if field not in data:
+            return jsonify({'error': f'Missing required field: {field}'}), 400
     
     try:
-        if args.action == 'start':
-            if not all([args.device_id, args.location, args.user]):
-                parser.error("start requires --device-id, --location, and --user")
-            instance_id = manager.start_instance(args.device_id, args.location, args.user)
-            print(f"Started instance {instance_id}")
-            
-        elif args.action == 'stop':
-            if not args.instance_id:
-                parser.error("stop requires --instance-id")
-            manager.stop_instance(args.instance_id)
-            print(f"Stopped instance {args.instance_id}")
-            
+        instance_id = manager.start_instance(
+            device_id=int(data['device_id']),
+            location=data['location'],
+            user=data['user'],
+            name=data['name']
+        )
+        return jsonify({
+            'instance_id': instance_id,
+            'message': f'Instance started successfully'
+        }), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
-        logger.error(str(e))
-        sys.exit(1)
+        logger.error(f"Error starting instance: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
+@app.route('/api/instances/<int:instance_id>', methods=['DELETE'])
+def stop_instance(instance_id):
+    try:
+        manager.stop_instance(instance_id)
+        return jsonify({
+            'message': f'Instance {instance_id} stopped successfully'
+        }), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Error stopping instance: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
 
 if __name__ == "__main__":
-    main()
+    app.run(host='0.0.0.0', port=5002)
