@@ -326,7 +326,7 @@ async def process_yaml_to_db(content: str):
 def get_or_insert_device(cursor, device_info: Dict[str, Any], network: Optional[Dict[str, Any]]) -> int:
     """Get existing device ID or insert new device and return the ID."""
     find_sql = """
-    SELECT id FROM devices
+    SELECT id FROM device
     WHERE manufacturer = %s
     AND model = %s
     AND firmware_version = %s;
@@ -344,7 +344,7 @@ def get_or_insert_device(cursor, device_info: Dict[str, Any], network: Optional[
         device_id = result['id']
         # Update existing device
         update_sql = """
-        UPDATE devices
+        UPDATE device
         SET description = %s,
             port = %s,
             discovery_enabled = %s
@@ -366,7 +366,7 @@ def get_or_insert_device(cursor, device_info: Dict[str, Any], network: Optional[
     
     # If no existing device found, insert new one
     insert_sql = """
-    INSERT INTO devices (manufacturer, model, firmware_version, description, port, discovery_enabled)
+    INSERT INTO device (manufacturer, model, firmware_version, description, port, discovery_enabled)
     VALUES (%s, %s, %s, %s, %s, %s);
     """
     
@@ -455,7 +455,7 @@ def get_or_update_sensor(cursor, sensor: Dict[str, Any], device_id: int) -> int:
         
         # Find existing sensor
         find_sql = """
-        SELECT id FROM sensors
+        SELECT id FROM sensor
         WHERE device_id = %s AND name = %s;
         """
         
@@ -465,7 +465,7 @@ def get_or_update_sensor(cursor, sensor: Dict[str, Any], device_id: int) -> int:
         if result:
             sensor_id = result['id']
             update_sql = """
-            UPDATE sensors
+            UPDATE sensor
             SET sensor_type = %s,
                 unit = %s,
                 data_type = %s,
@@ -495,7 +495,7 @@ def get_or_update_sensor(cursor, sensor: Dict[str, Any], device_id: int) -> int:
         
         # Insert new sensor
         insert_sql = """
-        INSERT INTO sensors (
+        INSERT INTO sensor (
             device_id, name, sensor_type, unit, data_type,
             min_value, max_value, read_endpoint, value_key, sampling_interval
         )
@@ -540,7 +540,7 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
         
         # Find existing actuator
         find_sql = """
-        SELECT id FROM actuators
+        SELECT id FROM actuator
         WHERE device_id = %s AND name = %s;
         """
         
@@ -550,7 +550,7 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
         if result:
             actuator_id = result['id']
             update_sql = """
-            UPDATE actuators
+            UPDATE actuator
             SET type = %s,
                 status_endpoint = %s,
                 value_key = %s,
@@ -578,7 +578,7 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
             
         # Insert new actuator
         insert_sql = """
-        INSERT INTO actuators (
+        INSERT INTO actuator (
             device_id, name, type, status_endpoint, value_key,
             on_up_value, off_down_value, on_up_endpoint, off_down_endpoint
         )
@@ -616,7 +616,7 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
     """Get existing actuator ID or insert new actuator and return the ID."""
     # Try to find existing actuator for this device with the same name
     find_sql = """
-    SELECT id FROM actuators
+    SELECT id FROM actuator
     WHERE device_id = %s AND name = %s;
     """
     
@@ -630,7 +630,7 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
         actuator_id = result['id']
         # Update existing actuator
         update_sql = """
-        UPDATE actuators
+        UPDATE actuator
         SET type = %s,
             status_endpoint = %s,
             value_key = %s,
@@ -658,7 +658,7 @@ def get_or_update_actuator(cursor, actuator: Dict[str, Any], device_id: int) -> 
     
     # If no existing actuator found, insert new one
     insert_sql = """
-    INSERT INTO actuators (
+    INSERT INTO actuator (
         device_id, name, type, status_endpoint, value_key,
         on_up_value, off_down_value, on_up_endpoint, off_down_endpoint
     )
@@ -683,13 +683,13 @@ def cleanup_old_components(cursor, device_id: int, current_sensors: Set[str], cu
     """Remove sensors and actuators that are no longer in the YAML file."""
     # Remove old sensors
     cursor.execute(
-        "DELETE FROM sensors WHERE device_id = %s AND name NOT IN %s",
+        "DELETE FROM sensor WHERE device_id = %s AND name NOT IN %s",
         (device_id, tuple(current_sensors) if current_sensors else ('',))
     )
     
     # Remove old actuators
     cursor.execute(
-        "DELETE FROM actuators WHERE device_id = %s AND name NOT IN %s",
+        "DELETE FROM actuator WHERE device_id = %s AND name NOT IN %s",
         (device_id, tuple(current_actuators) if current_actuators else ('',))
     )
 

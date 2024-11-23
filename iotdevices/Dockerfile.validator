@@ -3,6 +3,8 @@ FROM python:3.9-slim
 # Install required system packages
 RUN apt-get update && apt-get install -y \
     gcc \
+    default-libmysqlclient-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -18,8 +20,15 @@ RUN mkdir -p /tmp/yaml-validator
 # Copy the application
 COPY validator_api.py .
 
+# Environment variables for MySQL connection
+ENV MYSQL_HOST=szoftarch-db
+ENV MYSQL_USER=user
+ENV MYSQL_PASSWORD=teszt
+ENV MYSQL_DATABASE=plant_care
+ENV MYSQL_PORT=3306
+
 # Expose port 5001
 EXPOSE 5001
 
 # Command to run the API
-CMD ["python", "validator_api.py"]
+CMD ["uvicorn", "validator_api:app", "--host", "0.0.0.0", "--port", "5001"]
