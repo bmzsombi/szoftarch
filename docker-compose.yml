@@ -66,6 +66,10 @@ services:
     depends_on:
       szoftarch-db:
         condition: service_healthy
+      device-simulator-builder:
+        condition: service_completed_successfully
+      device-monitor-builder:
+        condition: service_completed_successfully
     environment:
       DB_HOST: szoftarch-db
       DB_PORT: 3306
@@ -89,14 +93,14 @@ services:
       context: ./iotdevices
       dockerfile: ./Dockerfile.device-simulator
     image: device-simulator:latest
-    command: ["true"]
+    entrypoint: ["true"]
 
   device-monitor-builder:
     build:
       context: ./iotdevices
       dockerfile: ./Dockerfile.monitor
     image: device-monitor:latest
-    command: ["true"]
+    entrypoint: ["true"]
       
 networks:
   szoftarch-nw:
