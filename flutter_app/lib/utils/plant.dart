@@ -2,14 +2,14 @@ class Plant {
   final String scname;
   final String cname;
   final String cat;
-  final String maxl;
-  final String minl;
-  final String maxenvhum;
-  final String minenvhum;
-  final String maxsom;
-  final String minsom;
-  final String maxtemp;
-  final String mintemp;
+  final int maxl;
+  final int minl;
+  final int maxenvhum;
+  final int minenvhum;
+  final int maxsom;
+  final int minsom;
+  final int maxtemp;
+  final int mintemp;
 
   Plant({
     required this.scname,
@@ -27,7 +27,7 @@ class Plant {
 
   factory Plant.fromJson(Map<String, dynamic> json){
     return Plant(
-      scname: json['scname'],
+      scname: json['scientific_name'],
       cname: json['common_name'],
       cat: json['category'],
       maxl: json['max_light'],

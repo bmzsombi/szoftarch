@@ -89,18 +89,12 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
             ListTile(
               title: const Text('My Plants'),
               onTap: () {
-                // Update the state of the app.
-                // ...
                 loadPlantListScreen();
               },
             ),
             ListTile(
               title: const Text('Sensors'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-                //loadDeviceListScreen();
-              },
+              onTap: () {},
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),

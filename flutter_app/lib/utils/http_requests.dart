@@ -1,11 +1,8 @@
-import 'dart:ffi';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'dart:developer' as developer;
 import 'dart:io';
 import 'package:flutter_app/utils/device_utils.dart';
+import 'package:flutter_app/utils/plant.dart';
 
 const String backend_url = 'localhost:5000';
 const String validator_url = 'localhost:5001';
@@ -17,7 +14,7 @@ const String addPlantPath = 'plants/addType';
 
 void createAccountRequest(String username_,  String password_, String email_, bool manufacturer_) async {
   var uri = Uri.http(backend_url, usersPath);
-  var response = await http.post(
+  await http.post(
     uri,
     headers: {
       "Content-Type": "application/json"
@@ -29,7 +26,6 @@ void createAccountRequest(String username_,  String password_, String email_, bo
       "role": manufacturer_ ? "manufacturer" : "user"
     })
   );
-  developer.log(response.statusCode.toString());
 }
 void userLoginRequest() {}
 void manufacturerLoginRequest() {}
@@ -64,12 +60,16 @@ Future<Map<String, dynamic>> manufacturerAddDeviceRequest(File configFile) async
 }
 void manufacturerModifyDeviceRequest() {}
 
-void userGetPlantsRequest() async {
+Future<List<Plant>> userGetPlantsRequest() async {
   var uri = Uri.http(backend_url, plantsPath);
   var response = await http.get(uri);
 
   if (response.statusCode == 200){
-
+    List<dynamic> jsonresponse = jsonDecode(response.body);
+    return jsonresponse.map((data) => Plant.fromJson(data)).toList();
+  }
+  else {
+    throw Exception('Failed to load devices');
   }
 }
 void userGetPlantDetailsRequest() {}
@@ -81,7 +81,7 @@ void userAddPlantRequest(
   ) 
 async {
   var uri = Uri.http(backend_url, addPlantPath);
-  var response = await http.post(
+  await http.post(
     uri,
     headers: {
       "Content-Type": "application/json"
@@ -100,6 +100,5 @@ async {
       "min_temp": mintemp
     })
   );
-  print(response.statusCode.toString());
 }
 void userAddSensorRequest() {}

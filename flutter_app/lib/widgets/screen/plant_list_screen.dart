@@ -4,6 +4,10 @@ import '../popup/add_plantpopup.dart';
 import '../../utils/plant.dart';
 import '../screen/device_list_screen.dart';
 import '../screen/login_screen.dart';
+import 'package:flutter_app/utils/http_requests.dart';
+import 'package:flutter_app/widgets/common/custom_widgets.dart';
+import 'package:flutter_app/widgets/common/plant_list_widgets.dart';
+
 
 class PlantListScreen extends StatelessWidget {
   const PlantListScreen({super.key});
@@ -31,69 +35,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Widget> plantList = [];
+  final TextEditingController searchTextController = TextEditingController();
+
+  List<Plant> plantList = [];
+  List<Plant> searchedPlantList = [];
   double screenWidth = 0;
   double screenHeight = 0;
 
   double plantButtonWidth = 150;
   double plantButtonHeight = 150;
 
+  bool shouldFetch = true;
+
   void showAddPlantPopup(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AddPlantPopup(
-        onAdd: (plantName, plantType) => addPlant(plantName, plantType, "asd"),
+        onAdd: (plantScName, plantCName, plantCat, plantMaxL, plantMinL, plantMaxEnvHum, 
+          plantMinEnvHum, plantMaxSoM, plantMinSoM, plantMaxTemp, plantMinTemp) => 
+          userAddPlantRequest(plantScName, plantCName, plantCat, plantMaxL, plantMinL, plantMaxEnvHum, 
+          plantMinEnvHum, plantMaxSoM, plantMinSoM, plantMaxTemp, plantMinTemp),
       ),
     );
   }
 
-  void _showPlantDetails() {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => const PlantDetails(),
-    ));
+  void addPressed() {
+    showAddPlantPopup(context);
   }
 
-  void addPlant(String plantScName, String plantCName, String plantCat) {
-    setState(() {
-      plantList.add(
-        SizedBox(
-          width: plantButtonWidth,
-          height: plantButtonHeight,
-          child: ElevatedButton(
-            onPressed: () {
-              // A növény részleteinek megjelenítése a gombra kattintva
-              /*
-              final plant = Plant(
-                name: plantName,
-                type: plantType,
-                humidity: '60%',
-                light: 'Medium',
-                soilMoisture: 'High',
-                pumpState: 'On',
-                temperature: '22°C',
-              );*/
-              _showPlantDetails();
-              
-            },
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-            ),
-            child: Text(
-              plantCName,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      );
-      plantList.add(
-        const SizedBox(
-          width: 20,
-        ),
-      );
-    });
+  Future<List<Plant>> fetchPlantList() async {
+    await Future.delayed(const Duration(seconds: 2));
+    return userGetPlantsRequest();
   }
 
   void exitPressed(){
@@ -114,6 +86,12 @@ class _MyHomePageState extends State<MyHomePage> {
     ));
   }
 
+  void refreshPressed() {
+    setState(() {
+      shouldFetch = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
@@ -126,7 +104,19 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.green,
-        title: Text(widget.title),
+        title: const Center(
+          child: Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: Text('Your plants'),
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: refreshPressed,
+            icon: const Icon(Icons.refresh),
+            iconSize: 32.0,
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -165,61 +155,96 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(
-          height: screenHeight,
-          decoration: BoxDecoration(
-            border: Border.all(color: const Color.fromARGB(52, 158, 158, 158), width: 2.0), // Szürke színű, 2 pixel vastag keret
-            borderRadius: BorderRadius.circular(10.0), // Opcionális: kerekített sarkok
-            color: Colors.white
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [ 
-                Row(
-                  children: [
-                    SizedBox(
-                      width: plantButtonWidth,
-                      height: plantButtonHeight,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          showAddPlantPopup(context);
-                        },
-                        icon: const Icon(Icons.add),
-                        label: const Text("Add new"),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(100, 50),
-                          maximumSize: const Size(300, 150),
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
+      body: 
+            FutureBuilder(
+              future: shouldFetch ? fetchPlantList() : null,
+              builder:(context, snapshot) {
+                if (shouldFetch) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  shouldFetch = false;
+                  if (snapshot.hasError) {
+                    return Center(child: ErrorText(errorText: snapshot.error.toString(), fontSize: 24.0));
+                  }
+                  if (snapshot.hasData) {
+                    plantList = snapshot.data!;
+                    return PlantListView(
+                      devices: plantList,
+                      padding: 4.0,
+                      fontSize: 24.0,
+                    );
+                  }
+                  return const Center(child: Text("No plants available"));
+                }
+                else {
+                  return PlantListView(
+                    devices: searchedPlantList,
+                    padding: 4.0,
+                    fontSize: 24.0,
+                  );
+                }
+              }
+            ),
+      
+      floatingActionButton: Stack(
+        children: [
+          Positioned(
+            bottom: 65,
+            right: 0,
+            child: FloatingActionButton(
+              heroTag: 'searchHeroTag',
+              child: const Icon(Icons.search),
+              onPressed: () {
+                showDialog(context: context, builder: (context) {
+                  return AlertDialog(
+                    title: TextField(
+                      controller: searchTextController,
+                      decoration: const InputDecoration(
+                        hintText: 'Search device'
                       ),
                     ),
-                  ]
-                ),
-                const Divider(
-                  color: Colors.grey, // Elválasztó vonal színe
-                  thickness: 1.0, // Elválasztó vonal vastagsága
-                  height: 32.0, // Térköz a vonal körül
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Wrap(
-                      spacing: 10.0, // Vízszintes távolság az elemek között
-                      runSpacing: 10.0, // Függőleges távolság az elemek között
-                      children: plantList,
-                    ),
-                  ),
-                ),
-              ]
+                    actions: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Exit'),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            searchedPlantList = searchPlants(searchTextController.text, plantList);
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Search'),
+                      )
+                    ],
+                  ); 
+                });
+              }
             ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: FloatingActionButton(
+              onPressed: addPressed,
+              heroTag: 'addHeroTag',
+              child: const Icon(Icons.add)
+            )
           )
-        )
-      ),
+        ],
+      )
     );
   }
 }

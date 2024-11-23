@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/utils/http_requests.dart';
 
 class AddPlantPopup extends StatefulWidget {
-  final void Function(String plantName, String plantType) onAdd;
+  final void Function(String plantScName, String plantCName, String plantCat, String plantMaxL,
+  String plantMinL, String plantMaxEnvHum, String plantMinEnvHum, String plantMaxSoM, String plantMinSoM,
+  String plantMaxTemp, String plantMintemp) onAdd;
 
   const AddPlantPopup({super.key, required this.onAdd});
 
@@ -46,11 +48,10 @@ class _AddPlantPopupState extends State<AddPlantPopup> {
       return;
     }
     widget.onAdd(
-      plantScName, plantCName /*, plantCat, plantMaxL, plantMinL, plantMaxEnvHum, 
-      plantMinEnvHum, plantMaxSoM, plantMinSoM, plantMaxTemp, plantMinTemp*/
+      plantScName, plantCName, plantCat, plantMaxL, plantMinL, plantMaxEnvHum, 
+      plantMinEnvHum, plantMaxSoM, plantMinSoM, plantMaxTemp, plantMinTemp
     );
-    userAddPlantRequest(plantScName, plantCName , plantCat, plantMaxL, plantMinL, plantMaxEnvHum, 
-      plantMinEnvHum, plantMaxSoM, plantMinSoM, plantMaxTemp, plantMinTemp);
+    
     Navigator.of(context).pop(); // Pop-up bezárása
   }
 
