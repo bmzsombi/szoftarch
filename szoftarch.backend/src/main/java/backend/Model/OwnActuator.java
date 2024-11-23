@@ -1,7 +1,11 @@
 package backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,66 +17,117 @@ import jakarta.persistence.Table;
 @Table (name = "actuator")
 public class OwnActuator {
 
+    public OwnActuator() {}
+
+    public enum ActuatorType {
+        PUMP, LIGHT, BLIND
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Kapcsolat az Eszkoz táblával
-    @JoinColumn(name = "eszkoz_id", nullable = false) // Az idegen kulcs neve
-    private Eszkoz eszkoz;
+    @ManyToOne
+    @JoinColumn(name = "device_id", nullable = false)
+    @JsonIgnore
+    private Device device;
 
-    //Ez notnull kéne, hogy legyen
+    @Column(nullable = false)
     private String name;
-    private String type, endpoint, value_code, on_endpoint, off_endpoint;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ActuatorType type;
+
+    @Column(nullable = false, name = "status_endpoint")
+    private String statusEndpoint;
+
+    @Column(nullable = false, name = "value_key")
+    private String valueKey;
+
+    @Column(nullable = false, name = "on_up_value")
+    private String onUpValue;
+
+    @Column(nullable = false, name = "off_down_value")
+    private String offDownValue;
+
+    @Column(nullable = false, name = "on_up_endpoint")
+    private String onUpEndpoint;
+
+    @Column(nullable = false, name = "off_down_endpoint")
+    private String offDownEndpoint;
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
+    }
 
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
-    public String getType() {
+
+    public ActuatorType getType() {
         return type;
     }
-    public void setType(String type) {
+
+    public void setType(ActuatorType type) {
         this.type = type;
     }
-    public String getEndpoint() {
-        return endpoint;
+
+    public String getStatusEndpoint() {
+        return statusEndpoint;
     }
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
+
+    public void setStatusEndpoint(String statusEndpoint) {
+        this.statusEndpoint = statusEndpoint;
     }
-    public String getValue_code() {
-        return value_code;
+
+    public String getValueKey() {
+        return valueKey;
     }
-    public void setValue_code(String value_code) {
-        this.value_code = value_code;
+
+    public void setValueKey(String valueKey) {
+        this.valueKey = valueKey;
     }
-    public String getOn_endpoint() {
-        return on_endpoint;
+
+    public String getOnUpValue() {
+        return onUpValue;
     }
-    public void setOn_endpoint(String on_endpoint) {
-        this.on_endpoint = on_endpoint;
+
+    public void setOnUpValue(String onUpKey) {
+        this.onUpValue = onUpKey;
     }
-    public String getOff_endpoint() {
-        return off_endpoint;
+
+    public String getOffDownValue() {
+        return offDownValue;
     }
-    public void setOff_endpoint(String off_endpoint) {
-        this.off_endpoint = off_endpoint;
+
+    public void setOffDownValue(String offDownKey) {
+        this.offDownValue = offDownKey;
     }
-    public OwnActuator() {}
-    public OwnActuator(Eszkoz eszkoz, String type, String endpoint, String value_code, String on_endpoint, String off_endpoint)
-    {
-        this.eszkoz = eszkoz;
-        this.type = type;
-        this.endpoint = endpoint;
-        this.value_code = value_code;
-        this.on_endpoint = on_endpoint;
-        this.off_endpoint = off_endpoint;
+
+    public String getOnUpEndpoint() {
+        return onUpEndpoint;
+    }
+
+    public void setOnUpEndpoint(String onUpEndpoint) {
+        this.onUpEndpoint = onUpEndpoint;
+    }
+
+    public String getOffDownEndpoint() {
+        return offDownEndpoint;
+    }
+
+    public void setOffDownEndpoint(String offDownEndpoint) {
+        this.offDownEndpoint = offDownEndpoint;
     }
 
 
-    
-    
 }

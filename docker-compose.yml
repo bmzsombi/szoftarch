@@ -20,7 +20,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  szoftarch-backend:
+
+  backend:
     build:
       context: ./szoftarch.backend
     image: backend:latest
@@ -36,7 +37,22 @@ services:
     environment:
       DB_URL: jdbc:mysql://szoftarch-db:3306/plant_care
       DB_USER: user
-      DB_PASSWORD: teszt  
+      DB_PASSWORD: teszt
+
+  device-validator:
+    build:
+      context: ./iotdevices
+      dockerfile: ./Dockerfile.validator
+    image: validator
+    ports:
+      - "5001:5001"
+    networks:
+      szoftarch-nw:
+        aliases:
+          - "szoftarch-validator"
+    depends_on:
+      szoftarch-db:
+        condition: service_healthy
 
 networks:
   szoftarch-nw:

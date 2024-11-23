@@ -1,0 +1,48 @@
+version: "1.0" 
+
+device_info: 
+  manufacturer: string 
+  model: string 
+  description: string 
+  firmware_version: string 
+
+network: 
+  default_port: 5683  
+  discovery_enabled: boolean 
+
+sensors: 
+  - name: string 
+    type: enum    
+    measurement: 
+      unit: string  
+      data_type: enum  
+      range: 
+        min: number 
+        max: number 
+    coap_endpoints: 
+      read: 
+        path: string 
+        content_format: string 
+        value_key: string  
+    sampling: 
+      interval: number  
+
+actuators: 
+  - type: enum    
+    name: string 
+    state: 
+      data_type: enum  
+      possible_values: [string]  
+      on_value: string 
+      off_value: string 
+      open_value: string 
+      closed_value: string 
+      value_key: string  
+    endpoints: 
+      status: string  
+      
+      turn_on: string  
+      turn_off: string 
+      
+      open: string    
+      close: string   

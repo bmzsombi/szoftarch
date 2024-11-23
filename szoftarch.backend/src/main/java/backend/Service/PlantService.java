@@ -1,5 +1,7 @@
 package backend.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,10 @@ public class PlantService {
     // Növény hozzáadása
     public Plant addPlant(Plant plant) {
         return plantRepository.save(plant); // A save() automatikusan elvégzi a mentést az adatbázisba
+    }
+
+    public List<Plant> getAllPlants() { 
+        return plantRepository.findAll();
     }
 }
 
