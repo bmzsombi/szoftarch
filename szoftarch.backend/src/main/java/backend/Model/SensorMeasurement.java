@@ -2,6 +2,8 @@ package backend.Model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,14 +19,16 @@ public class SensorMeasurement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "instance_id", nullable = false)
+    @JsonIgnore
     private DeviceInstance instance;
 
     @ManyToOne
     @JoinColumn(name = "sensor_id", nullable = false)
+    @JsonIgnore
     private Sensor sensor;
 
     @Column(nullable = false)
@@ -33,11 +37,11 @@ public class SensorMeasurement {
     @Column(nullable = false)
     private LocalDateTime timestamp = LocalDateTime.now();
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

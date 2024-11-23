@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import backend.Model.Device;
+import backend.Model.OwnActuator;
 import backend.Repository.DeviceRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DeviceService {
@@ -29,6 +31,16 @@ public class DeviceService {
 
     public List<Device> getAllDevice() {
         return eszkozRepository.findAll();
+    }
+
+
+    public Device findById(Long deviceId) {
+        Optional<Device> deviceOpt = eszkozRepository.findById(deviceId);
+        if (deviceOpt.isPresent()) {
+            return deviceOpt.get();  // Visszaadja a találatot, ha létezik
+        } else {
+            throw new RuntimeException("DeviceInstance not found with id: " + deviceId); // Vagy dobj egy megfelelő kivételt
+        }
     }
     
 }
