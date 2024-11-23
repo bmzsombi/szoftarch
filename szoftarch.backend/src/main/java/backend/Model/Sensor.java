@@ -1,5 +1,7 @@
 package backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,6 +31,7 @@ public class Sensor {
 
     @ManyToOne
     @JoinColumn(name = "device_id", nullable = false)
+    @JsonIgnore
     private Device device;
 
     @Column(nullable = false)

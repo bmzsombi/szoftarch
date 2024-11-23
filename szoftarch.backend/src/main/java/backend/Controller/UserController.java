@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import backend.Model.Device;
 import backend.Model.User;
 import backend.Service.UserService;
 
@@ -24,6 +23,7 @@ public class UserController {
     
     @Autowired
     private UserService userService;
+    
 
     // User hozzáadása
     @PostMapping("/addType")
