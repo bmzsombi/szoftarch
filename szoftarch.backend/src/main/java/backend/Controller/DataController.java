@@ -24,4 +24,6 @@ public class DataController {
     public Data addDataType(@RequestBody Data data) {
         return dataService.addData(data);
     }
+
+    
 }

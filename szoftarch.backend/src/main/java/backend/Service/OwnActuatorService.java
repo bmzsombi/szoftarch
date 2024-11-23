@@ -1,5 +1,7 @@
 package backend.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,5 +16,9 @@ public class OwnActuatorService {
     // Növény hozzáadása
     public OwnActuator addActuator(OwnActuator ownActuator) {
         return ownActuatorRepository.save(ownActuator); // A save() automatikusan elvégzi a mentést az adatbázisba
+    }
+
+    public List<OwnActuator> getAllActuators() {
+        return ownActuatorRepository.findAll();
     }
 }
