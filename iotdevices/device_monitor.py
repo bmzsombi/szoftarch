@@ -76,7 +76,7 @@ class DeviceMonitor:
 
             # Get actuators
             cursor.execute("""
-                SELECT id, name, status_endpoint, value_key 
+                SELECT id, name, status_endpoint, value_key, on_up_value
                 FROM actuator 
                 WHERE device_id = %s
             """, (device_id,))
@@ -169,7 +169,7 @@ class DeviceMonitor:
                 self.store_actuator_state(
                     instance['instance_id'],
                     actuator['id'],
-                    state == 'on'  # Assuming boolean state
+                    state == actuator['on_up_value']  # Assuming boolean state
                 )
                 logger.info(f"Stored actuator state: {actuator['name']} = {state}")
 

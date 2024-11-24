@@ -13,11 +13,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 DB_CONFIG = {
-    'host': os.getenv('MYSQL_HOST', 'szoftarch-db'),
-    'user': os.getenv('MYSQL_USER', 'user'),
-    'password': os.getenv('MYSQL_PASSWORD', 'teszt'),
-    'database': os.getenv('MYSQL_DATABASE', 'plant_care'),
-    'port': int(os.getenv('MYSQL_PORT', 3306))
+    'host': os.getenv('DB_HOST', 'szoftarch-db'),
+    'user': os.getenv('DB_USER', 'user'),
+    'password': os.getenv('DB_PASSWORD', 'teszt'),
+    'database': os.getenv('DB_NAME', 'plant_care'),
+    'port': int(os.getenv('DB_PORT', 3306))
 }
 
 app = FastAPI()

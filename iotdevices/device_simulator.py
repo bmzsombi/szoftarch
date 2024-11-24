@@ -8,7 +8,7 @@ import mysql.connector
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Optional, Dict, Any 
-from aiocoap import resource, Message
+from aiocoap import resource, Message, CHANGED
 import random
 
 # Database configuration
@@ -64,17 +64,35 @@ class SensorResource(resource.Resource):
         return Message(payload=payload)
 
 class ActuatorResource(resource.Resource):
+    # Class-level dictionary to store states across all instances of same actuator
+    _shared_states = {}
+    
     def __init__(self, actuator_config: Dict[str, Any], command_type: str):
         super().__init__()
         self.config = actuator_config
         self.command_type = command_type  # 'status', 'on_up', or 'off_down'
-        self.state = False  # Initialize to off/closed state
+        
+        # Use actuator ID as key for shared state
+        self.actuator_id = self.config['id']
+        if self.actuator_id not in self._shared_states:
+            self._shared_states[self.actuator_id] = False
+        
         logger.info(f"Created actuator resource: {self.config['name']} for {command_type}")
+
+    @property
+    def state(self):
+        return self._shared_states[self.actuator_id]
+    
+    @state.setter
+    def state(self, value):
+        self._shared_states[self.actuator_id] = value
 
     def get_state_value(self) -> str:
         """Get the current state value based on actuator configuration."""
         if self.state:
+            logger.info(f"Returning state {self.config['on_up_value']}")
             return self.config['on_up_value']
+        logger.info(f"Returning state {self.config['off_down_value']}")
         return self.config['off_down_value']
 
     async def render_get(self, request):

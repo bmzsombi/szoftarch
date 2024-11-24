@@ -126,6 +126,12 @@ class InstanceManager:
                 }
             )
             
+            # Ensure actuator API is in the network
+            try:
+                self.ensure_container_in_network('szoftarch-actuator-api')
+            except docker.errors.NotFound:
+                logger.warning("Actuator API container not found")
+            
             logger.info(f"Started device instance {instance_id} in container {container_name}")
             return instance_id
             
