@@ -125,4 +125,8 @@ public class PlantInstanceService {
         // Frissített PlantInstance mentése
         return plantInstanceRepository.save(plantInstance);
     }
+
+    public Optional<PlantInstance> getById(Long plantInstanceId) {
+        return plantInstanceRepository.findById(plantInstanceId);
+    }
 }

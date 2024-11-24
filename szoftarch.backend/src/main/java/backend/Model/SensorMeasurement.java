@@ -2,7 +2,10 @@ package backend.Model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,12 +26,10 @@ public class SensorMeasurement {
 
     @ManyToOne
     @JoinColumn(name = "instance_id", nullable = false)
-    @JsonIgnore
     private DeviceInstance instance;
 
     @ManyToOne
     @JoinColumn(name = "sensor_id", nullable = false)
-    @JsonIgnore
     private Sensor sensor;
 
     @Column(nullable = false)
@@ -36,6 +37,12 @@ public class SensorMeasurement {
 
     @Column(nullable = false)
     private LocalDateTime timestamp = LocalDateTime.now();
+
+    // Ez kell?
+    @JsonProperty("sensorId")  // A JSON-ban megjelenő mező neve
+    public Long getSensorId() {
+        return sensor != null ? sensor.getId() : null;  // Az érzékelő id-ja
+    }
 
     public Long getId() {
         return id;

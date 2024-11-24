@@ -63,11 +63,14 @@ public class SensorController {
         return sensorService.addSensor(sensor);
     }
 
-
-    // Minden növény lekérése
     @GetMapping("/all")
     public List<Sensor> getAllSensors() {
         return sensorService.getAllSensors();
+    }
+
+    @GetMapping("/getById/{id}")
+    public Sensor getById(@PathVariable Long id) {
+        return sensorService.getById(id).orElseThrow(() -> new RuntimeException("Sensor not found with id: " + id));
     }
 
     @DeleteMapping("/delete/{id}")

@@ -23,13 +23,11 @@ public class ActuatorStateHistory {
 
     @ManyToOne
     @JoinColumn(name = "instance_id", nullable = false)
-    @JsonIgnore
     private DeviceInstance instance;
 
     // innen szedi a nvevét
     @ManyToOne
     @JoinColumn(name = "actuator_id", nullable = false)
-    @JsonIgnore
     private OwnActuator actuator;
 
     @Column(nullable = false)
