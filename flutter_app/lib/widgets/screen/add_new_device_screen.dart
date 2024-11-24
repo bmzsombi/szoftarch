@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../common/custom_widgets.dart';
 import '/utils/device_utils.dart';
 import 'package:flutter_app/utils/http_requests.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
 
 class AddNewDeviceScreen extends StatefulWidget {
   const AddNewDeviceScreen({
@@ -48,7 +46,6 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
         // );
       }
       else {
-        
         setErrorText(result["message"]);
       }
     }

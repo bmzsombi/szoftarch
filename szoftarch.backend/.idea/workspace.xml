@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="54baaed2-bb11-45f5-8fec-4d3512bca4c2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../flutter_app/lib/utils/http_requests.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/utils/http_requests.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/common/plant_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/common/plant_details.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/common/plant_list_widgets.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/common/plant_list_widgets.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/popup/add_plantpopup.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/popup/add_plantpopup.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/device_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/device_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/create_account_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/create_account_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/login_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/login_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/plant_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/plant_list_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,7 +42,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "zsombor__grind",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/bmzso.JENKINS.000/asd/szoftarch/szoftarch.backend",
     "node.js.detected.package.eslint": "true",
