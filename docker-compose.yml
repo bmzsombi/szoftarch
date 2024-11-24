@@ -13,8 +13,6 @@ services:
       - "3306:3306"
     networks:
       szoftarch-nw:
-        aliases:
-          - backend
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pdavid"]
       interval: 10s
@@ -29,8 +27,6 @@ services:
       - "5000:5000"
     networks:
       szoftarch-nw:
-        aliases:
-          - szoftarch-db
     depends_on:
       szoftarch-db:
         condition: service_healthy
@@ -38,6 +34,11 @@ services:
       DB_URL: jdbc:mysql://szoftarch-db:3306/plant_care
       DB_USER: user
       DB_PASSWORD: teszt
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/plants/all"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   device-validator:
     build:
@@ -101,6 +102,19 @@ services:
       dockerfile: ./Dockerfile.monitor
     image: device-monitor:latest
     entrypoint: ["true"]
+
+  # frontend:
+  #   build:
+  #     context: ./flutter_app
+  #     dockerfile: ./Dockerfile
+  #   image: frontend-webapp
+  #   ports:
+  #     - "8080:80"
+  #   networks:
+  #     szoftarch-nw:
+  #   depends_on:
+  #     backend:
+  #       condition: service_healthy
       
 networks:
   szoftarch-nw:

@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:flutter_app/utils/device_utils.dart';
 import 'package:flutter_app/utils/plant.dart';
-import 'package:flutter_app/utils/device_utils.dart';
 
 const String backend_url = 'localhost:5000';
 const String validator_url = 'localhost:5001';
@@ -114,20 +113,12 @@ Future<List<Plant>> userGetPlantsRequest() async {
     throw Exception('Failed to load devices');
   }
 }
-void userDeletePlantRequest(String scname) async {
-  var uri = Uri.http(backend_url, deletePlantPath);
-  await http.delete(
-    uri,
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: jsonEncode({
-      "scientific_name": scname
-    })
-  );
 
-
+void userDeletePlantRequest(int id) async {
+  var uri = Uri.http(backend_url, '$deletePlantPath/$id');
+  await http.delete(uri);
 }
+
 void userGetPlantDetailsRequest() {}
 void userGetPlantSensorsRequest() {}
 void userGetSensorDetailsRequest() async {}
@@ -143,7 +134,7 @@ async {
       "Content-Type": "application/json"
     },
     body: jsonEncode({
-      "scientific_name": scname,
+      "scientificName": scname,
       "common_name": cname,
       "category": cat,
       "max_light": maxl,

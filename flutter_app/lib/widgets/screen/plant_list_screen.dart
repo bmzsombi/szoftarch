@@ -170,6 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (snapshot.hasData) {
                     plantList = snapshot.data!;
                     return PlantListView(
+                      onRefresh: refreshPressed,
                       plants: plantList,
                       padding: 4.0,
                       fontSize: 24.0,
@@ -179,6 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
                 else {
                   return PlantListView(
+                    onRefresh: refreshPressed,
                     plants: searchedPlantList,
                     padding: 4.0,
                     fontSize: 24.0,
