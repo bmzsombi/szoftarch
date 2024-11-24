@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/widgets/common/plant_details.dart';
 import '../popup/add_plantpopup.dart';
 import '../../utils/plant.dart';
 import '../screen/device_list_screen.dart';

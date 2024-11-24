@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../utils/plant.dart'; // A növény modell importálása
 
 class PlantDetails extends StatefulWidget {
   /*final Plant plant;*/

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../common/custom_widgets.dart';
 import '/utils/device_utils.dart';
-import 'package:flutter_app/utils/http_requests.dart';
 
 class ModifyDeviceConfigScreen extends StatefulWidget {
   const ModifyDeviceConfigScreen({
