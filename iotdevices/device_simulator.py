@@ -4,21 +4,20 @@ import os
 import asyncio
 import json
 import logging
-import psycopg2
-from psycopg2.extras import DictCursor
-from aiocoap import resource, Context, Message, CHANGED
+import mysql.connector
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Optional, Dict, Any 
+from aiocoap import resource, Message
 import random
 
 # Database configuration
 DB_CONFIG = {
-    'dbname': os.getenv('DB_NAME', 'plantmonitor'),
-    'user': os.getenv('DB_USER', 'postgres'),
-    'password': os.getenv('DB_PASSWORD', ''),
-    'host': os.getenv('DB_HOST', 'postgres_dev'),  # Default to container name
-    'port': os.getenv('DB_PORT', '5432')
+    'database': os.getenv('DB_NAME', 'plant_care'),
+    'user': os.getenv('DB_USER', 'user'),
+    'password': os.getenv('DB_PASSWORD', 'teszt'),
+    'host': os.getenv('DB_HOST', 'szoftarch-db'),
+    'port': os.getenv('DB_PORT', '3306')
 }
 
 logging.basicConfig(level=logging.INFO)
@@ -119,32 +118,50 @@ class IoTDeviceSimulator:
         self.sensors = []
         self.actuators = []
         self.data_source = RandomSensorDataSource()
+        self.db_pool = self.create_pool()
+
+    def create_pool(self):
+        """Create a connection pool for MySQL."""
+        return mysql.connector.pooling.MySQLConnectionPool(
+            pool_name="simulator_pool",
+            pool_size=5,
+            **DB_CONFIG
+        )
 
     def load_configuration(self):
         """Load device configuration from database."""
-        with psycopg2.connect(**DB_CONFIG) as conn:
-            with conn.cursor(cursor_factory=DictCursor) as cur:
-                # Load device info
-                cur.execute("""
-                    SELECT * FROM devices WHERE id = %s
-                """, (self.device_id,))
-                self.device_info = dict(cur.fetchone())
+        conn = self.db_pool.get_connection()
+        try:
+            cursor = conn.cursor(dictionary=True)
+            
+            # Load device info
+            cursor.execute("""
+                SELECT * FROM device WHERE id = %s
+            """, (self.device_id,))
+            self.device_info = cursor.fetchone()
 
-                # Load sensors
-                cur.execute("""
-                    SELECT * FROM sensors WHERE device_id = %s
-                """, (self.device_id,))
-                self.sensors = [dict(row) for row in cur.fetchall()]
+            # Load sensors
+            cursor.execute("""
+                SELECT * FROM sensor WHERE device_id = %s
+            """, (self.device_id,))
+            self.sensors = cursor.fetchall()
 
-                # Load actuators
-                cur.execute("""
-                    SELECT * FROM actuators WHERE device_id = %s
-                """, (self.device_id,))
-                self.actuators = [dict(row) for row in cur.fetchall()]
+            # Load actuators
+            cursor.execute("""
+                SELECT * FROM actuator WHERE device_id = %s
+            """, (self.device_id,))
+            self.actuators = cursor.fetchall()
 
-        logger.info(f"Loaded configuration for device {self.device_info['model']}")
+            logger.info(f"Loaded configuration for device {self.device_info['model']}")
+
+        finally:
+            cursor.close()
+            conn.close()
 
     async def start(self):
+        try:
+            from aiocoap import resource, Context, Message, CHANGED
+            
             self.load_configuration()
             root = resource.Site()
 
@@ -175,6 +192,10 @@ class IoTDeviceSimulator:
                 root, 
                 bind=('::', self.device_info['port'])
             )
+
+        except Exception as e:
+            logger.error(f"Error starting simulator: {e}")
+            raise
 
     def _print_endpoints(self, site, path=""):
         """Recursively print all available endpoints"""
