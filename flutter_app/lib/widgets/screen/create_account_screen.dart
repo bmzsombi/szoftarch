@@ -21,7 +21,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     Navigator.pop(context);
   }
 
-  void createAccountButtonPressed() {
+  void createAccountButtonPressed() async {
     if (
       userNameController.text.trim().isNotEmpty &&
       emailController.text.trim().isNotEmpty &&
@@ -29,7 +29,18 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       confirmPasswordController.text.trim().isNotEmpty &&
       passwordController.text.trim() == confirmPasswordController.text.trim()
     ) {
-      // TODO: createAccountRequest(userNameController.text, passwordController.text, emailController.text, switchOn);
+      String username_ = userNameController.text.trim();
+      String email_ = userNameController.text.trim();
+      String password_ = passwordController.text.trim();
+      bool manufacturer_ = switchOn;
+      int createResult = await createAccountRequest(username_, email_, password_, manufacturer_);
+
+      if (createResult == 1) {
+        setErrorText('sikerult');
+      }
+      else if (createResult == -1) {
+        setErrorText('nem sikerult');
+      }
     }
     else if (userNameController.text.trim().isEmpty) {
       setErrorText("Username can't be empty!");
