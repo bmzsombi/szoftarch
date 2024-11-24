@@ -36,4 +36,8 @@ public class OwnActuatorService {
     public void deleteOwnActuator(Long id) {
         ownActuatorRepository.deleteById(id);
     }
+
+    public OwnActuator getOwnActuatorById(Long ownActuatorId) {
+        return ownActuatorRepository.findById(ownActuatorId).orElse(null);
+    }
 }

@@ -42,7 +42,8 @@ public class SensorController {
         Device device = deviceService.findById(sensorDTO.getDeviceId());
 
         // A PlantInstance entitás betöltése az ID alapján
-        PlantInstance plantInstance = plantInstanceService.findById(sensorDTO.getPlantInstanceId()).orElseThrow(() -> new RuntimeException("PlantInstance not found with ID: " + sensorDTO.getPlantInstanceId()));
+        PlantInstance plantInstance = plantInstanceService.findById(sensorDTO.getPlantInstanceId())
+        .orElseThrow(() -> new RuntimeException("PlantInstance not found with id: " + sensorDTO.getPlantInstanceId()));
 
         // Új Sensor objektum létrehozása és kitöltése
         Sensor sensor = new Sensor();
@@ -62,11 +63,14 @@ public class SensorController {
         return sensorService.addSensor(sensor);
     }
 
-
-    // Minden növény lekérése
     @GetMapping("/all")
     public List<Sensor> getAllSensors() {
         return sensorService.getAllSensors();
+    }
+
+    @GetMapping("/getById/{id}")
+    public Sensor getById(@PathVariable Long id) {
+        return sensorService.getById(id).orElseThrow(() -> new RuntimeException("Sensor not found with id: " + id));
     }
 
     @DeleteMapping("/delete/{id}")

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -26,7 +27,6 @@ public class DeviceInstance {
 
     @ManyToOne
     @JoinColumn(name = "device_id", nullable = false)
-    @JsonIgnore
     private Device device;
 
     private String name;
