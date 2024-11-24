@@ -8,6 +8,7 @@ class PlantListView extends StatelessWidget {
     required this.plants,
     required this.padding,
     required this.fontSize,
+    required this.onRefresh,
     this.crossAxisCount = 4, // Default to 2 columns
     this.crossAxisSpacing = 8.0,
     this.mainAxisSpacing = 8.0,
@@ -15,6 +16,7 @@ class PlantListView extends StatelessWidget {
     this.backgroundColor = Colors.lightGreen, // Default background color for buttons
   });
 
+  final VoidCallback onRefresh;
   final List<Plant> plants;
   final double padding;
   final double fontSize;
@@ -37,7 +39,9 @@ class PlantListView extends StatelessWidget {
         itemCount: plants.length,
         itemBuilder: (context, index) {
           return PlantButton(
+            onRefresh: onRefresh,
             plantScName: plants[index].scname,
+            id: plants[index].id,
             fontSize: fontSize,
             backgroundColor: backgroundColor,
             borderRadius: borderRadius,
@@ -52,12 +56,16 @@ class PlantButton extends StatelessWidget {
   const PlantButton({
     super.key,
     required this.plantScName,
+    required this.id,
     required this.fontSize,
+    required this.onRefresh,
     this.backgroundColor = Colors.blueAccent, // Default background color
     this.borderRadius = 8.0, // Default border radius for rounded squares
   });
 
+  final VoidCallback onRefresh;
   final String plantScName;
+  final int id;
   final double fontSize;
   final Color backgroundColor;
   final double borderRadius;
@@ -76,7 +84,7 @@ class PlantButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PlantDetails(plantScName: plantScName),
+            builder: (context) => PlantDetails(plantScName: plantScName, id: id, onRefresh: onRefresh),
           ),
         );
       },

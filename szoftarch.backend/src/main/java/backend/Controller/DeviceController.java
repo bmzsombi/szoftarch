@@ -27,5 +27,11 @@ public class DeviceController {
     public Device adddeviceType(@RequestBody Device device) {
         return deviceService.addDevice(device);
     }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)  // A státuszkód '204 No Content' lesz, ha sikeres a törlés
+    public void deletePlant(@PathVariable Long id) {
+        deviceService.deleteDevice(id);
+    }
     
 }

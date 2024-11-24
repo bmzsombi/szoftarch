@@ -23,4 +23,8 @@ public class ActuatorStateHistoryService {
     public List<ActuatorStateHistory> getAllActuatorStateHistory() {
         return actuatorStateHistoryRepository.findAll();
     }
+
+    public void deleteActuatorStateHistory(Long id) {
+        actuatorStateHistoryRepository.deleteById(id);
+    }
 }

@@ -1,4 +1,5 @@
 class Plant {
+  final int id;
   final String scname;
   final String cname;
   final String cat;
@@ -12,6 +13,7 @@ class Plant {
   final int mintemp;
 
   Plant({
+    required this.id,
     required this.scname,
     required this.cname,
     required this.cat,
@@ -22,12 +24,13 @@ class Plant {
     required this.maxsom,
     required this.minsom,
     required this.maxtemp,
-    required this.mintemp
+    required this.mintemp,
   });
 
   factory Plant.fromJson(Map<String, dynamic> json){
     return Plant(
-      scname: json['scientific_name'],
+      id: json['id'],
+      scname: json['scientificName'],
       cname: json['common_name'],
       cat: json['category'],
       maxl: json['max_light'],

@@ -16,18 +16,26 @@ public class Plant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @JsonProperty
-    private String  scientific_name, common_name, category;
+    private String  scientificName, common_name, category;
     @JsonProperty 
     private Integer max_light, min_light, max_env_humid, min_env_humid, max_soil_moist, min_soil_moist, max_temp, min_temp;
 
     //Getterek setterek
-    public String getScientific_name() {
-        return scientific_name;
+    public String getScientificName() {
+        return scientificName;
     }
 
-    public void setScientific_name(String scientific_name) {
-        this.scientific_name = scientific_name;
+    public void setScientificName(String scientific_name) {
+        this.scientificName = scientific_name;
     }
 
     public String getCommon_name() {
@@ -115,7 +123,7 @@ public class Plant {
     public Plant(String scientific_name2, String common_name2, String category2, Integer max_light2, Integer min_light2,
             Integer max_env_humid2, Integer min_env_humid2, Integer max_soil_moist2, Integer min_soil_moist2,
             Integer max_temp2, Integer min_temp2) {
-        this.scientific_name = scientific_name2;
+        this.scientificName = scientific_name2;
         this.common_name = common_name2;
         this.category = category2;
         this.max_light = max_light2;

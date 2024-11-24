@@ -17,6 +17,9 @@ public class UserService {
 
     // Növény hozzáadása
     public User addUser(User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("User with this name already exists");
+        }
         return userRepository.save(user); // A save() automatikusan elvégzi a mentést az adatbázisba
     }
 
@@ -34,5 +37,9 @@ public class UserService {
 
     public boolean isAuthenticated(String username, String password) {
         return userRepository.findByUsernameAndPassword(username, password).isPresent();
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 }
