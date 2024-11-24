@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import backend.DTO.PlantInstanceDTO;
+import backend.Model.OwnActuator;
 import backend.Model.PlantInstance;
 import backend.Model.Sensor;
 import backend.Service.PlantInstanceService;
@@ -33,6 +34,16 @@ public class PlantInstanceController {
 
         // Visszaadjuk a PlantInstance-hoz tartozó szenzorok listáját
         return plantInstance.getSensors();  // A PlantInstance-ban lévő sensorokat adjuk vissza
+    }
+
+    @GetMapping("/{plantInstanceId}/actuators")
+    public List<OwnActuator> getActuatorsByPlantInstanceId(@PathVariable Long plantInstanceId) {
+        // PlantInstance keresése ID alapján
+        PlantInstance plantInstance = plantInstanceService.getById(plantInstanceId)
+                .orElseThrow(() -> new RuntimeException("PlantInstance not found with id: " + plantInstanceId));
+
+        // Visszaadjuk a PlantInstance-hoz tartozó szenzorok listáját
+        return plantInstance.getOwnActuators();  // A PlantInstance-ban lévő sensorokat adjuk vissza
     }
 
     @PostMapping("/addType")

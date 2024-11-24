@@ -26,10 +26,12 @@ public class SensorMeasurement {
 
     @ManyToOne
     @JoinColumn(name = "instance_id", nullable = false)
+    @JsonBackReference  
     private DeviceInstance instance;
 
     @ManyToOne
     @JoinColumn(name = "sensor_id", nullable = false)
+    @JsonBackReference 
     private Sensor sensor;
 
     @Column(nullable = false)
