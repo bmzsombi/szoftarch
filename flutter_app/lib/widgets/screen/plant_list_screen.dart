@@ -55,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
           plantMinEnvHum, plantMaxSoM, plantMinSoM, plantMaxTemp, plantMinTemp) => 
           userAddPlantRequest(plantScName, plantCName, plantCat, plantMaxL, plantMinL, plantMaxEnvHum, 
           plantMinEnvHum, plantMaxSoM, plantMinSoM, plantMaxTemp, plantMinTemp),
+        onRefresh: refreshPressed,
       ),
     );
   }

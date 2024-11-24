@@ -35,6 +35,7 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
     if (deviceNameController.text.trim().isNotEmpty) {
       Map<String, dynamic> result = await manufacturerAddDeviceRequest(configFile!);
       if (result["success"] == true && context.mounted){
+        //widget.onRefresh();
         Navigator.pop(context);
         // Fluttertoast.showToast(
         //   msg: "Success",

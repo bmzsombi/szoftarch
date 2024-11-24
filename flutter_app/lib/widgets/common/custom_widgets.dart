@@ -285,7 +285,7 @@ class DeviceListView extends StatelessWidget {
     this.crossAxisSpacing = 8.0,
     this.mainAxisSpacing = 8.0,
     this.borderRadius = 8.0, // Default border radius for rounded squares
-    this.backgroundColor = Colors.lightGreen, // Default background color for buttons
+    this.backgroundColor = Colors.lightGreen
   });
 
   final List<Device> devices;
