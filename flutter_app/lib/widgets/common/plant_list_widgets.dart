@@ -5,7 +5,7 @@ import 'package:flutter_app/widgets/common/plant_details.dart';
 class PlantListView extends StatelessWidget {
   const PlantListView({
     super.key,
-    required this.devices,
+    required this.plants,
     required this.padding,
     required this.fontSize,
     this.crossAxisCount = 4, // Default to 2 columns
@@ -15,7 +15,7 @@ class PlantListView extends StatelessWidget {
     this.backgroundColor = Colors.lightGreen, // Default background color for buttons
   });
 
-  final List<Plant> devices;
+  final List<Plant> plants;
   final double padding;
   final double fontSize;
   final int crossAxisCount;
@@ -34,10 +34,10 @@ class PlantListView extends StatelessWidget {
           crossAxisSpacing: crossAxisSpacing,
           mainAxisSpacing: mainAxisSpacing,
         ),
-        itemCount: devices.length,
+        itemCount: plants.length,
         itemBuilder: (context, index) {
           return PlantButton(
-            plantName: devices[index].scname,
+            plantScName: plants[index].scname,
             fontSize: fontSize,
             backgroundColor: backgroundColor,
             borderRadius: borderRadius,
@@ -51,13 +51,13 @@ class PlantListView extends StatelessWidget {
 class PlantButton extends StatelessWidget {
   const PlantButton({
     super.key,
-    required this.plantName,
+    required this.plantScName,
     required this.fontSize,
     this.backgroundColor = Colors.blueAccent, // Default background color
     this.borderRadius = 8.0, // Default border radius for rounded squares
   });
 
-  final String plantName;
+  final String plantScName;
   final double fontSize;
   final Color backgroundColor;
   final double borderRadius;
@@ -73,12 +73,17 @@ class PlantButton extends StatelessWidget {
         padding: EdgeInsets.zero, // Remove default padding for custom sizing
       ),
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const PlantDetails()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PlantDetails(plantScName: plantScName),
+          ),
+        );
       },
       child: Container(
         alignment: Alignment.center,
         child: PlantButtonText(
-          text: plantName,
+          text: plantScName,
           fontSize: fontSize,
         ),
       ),

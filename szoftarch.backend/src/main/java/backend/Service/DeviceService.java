@@ -42,5 +42,10 @@ public class DeviceService {
             throw new RuntimeException("DeviceInstance not found with id: " + deviceId); // Vagy dobj egy megfelelő kivételt
         }
     }
+
+
+    public void deleteDevice(Long id) {
+        eszkozRepository.deleteById(id);
+    }
     
 }
