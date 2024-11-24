@@ -20,7 +20,7 @@ class AddNewDeviceScreen extends StatefulWidget {
 
 class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
 
-  final TextEditingController deviceNameController = TextEditingController();
+  //final TextEditingController deviceNameController = TextEditingController();
   String errorText = '';
   File? configFile;
   String configFileName = '';
@@ -36,7 +36,7 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
   }
 
   void uploadDevicePressed(BuildContext context) async {
-    if (deviceNameController.text.trim().isNotEmpty) {
+    //if (deviceNameController.text.trim().isNotEmpty) {
       Map<String, dynamic> result = await manufacturerAddDeviceRequest(configFile!);
       if (result["success"] == true && context.mounted){
         Navigator.pop(context);
@@ -46,10 +46,10 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
       else {
         setErrorText(result["message"]);
       }
-    }
-    else {
+    //}
+    /*else {
       setErrorText("Device name can't be empty!");
-    }
+    }*/
   }
 
   void setErrorText(String e) {
@@ -86,7 +86,7 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
             const AppText(text: 'Add new device', fontSize: 32.0, textColor: Colors.black),
             const Spacer(),
             const Spacer(),
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
               child: TextField(
                 onChanged: (text) { setErrorText(''); },
@@ -100,7 +100,7 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
                   )
                 ),
               ),
-            ),
+            ),*/
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
               child: Column(

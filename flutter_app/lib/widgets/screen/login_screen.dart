@@ -20,9 +20,10 @@ class _LoginscreenState extends State<Loginscreen> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void saveLoginInfo(String username) async{
+  void saveLoginInfo(String username, String role) async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
+    await prefs.setString('role', role);
   }
 
   void toggleSwitch(bool value) {
@@ -35,20 +36,21 @@ class _LoginscreenState extends State<Loginscreen> {
     if (userNameController.text.trim().isNotEmpty && passwordController.text.trim().isNotEmpty) {
       String username = userNameController.text.trim();
       String password = passwordController.text.trim();
-      int loginResult = await loginRequest(username, password);
+
+      String loginResult = await loginRequest(username, password);
       switch (loginResult) {
-        case 0:
-        case 1: Navigator.push(context, MaterialPageRoute(
+        case "0":
+        case "user": Navigator.push(context, MaterialPageRoute(
                   builder: (context) => const PlantListScreen(),
                 )); 
-                saveLoginInfo(username);
+                saveLoginInfo(username, loginResult);
                 break;
-        case 2: Navigator.push(context, MaterialPageRoute(
+        case "manufacturer": Navigator.push(context, MaterialPageRoute(
                   builder: (context) => const DeviceListScreen(),
                 ));
-                saveLoginInfo(username);
+                saveLoginInfo(username, loginResult);
                 break;
-        case -1: setErrorText('User not found!');
+        case "-1": setErrorText('User not found!');
         default: setErrorText('default'); break;
       }
     }

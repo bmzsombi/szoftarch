@@ -6,6 +6,7 @@ import '../screen/login_screen.dart';
 import 'package:flutter_app/utils/http_requests.dart';
 import 'package:flutter_app/widgets/common/custom_widgets.dart';
 import 'package:flutter_app/widgets/common/plant_list_widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class PlantListScreen extends StatelessWidget {
@@ -59,13 +60,23 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Future<String?> getUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? action = prefs.getString('username');
+    return action;
+  }
+
   void addPressed() {
     showAddPlantPopup(context);
   }
 
   Future<List<Plant>> fetchPlantList() async {
     await Future.delayed(const Duration(seconds: 2));
-    return userGetPlantsRequest();
+    String? username = await getUsername();
+    if (username == null) {
+      throw Exception('Username not found');
+    }
+    return userGetPlantsRequest(username);
   }
 
   void exitPressed(){
@@ -135,7 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Sensors'),
               onTap: () {
-                loadDeviceListScreen();
+                //loadDeviceListScreen();
+                //TODO: ide jönnek a sensorok
               },
             ),
             Padding(

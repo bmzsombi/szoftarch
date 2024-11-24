@@ -81,6 +81,7 @@ class _PlantDetailsState extends State<PlantDetails> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           FloatingActionButton(
+            heroTag: 'adddevicetoplant',
             onPressed: addDeviceToPlant, // Eszköz hozzáadás funkció
             backgroundColor: Colors.blue, // Kék szín
             tooltip: 'Add Device',
@@ -88,6 +89,7 @@ class _PlantDetailsState extends State<PlantDetails> {
           ),
           const SizedBox(height: 10), // Távolság a gombok között
           FloatingActionButton(
+            heroTag: 'deleteplant',
             onPressed: deletePlant, // Törlés gomb funkció
             backgroundColor: Colors.red, // Piros szín
             tooltip: 'Delete Plant',
