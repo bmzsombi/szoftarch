@@ -26,6 +26,15 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
     });
   }
 
+  void addDevicePressed() {
+    if (selectedDevice != null &&
+        deviceNameController.text.trim().isNotEmpty &&
+        deviceLocationController.text.trim().isNotEmpty
+    ) {
+      createInstanceRequest(selectedDevice!.deviceId, deviceLocationController.text.trim(), "exampleUser", deviceNameController.text.trim());
+    }
+  }
+
   void refreshPressed() {
     setState(() {
       shouldFetch = true;
@@ -164,7 +173,7 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
                     },
                   ),
                   const Spacer(),
-                  AppButton(text: 'Add device', onPressed: () => {}, fontSize: 24.0, textColor: Colors.black, backgroundColor: Colors.white),
+                  AppButton(text: 'Add device', onPressed: addDevicePressed, fontSize: 24.0, textColor: Colors.black, backgroundColor: Colors.white),
                   const Spacer()
                 ],
               ),

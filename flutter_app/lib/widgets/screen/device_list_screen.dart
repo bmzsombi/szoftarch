@@ -35,7 +35,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
   void addPressed() {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) => const AddNewDeviceScreen()
-    ));
+    )).then((_) => { refreshPressed() });
   }
 
   void exitPressed(){
@@ -131,6 +131,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
                 devices: deviceList,
                 padding: 4.0,
                 fontSize: 24.0,
+                onReturn: refreshPressed,
               );
             }
             return const Center(child: Text("No devices available"));
@@ -140,6 +141,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
               devices: searchedDeviceList,
               padding: 4.0,
               fontSize: 24.0,
+              onReturn: () => {},
             );
           }
         }

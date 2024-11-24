@@ -34,6 +34,7 @@ dependencies:
   flutter_plugin_android_lifecycle: ^2.0.23
   http: ^1.2.2
   fluttertoast: ^8.2.8
+  shared_preferences: ^2.3.3
 
 
   # The following adds the Cupertino Icons font to your application.

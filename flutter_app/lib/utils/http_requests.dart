@@ -6,6 +6,8 @@ import 'package:flutter_app/utils/plant.dart';
 
 const String backend_url = 'localhost:5000';
 const String validator_url = 'localhost:5001';
+const String instance_url = 'localhost:5002';
+const String instance_path = 'api/instances';
 const String validatorPath = 'api/validate';
 const String devicesPath= 'device/all';
 const String usersPath = 'api/users';
@@ -161,5 +163,41 @@ Future<List<DropdownDeviceItem>> userGetDeviceTypesRequest() async{
   }
   else {
     return [];
+  }
+}
+
+Future<int> createInstanceRequest(int deviceId, String location, String user, String name) async {
+  var uri = Uri.http(instance_url, instance_path);
+  var response = await http.post(
+    uri,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: jsonEncode({
+      "device_id": deviceId,
+      "location": location,
+      "user": user,
+      "name": name
+    })
+  );
+  if (response.statusCode == 201) {
+    return 1;
+  } else {
+    return -1;
+  }
+}
+
+Future<int> deleteInstanceRequest(int instanceId) async {
+  var uri = Uri.http(instance_url, '$instance_path/$instanceId');
+  var response = await http.delete(
+    uri,
+    headers: {
+      "Content-Type": "application/json"
+    }
+  );
+  if (response.statusCode == 200) {
+    return 1;
+  } else {
+    return -1;
   }
 }

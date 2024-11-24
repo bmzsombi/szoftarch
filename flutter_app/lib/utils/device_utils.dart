@@ -52,11 +52,13 @@ List<Device> searchDevices(String term, List<Device> allDevices) {
 }
 
 class DropdownDeviceItem {
+  final int deviceId;
   final String manufacturer;
   final String model;
   final String firmwareVersion;
 
   DropdownDeviceItem({
+    required this.deviceId,
     required this.manufacturer,
     required this.model,
     required this.firmwareVersion,
@@ -69,6 +71,7 @@ class DropdownDeviceItem {
 
   factory DropdownDeviceItem.fromJson(Map<String, dynamic> json) {
     return DropdownDeviceItem(
+      deviceId: json["device_id"],
       manufacturer: json['manufacturer'],
       model: json['model'],
       firmwareVersion: json['firmwareVersion'],
