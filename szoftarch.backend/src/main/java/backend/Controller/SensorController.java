@@ -42,7 +42,8 @@ public class SensorController {
         Device device = deviceService.findById(sensorDTO.getDeviceId());
 
         // A PlantInstance entitás betöltése az ID alapján
-        PlantInstance plantInstance = plantInstanceService.findById(sensorDTO.getPlantInstanceId()).orElseThrow(() -> new RuntimeException("PlantInstance not found with ID: " + sensorDTO.getPlantInstanceId()));
+        PlantInstance plantInstance = plantInstanceService.findById(sensorDTO.getPlantInstanceId())
+        .orElseThrow(() -> new RuntimeException("PlantInstance not found with id: " + sensorDTO.getPlantInstanceId()));
 
         // Új Sensor objektum létrehozása és kitöltése
         Sensor sensor = new Sensor();

@@ -30,8 +30,6 @@ public class Sensor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-
     @ManyToOne
     @JoinColumn(name = "device_id", nullable = false)
     @JsonIgnore
