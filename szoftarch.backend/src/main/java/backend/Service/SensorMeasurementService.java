@@ -23,5 +23,9 @@ public class SensorMeasurementService {
     public List<SensorMeasurement> getAllSensorMeasurement() {
         return sensorMeasurementRepository.findAll();
     }
+
+    public void deleteSensorMeasurement(Long id) {
+        sensorMeasurementRepository.deleteById(id);
+    }
 }
 

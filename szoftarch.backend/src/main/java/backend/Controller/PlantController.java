@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,21 @@ public class PlantController {
     public Plant addPlantType(@RequestBody Plant plant) {
         return plantService.addPlant(plant);
     }
+
+    // Növény törlése ID alapján
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)  // A státuszkód '204 No Content' lesz, ha sikeres a törlés
+    public void deletePlant(@PathVariable Long id) {
+        plantService.deletePlant(id);
+    }
+
+    // Növény törlése scientific_name alapján
+    @DeleteMapping("/deleteByName/{scientificName}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)  // A státuszkód '204 No Content' lesz, ha sikeres a törlés
+    public void deletePlantByScientificName(@PathVariable String scientificName) {
+        plantService.deletePlantByScientificName(scientificName);
+    }
+
 
     // Feltételezem nektek frontend oldalróól ez lesz a hasznosabb
     @PostMapping("/add")

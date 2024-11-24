@@ -33,4 +33,8 @@ public class SensorService {
             throw new RuntimeException("DeviceInstance not found with id: " + sensorId); // Vagy dobj egy megfelelő kivételt
         }
     }
+
+    public void deleteSensor(Long id) {
+        sensorRepository.deleteById(id);
+    }
 }
