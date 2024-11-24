@@ -37,10 +37,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       int createResult = await createAccountRequest(username_, email_, password_, manufacturer_);
 
       if (createResult == 1) {
-        setErrorText('sikerult');
+        Navigator.pop(context);
+        // TODO: toast uzenet
       }
       else if (createResult == -1) {
-        setErrorText('nem sikerult');
+        setErrorText("Account couldn't be created! Username already exists.");
       }
     }
     else if (userNameController.text.trim().isEmpty) {

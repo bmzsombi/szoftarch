@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/screen/create_account_screen.dart';
 import 'package:flutter_app/widgets/common/custom_widgets.dart';
 import 'package:flutter_app/utils/http_requests.dart';
+import 'package:flutter_app/widgets/screen/plant_list_screen.dart';
+import 'package:flutter_app/widgets/screen/device_list_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
@@ -17,6 +20,11 @@ class _LoginscreenState extends State<Loginscreen> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  void saveLoginInfo(String username) async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+  }
+
   void toggleSwitch(bool value) {
     setState(() {
       switchOn = value;
@@ -28,16 +36,21 @@ class _LoginscreenState extends State<Loginscreen> {
       String username = userNameController.text.trim();
       String password = passwordController.text.trim();
       int loginResult = await loginRequest(username, password);
-      
-      setState(() {
-        switch (loginResult) {
-          case 1: setErrorText('user login sikerult'); break; // user login;
-          case 2: setErrorText('manufacturer login sikerult'); break; // manufacturer login;
-          case 0: setErrorText('Unexpected error!');
-          case -1: setErrorText('User not found!');
-          default: setErrorText('default'); break;
-        }
-      });
+      switch (loginResult) {
+        case 0:
+        case 1: Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => const PlantListScreen(),
+                )); 
+                saveLoginInfo(username);
+                break;
+        case 2: Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => const DeviceListScreen(),
+                ));
+                saveLoginInfo(username);
+                break;
+        case -1: setErrorText('User not found!');
+        default: setErrorText('default'); break;
+      }
     }
     else if (userNameController.text.trim().isEmpty) {
       setErrorText("Username can't be empty!");
@@ -113,7 +126,7 @@ class _LoginscreenState extends State<Loginscreen> {
               padding: EdgeInsets.symmetric(horizontal: 64.0, vertical: 10.0),
               child: Row(
                 children: <Widget>[
-                  LoginScreenText(text: 'Manufacturer', fontSize: 24.0),
+                  //LoginScreenText(text: 'Manufacturer', fontSize: 24.0),
                   Spacer(),
                   // Switch(
                   //   value: switchOn,
