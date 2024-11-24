@@ -87,4 +87,17 @@ public class UserController {
     public User addPlantToUser(@PathVariable Long userId, @PathVariable Long plantId) {
         return userService.addPlantToUser(userId, plantId);
     }
+
+    @PostMapping("/{username}/addPlantByName/{plantId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public User addPlantToUserByName(@PathVariable String username, @PathVariable Long plantId) {
+        return userService.addPlantToUserByName(username, plantId);
+    }
+
+    // DELETE /users/name/plants/2
+    @DeleteMapping("/{username}/plants/{plantId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removePlantFromUser(@PathVariable String username, @PathVariable Long plantId) {
+        userService.removePlantFromUser(username, plantId);
+    }
 }
