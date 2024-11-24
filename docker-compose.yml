@@ -47,7 +47,7 @@ services:
     depends_on:
       szoftarch-db:
         condition: service_healthy
-        
+
   actuator-api:
     build:
       context: ./iotdevices
@@ -71,13 +71,7 @@ services:
       DB_NAME: plant_care
       DB_USER: user
       DB_PASSWORD: teszt
-    volumes:
-      - type: bind
-        source: /var/run/docker.sock
-        target: /var/run/docker.sock
-        bind:
-          create_host_path: true
-        
+
   instance-manager:
     build:
       context: ./iotdevices
