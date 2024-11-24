@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../common/custom_widgets.dart';
 import '/utils/device_utils.dart';
 import 'package:flutter_app/utils/http_requests.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
 
 class AddNewDeviceScreen extends StatefulWidget {
   const AddNewDeviceScreen({
@@ -60,6 +63,21 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
     });
   }
 
+  Future<void> downloadLocalPdf() async {
+    try {
+      final ByteData data = await rootBundle.load('assets/device-yaml-docs.pdf');
+      
+      final Directory tempDir = await getTemporaryDirectory();
+      final File tempFile = File('${tempDir.path}/device-yaml-docs.pdf');
+
+      await tempFile.writeAsBytes(data.buffer.asUint8List());
+
+      await OpenFile.open(tempFile.path);
+    } catch (e) {
+      setErrorText("Could not open the PDF file.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,6 +119,19 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
                   ),
                   ConfigUploadRow(text: 'Browse', onPressed: browseFilePressed, fontSize: 12.0, textColor: Colors.white, backgroundColor: Colors.black, fileText: configFileName)
                 ],
+              ),
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: downloadLocalPdf,
+              child: const Text(
+                "Formatting requirements",
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 25, 85, 134),
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
             const Spacer(),

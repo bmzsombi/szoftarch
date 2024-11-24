@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/utils/http_requests.dart';
+import 'package:flutter_app/widgets/screen/add_device_to_plant_screen.dart';
+import 'package:flutter_app/widgets/screen/user_add_device_screen.dart';
 
 class PlantDetails extends StatefulWidget {
   /*final Plant plant;*/
@@ -23,6 +25,21 @@ class _PlantDetailsState extends State<PlantDetails> {
     userDeletePlantRequest(widget.id);
     Navigator.pop(context);
     widget.onRefresh();
+  }
+
+  void addDeviceToPlant(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UserAddDeviceScreen(
+          /*plantId: widget.id,
+          onDeviceAdded: () {
+            // Itt frissítheted az adatokat, ha szükséges
+            widget.onRefresh();
+          },*/
+        ),
+      ),
+    );
   }
 
   @override
@@ -55,11 +72,24 @@ class _PlantDetailsState extends State<PlantDetails> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: deletePlant, // Törlés gomb funkció
-        backgroundColor: Colors.red, // Piros szín
-        tooltip: 'Delete Plant',
-        child: const Icon(Icons.delete, color: Colors.white),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          FloatingActionButton(
+            onPressed: addDeviceToPlant, // Eszköz hozzáadás funkció
+            backgroundColor: Colors.blue, // Kék szín
+            tooltip: 'Add Device',
+            child: const Icon(Icons.add, color: Colors.white),
+          ),
+          const SizedBox(height: 10), // Távolság a gombok között
+          FloatingActionButton(
+            onPressed: deletePlant, // Törlés gomb funkció
+            backgroundColor: Colors.red, // Piros szín
+            tooltip: 'Delete Plant',
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Jobb alsó sarok
     );

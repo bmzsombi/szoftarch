@@ -32,6 +32,7 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
         deviceLocationController.text.trim().isNotEmpty
     ) {
       createInstanceRequest(selectedDevice!.deviceId, deviceLocationController.text.trim(), "exampleUser", deviceNameController.text.trim());
+      Navigator.pop(context);
     }
   }
 

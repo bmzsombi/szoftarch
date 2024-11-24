@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/screen/plant_list_screen.dart';
 import 'package:flutter_app/widgets/screen/login_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_app/widgets/screen/user_add_device_screen.dart';
 
 void main() {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

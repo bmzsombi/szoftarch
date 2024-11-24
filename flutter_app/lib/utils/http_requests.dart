@@ -18,6 +18,7 @@ const String createAccountPath = 'users/addType';
 const String loginPath = 'users/loginFull';
 const String deviceTypesPath = 'device/all';
 const String deletePlantPath = 'plants/delete';
+const String deviceInstancesPath = 'deviceInstance/all';
 
 Future<int> createAccountRequest(String username_, String email_, String password_, bool manufacturer_) async {
   var uri = Uri.http(url, createAccountPath);
@@ -120,7 +121,12 @@ void userDeletePlantRequest(int id) async {
 }
 
 void userGetPlantDetailsRequest() {}
-void userGetPlantSensorsRequest() {}
+void userGetPlantSensorsRequest() async {
+  var uri = Uri.http(backend_url, deviceInstancesPath);
+  var response = await http.get(uri);
+
+  
+}
 void userGetSensorDetailsRequest() async {}
 void userAddPlantRequest(
   String scname, String cname, String cat, String maxl, String minl, String maxenvhum, 
