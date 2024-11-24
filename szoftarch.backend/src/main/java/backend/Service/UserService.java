@@ -38,4 +38,8 @@ public class UserService {
     public boolean isAuthenticated(String username, String password) {
         return userRepository.findByUsernameAndPassword(username, password).isPresent();
     }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 }

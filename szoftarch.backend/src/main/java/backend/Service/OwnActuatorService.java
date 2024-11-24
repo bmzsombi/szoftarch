@@ -32,4 +32,8 @@ public class OwnActuatorService {
             throw new RuntimeException("DeviceInstance not found with id: " + actuatorId); // Vagy dobj egy megfelelő kivételt
         }
     }
+
+    public void deleteOwnActuator(Long id) {
+        ownActuatorRepository.deleteById(id);
+    }
 }

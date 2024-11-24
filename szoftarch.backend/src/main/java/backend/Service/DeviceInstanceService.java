@@ -32,5 +32,9 @@ public class DeviceInstanceService {
             throw new RuntimeException("DeviceInstance not found with id: " + instanceId); // Vagy dobj egy megfelelő kivételt
         }
     }
+
+    public void deleteDeviceInstance(Long id) {
+        deviceInstanceRepository.deleteById(id);
+    }
     
 }
