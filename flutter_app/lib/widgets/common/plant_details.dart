@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/utils/http_requests.dart';
+import 'package:flutter_app/utils/toastutils.dart';
 
 class PlantDetails extends StatefulWidget {
   /*final Plant plant;*/
@@ -22,6 +23,8 @@ class _PlantDetailsState extends State<PlantDetails> {
   void deletePlant(){
     userDeletePlantRequest(widget.id);
     Navigator.pop(context);
+    ToastUtils toastUtils = ToastUtils(toastText: "Plant deleted.", context: context);
+    toastUtils.showToast();
     widget.onRefresh();
   }
 

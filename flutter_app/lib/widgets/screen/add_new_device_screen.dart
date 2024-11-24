@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../common/custom_widgets.dart';
 import '/utils/device_utils.dart';
 import 'package:flutter_app/utils/http_requests.dart';
+import 'package:flutter_app/utils/toastutils.dart';
 
 class AddNewDeviceScreen extends StatefulWidget {
   const AddNewDeviceScreen({
@@ -14,6 +15,7 @@ class AddNewDeviceScreen extends StatefulWidget {
 }
 
 class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
+
   final TextEditingController deviceNameController = TextEditingController();
   String errorText = '';
   File? configFile;
@@ -33,17 +35,9 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
     if (deviceNameController.text.trim().isNotEmpty) {
       Map<String, dynamic> result = await manufacturerAddDeviceRequest(configFile!);
       if (result["success"] == true && context.mounted){
-        //widget.onRefresh();
         Navigator.pop(context);
-        // Fluttertoast.showToast(
-        //   msg: "Success",
-        //   toastLength: Toast.LENGTH_SHORT,
-        //   gravity: ToastGravity.CENTER,
-        //   timeInSecForIosWeb: 1,
-        //   backgroundColor: Colors.red,
-        //   textColor: Colors.white,
-        //   fontSize: 16.0
-        // );
+        ToastUtils toastUtils = ToastUtils(toastText: "Device uploaded.", context: context);
+        toastUtils.showToast();
       }
       else {
         setErrorText(result["message"]);
