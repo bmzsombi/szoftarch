@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/widgets/screen/login_screen.dart';
-import 'package:flutter_app/widgets/screen/device_list_screen.dart';
 import 'package:flutter_app/widgets/screen/plant_list_screen.dart';
-import 'package:flutter_app/widgets/screen/user_add_device_screen.dart';
 
 void main() {
   runApp(const MyApp());

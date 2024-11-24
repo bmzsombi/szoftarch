@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/utils/http_requests.dart';
 
 class PlantDetails extends StatefulWidget {
   /*final Plant plant;*/
   final String plantScName;
+  final int id;
+  final VoidCallback onRefresh;
 
   const PlantDetails({
     super.key,
     required this.plantScName,
+    required this.id,
+    required this.onRefresh
     /*, required this.plant*/});
 
   @override
@@ -15,7 +20,9 @@ class PlantDetails extends StatefulWidget {
 
 class _PlantDetailsState extends State<PlantDetails> {
   void deletePlant(){
-    
+    userDeletePlantRequest(widget.id);
+    Navigator.pop(context);
+    widget.onRefresh();
   }
 
   @override
