@@ -16,6 +16,7 @@ const String url = 'localhost:5000';
 const String createAccountPath = 'users/addType';
 const String loginPath = 'users/loginFull';
 const String deviceTypesPath = 'device/all';
+const String deletePlantPath = 'plants/delete';
 
 Future<int> createAccountRequest(String username_, String email_, String password_, bool manufacturer_) async {
   var uri = Uri.http(url, createAccountPath);
@@ -110,6 +111,20 @@ Future<List<Plant>> userGetPlantsRequest() async {
   else {
     throw Exception('Failed to load devices');
   }
+}
+void userDeletePlantRequest(String scname) async {
+  var uri = Uri.http(backend_url, deletePlantPath);
+  await http.delete(
+    uri,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: jsonEncode({
+      "scientific_name": scname
+    })
+  );
+
+
 }
 void userGetPlantDetailsRequest() {}
 void userGetPlantSensorsRequest() {}

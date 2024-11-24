@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
-import '../../utils/plant.dart'; // A növény modell importálása
 
 class PlantDetails extends StatefulWidget {
   /*final Plant plant;*/
+  final String plantScName;
 
-  const PlantDetails({super.key/*, required this.plant*/});
+  const PlantDetails({
+    super.key,
+    required this.plantScName,
+    /*, required this.plant*/});
 
   @override
   _PlantDetailsState createState() => _PlantDetailsState();
 }
 
 class _PlantDetailsState extends State<PlantDetails> {
+  void deletePlant(){
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Plant Details'),
       ),
-      body: const Center (
-        child: const SizedBox(
-          child: const Padding(
+      body: Center(
+        child: SizedBox(
+          child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,18 +36,25 @@ class _PlantDetailsState extends State<PlantDetails> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const Divider(),
-                Text('Scientific name: asd'),
-                Text('Common name: asd'),
-                Text('Category: asd'),
-                Text('Light: asd'),
-                Text('Soil Moisture: asd'),
-                Text('Pump State: asd'),
-                Text('Temperature: asd')
+                Text('Scientific name: ${widget.plantScName}'),
+                const Text('Common name: Common Name Example'),
+                const Text('Category: Example Category'),
+                const Text('Light: High'),
+                const Text('Soil Moisture: Medium'),
+                const Text('Pump State: Off'),
+                const Text('Temperature: 22°C'),
               ],
             ),
           ),
         ),
-      )
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: deletePlant, // Törlés gomb funkció
+        backgroundColor: Colors.red, // Piros szín
+        tooltip: 'Delete Plant',
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Jobb alsó sarok
     );
   }
 }

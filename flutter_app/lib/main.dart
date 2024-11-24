@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/screen/login_screen.dart';
 import 'package:flutter_app/widgets/screen/device_list_screen.dart';
+import 'package:flutter_app/widgets/screen/plant_list_screen.dart';
 import 'package:flutter_app/widgets/screen/user_add_device_screen.dart';
 
 void main() {
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       //home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: const UserAddDeviceScreen()
+      home: const PlantListScreen()
     );
   }
 }
