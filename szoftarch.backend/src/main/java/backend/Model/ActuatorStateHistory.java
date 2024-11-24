@@ -2,6 +2,8 @@ package backend.Model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,10 +23,13 @@ public class ActuatorStateHistory {
 
     @ManyToOne
     @JoinColumn(name = "instance_id", nullable = false)
+    @JsonIgnore
     private DeviceInstance instance;
 
+    // innen szedi a nvevét
     @ManyToOne
     @JoinColumn(name = "actuator_id", nullable = false)
+    @JsonIgnore
     private OwnActuator actuator;
 
     @Column(nullable = false)

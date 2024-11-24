@@ -3,10 +3,8 @@
 import asyncio
 import json
 import logging
-import psycopg2
-from psycopg2.extras import DictCursor
+import mysql.connector
 import aiocoap
-from datetime import datetime
 import os
 import time
 from typing import List, Dict, Any
@@ -15,11 +13,11 @@ time.sleep(30)
 
 # Database configuration
 DB_CONFIG = {
-    'dbname': os.getenv('DB_NAME', 'plantmonitor'),
-    'user': os.getenv('DB_USER', 'postgres'),
-    'password': os.getenv('DB_PASSWORD', ''),
-    'host': os.getenv('DB_HOST', 'postgres_dev'),
-    'port': os.getenv('DB_PORT', '5432')
+    'database': os.getenv('DB_NAME', 'plant_care'),
+    'user': os.getenv('DB_USER', 'user'),
+    'password': os.getenv('DB_PASSWORD', 'teszt'),
+    'host': os.getenv('DB_HOST', 'szoftarch-db'),
+    'port': os.getenv('DB_PORT', '3306')
 }
 
 logging.basicConfig(level=logging.INFO)
@@ -30,6 +28,15 @@ class DeviceMonitor:
         self.coap_context = None
         self.active_instances = []
         self.polling_interval = int(os.getenv('POLLING_INTERVAL', '60'))  # seconds
+        self.db_pool = self.create_pool()
+
+    def create_pool(self):
+        """Create a connection pool for MySQL."""
+        return mysql.connector.pooling.MySQLConnectionPool(
+            pool_name="mypool",
+            pool_size=5,
+            **DB_CONFIG
+        )
 
     async def setup(self):
         """Setup CoAP context."""
@@ -37,40 +44,48 @@ class DeviceMonitor:
 
     def get_active_instances(self) -> List[Dict[str, Any]]:
         """Get all active device instances from database."""
-        with psycopg2.connect(**DB_CONFIG) as conn:
-            with conn.cursor(cursor_factory=DictCursor) as cur:
-                cur.execute("""
-                    SELECT 
-                        di.id as instance_id,
-                        d.id as device_id,
-                        d.model,
-                        di.location
-                    FROM device_instances di
-                    JOIN devices d ON di.device_id = d.id
-                """)
-                return [dict(row) for row in cur.fetchall()]
+        conn = self.db_pool.get_connection()
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT 
+                    di.id as instance_id,
+                    d.id as device_id,
+                    d.model,
+                    di.location
+                FROM device_instance di
+                JOIN device d ON di.device_id = d.id
+            """)
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+            conn.close()
 
     def get_instance_endpoints(self, device_id: int) -> Dict[str, List[Dict]]:
         """Get all endpoints for a device."""
-        with psycopg2.connect(**DB_CONFIG) as conn:
-            with conn.cursor(cursor_factory=DictCursor) as cur:
-                # Get sensors
-                cur.execute("""
-                    SELECT id, name, read_endpoint, value_key 
-                    FROM sensors 
-                    WHERE device_id = %s
-                """, (device_id,))
-                sensors = [dict(row) for row in cur.fetchall()]
+        conn = self.db_pool.get_connection()
+        try:
+            cursor = conn.cursor(dictionary=True)
+            # Get sensors
+            cursor.execute("""
+                SELECT id, name, read_endpoint, value_key 
+                FROM sensor 
+                WHERE device_id = %s
+            """, (device_id,))
+            sensors = cursor.fetchall()
 
-                # Get actuators
-                cur.execute("""
-                    SELECT id, name, status_endpoint, value_key 
-                    FROM actuators 
-                    WHERE device_id = %s
-                """, (device_id,))
-                actuators = [dict(row) for row in cur.fetchall()]
+            # Get actuators
+            cursor.execute("""
+                SELECT id, name, status_endpoint, value_key, on_up_value
+                FROM actuator 
+                WHERE device_id = %s
+            """, (device_id,))
+            actuators = cursor.fetchall()
 
-                return {'sensors': sensors, 'actuators': actuators}
+            return {'sensors': sensors, 'actuators': actuators}
+        finally:
+            cursor.close()
+            conn.close()
 
     async def query_endpoint(self, instance_id: str, endpoint: str) -> Dict:
         """Query a CoAP endpoint and return the response."""
@@ -93,25 +108,34 @@ class DeviceMonitor:
 
     def store_sensor_measurement(self, instance_id: int, sensor_id: int, value: float):
         """Store sensor measurement in database."""
-        with psycopg2.connect(**DB_CONFIG) as conn:
-            with conn.cursor() as cur:
-                cur.execute("""
-                    INSERT INTO sensor_measurements 
-                    (instance_id, sensor_id, value) 
-                    VALUES (%s, %s, %s)
-                """, (instance_id, sensor_id, value))
-                conn.commit()
+        conn = self.db_pool.get_connection()
+        try:
+            cursor = conn.cursor()
+            # Explicitly include the timestamp in the INSERT
+            cursor.execute("""
+                INSERT INTO sensor_measurement 
+                (instance_id, sensor_id, value, timestamp) 
+                VALUES (%s, %s, %s, NOW())
+            """, (instance_id, sensor_id, value))
+            conn.commit()
+        finally:
+            cursor.close()
+            conn.close()
 
     def store_actuator_state(self, instance_id: int, actuator_id: int, state: bool):
         """Store actuator state in database."""
-        with psycopg2.connect(**DB_CONFIG) as conn:
-            with conn.cursor() as cur:
-                cur.execute("""
-                    INSERT INTO actuator_state_history 
-                    (instance_id, actuator_id, state) 
-                    VALUES (%s, %s, %s)
-                """, (instance_id, actuator_id, state))
-                conn.commit()
+        conn = self.db_pool.get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO actuator_state_history 
+                (instance_id, actuator_id, state, changed_at) 
+                VALUES (%s, %s, %s, NOW())
+            """, (instance_id, actuator_id, state))
+            conn.commit()
+        finally:
+            cursor.close()
+            conn.close()
 
     async def monitor_instance(self, instance: Dict):
         """Monitor all endpoints for a single instance."""
@@ -145,7 +169,7 @@ class DeviceMonitor:
                 self.store_actuator_state(
                     instance['instance_id'],
                     actuator['id'],
-                    state == 'on'  # Assuming boolean state
+                    state == actuator['on_up_value']  # Assuming boolean state
                 )
                 logger.info(f"Stored actuator state: {actuator['name']} = {state}")
 
