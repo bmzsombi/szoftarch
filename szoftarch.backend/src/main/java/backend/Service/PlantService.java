@@ -1,11 +1,13 @@
 package backend.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import backend.Model.Plant;
+import backend.Model.User;
 import backend.Repository.PlantRepository;
 
 @Service
@@ -34,5 +36,10 @@ public class PlantService {
             plantRepository.delete(plant);
         }
     }
+
+    public Optional<Plant> findById(Long id) {
+       return plantRepository.findById(id);
+    }
+
 }
 
