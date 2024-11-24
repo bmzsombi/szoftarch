@@ -234,6 +234,7 @@ class DeviceButton extends StatelessWidget {
     required this.fontSize,
     this.backgroundColor = Colors.blueAccent, // Default background color
     this.borderRadius = 8.0, // Default border radius for rounded squares
+    required this.onReturn
   });
 
   final int deviceId;
@@ -241,6 +242,7 @@ class DeviceButton extends StatelessWidget {
   final double fontSize;
   final Color backgroundColor;
   final double borderRadius;
+  final VoidCallback onReturn;
 
   @override
   Widget build(BuildContext context) {
@@ -261,7 +263,7 @@ class DeviceButton extends StatelessWidget {
               deviceName: deviceName,
             ),
           ),
-        );
+        ).then((_) => { onReturn });
       },
       child: Container(
         alignment: Alignment.center,
@@ -285,7 +287,8 @@ class DeviceListView extends StatelessWidget {
     this.crossAxisSpacing = 8.0,
     this.mainAxisSpacing = 8.0,
     this.borderRadius = 8.0, // Default border radius for rounded squares
-    this.backgroundColor = Colors.lightGreen
+    this.backgroundColor = Colors.lightGreen,
+    required this.onReturn
   });
 
   final List<Device> devices;
@@ -296,6 +299,7 @@ class DeviceListView extends StatelessWidget {
   final double mainAxisSpacing;
   final double borderRadius;
   final Color backgroundColor;
+  final VoidCallback onReturn;
 
   @override
   Widget build(BuildContext context) {
@@ -315,6 +319,7 @@ class DeviceListView extends StatelessWidget {
             fontSize: fontSize,
             backgroundColor: backgroundColor,
             borderRadius: borderRadius,
+            onReturn: onReturn,
           );
         },
       ),
