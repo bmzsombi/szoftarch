@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import backend.Model.Plant;
 import backend.Model.User;
 import backend.Service.UserService;
 
@@ -38,6 +39,13 @@ public class UserController {
     public List<User> getAllUser() {
         return userService.getAllUser();
     }
+
+    // http://localhost:5000/plants/getUsers?username=john_doe
+    @GetMapping("/getPlants")
+    public List<Plant> getMethodName(@RequestParam String username) {
+        return userService.findByName(username).getPlants();
+    }
+    
 
     @GetMapping("/find")
     public User getUserByName(@RequestParam String username) {
@@ -72,5 +80,11 @@ public class UserController {
     public ResponseEntity<Boolean> login(@RequestBody User loginRequest) {
         boolean isAuthenticated = userService.isAuthenticated(loginRequest.getUsername(), loginRequest.getPassword());
         return ResponseEntity.ok(isAuthenticated);
+    }
+
+    @PostMapping("/{userId}/addPlant/{plantId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public User addPlantToUser(@PathVariable Long userId, @PathVariable Long plantId) {
+        return userService.addPlantToUser(userId, plantId);
     }
 }

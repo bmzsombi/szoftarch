@@ -1,6 +1,8 @@
 package backend.Controller;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import backend.Model.Plant;
+import backend.Model.User;
 import backend.Service.PlantService;
 
 @RestController
@@ -28,6 +31,20 @@ public class PlantController {
     public List<Plant> getAllPlants() {
         return plantService.getAllPlants();
     }
+
+    //http://localhost:5000/plants/getUsers?id=2
+    @GetMapping("/getUsers")
+    public List<User> getUsers(@RequestParam Long id) {
+        Optional<Plant> optionalPlant = plantService.findById(id);
+    
+        if (optionalPlant.isPresent()) {
+            return optionalPlant.get().getUsers();
+        } else {
+            // Ha nincs ilyen növény, akkor üres lista visszaadása
+            return Collections.emptyList();
+        }
+    }
+    
 
     // Növény hozzáadása mint plant típus
     @PostMapping("/addType")
@@ -49,7 +66,6 @@ public class PlantController {
     public void deletePlantByScientificName(@PathVariable String scientificName) {
         plantService.deletePlantByScientificName(scientificName);
     }
-
 
     // Feltételezem nektek frontend oldalróól ez lesz a hasznosabb
     @PostMapping("/add")

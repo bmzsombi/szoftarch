@@ -1,11 +1,17 @@
 package backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 import java.awt.*;
@@ -18,11 +24,37 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     private String username;
     private String password;
     private String email;
     private String role;
     private Integer manufacturer_id;
+
+    //user tároljon egy növény listát
+    @ManyToMany
+    @JsonIgnoreProperties("users")
+    @JoinTable(
+        name = "user_plants", // A kapcsolatot tároló táblázat neve
+        joinColumns = @JoinColumn(name = "user_id"), // A felhasználóhoz tartozó oszlop
+        inverseJoinColumns = @JoinColumn(name = "plant_id") // A növényhez tartozó oszlop
+    )
+    private List<Plant> plants;
+
+    public List<Plant> getPlants() {
+        return plants;
+    }
+
+    public void setPlants(List<Plant> plants) {
+        this.plants = plants;
+    }
 
     public String getUsername() {
         return username;
