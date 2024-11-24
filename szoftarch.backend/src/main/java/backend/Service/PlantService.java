@@ -22,5 +22,17 @@ public class PlantService {
     public List<Plant> getAllPlants() { 
         return plantRepository.findAll();
     }
+
+    public void deletePlant(Long id) {
+        plantRepository.deleteById(id);
+
+    }
+
+    public void deletePlantByScientificName(String scientificName) {
+           Plant plant = plantRepository.findByScientificName(scientificName);
+        if (plant != null) {
+            plantRepository.delete(plant);
+        }
+    }
 }
 
