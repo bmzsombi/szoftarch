@@ -32,7 +32,7 @@ public class PlantController {
         return plantService.getAllPlants();
     }
 
-    //http://localhost:5000/plants/getUsers?id=2
+    /*//http://localhost:5000/plants/getUsers?id=2
     @GetMapping("/getUsers")
     public List<User> getUsers(@RequestParam Long id) {
         Optional<Plant> optionalPlant = plantService.findById(id);
@@ -43,7 +43,7 @@ public class PlantController {
             // Ha nincs ilyen növény, akkor üres lista visszaadása
             return Collections.emptyList();
         }
-    }
+    }*/
     
 
     // Növény hozzáadása mint plant típus

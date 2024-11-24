@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import backend.DTO.SensorDTO;
 import backend.Model.Device;
+import backend.Model.PlantInstance;
 import backend.Model.Sensor;
 import backend.Service.DeviceService;
+import backend.Service.PlantInstanceService;
 import backend.Service.SensorService;
 
 @RestController
@@ -29,12 +31,18 @@ public class SensorController {
     @Autowired
     private DeviceService deviceService;
 
+    @Autowired
+    private PlantInstanceService plantInstanceService;
+
     @PostMapping("/addType")
     @ResponseStatus(HttpStatus.CREATED)  // A státuszkód '201 Created' lesz
     public Sensor addSensorType(@RequestBody SensorDTO sensorDTO) {
 
         // A Device entitás betöltése az ID alapján
         Device device = deviceService.findById(sensorDTO.getDeviceId());
+
+        // A PlantInstance entitás betöltése az ID alapján
+        PlantInstance plantInstance = plantInstanceService.findById(sensorDTO.getPlantInstanceId()).orElseThrow(() -> new RuntimeException("PlantInstance not found with ID: " + sensorDTO.getPlantInstanceId()));
 
         // Új Sensor objektum létrehozása és kitöltése
         Sensor sensor = new Sensor();
@@ -48,6 +56,7 @@ public class SensorController {
         sensor.setReadEndpoint(sensorDTO.getReadEndpoint());  // Beállítjuk az olvasási végpontot
         sensor.setValueKey(sensorDTO.getValueKey());  // Beállítjuk az érték kulcsot
         sensor.setSamplingInterval(sensorDTO.getSamplingInterval());  // Beállítjuk a mintavételi intervallumot
+        sensor.setPlantInstance(plantInstance);  // Hozzárendeljük a PlantInstance objektumot
 
         // Az objektum mentése
         return sensorService.addSensor(sensor);

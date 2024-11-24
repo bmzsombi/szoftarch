@@ -49,7 +49,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User addPlantToUser(Long userId, Long plantId) {
+    /*public User addPlantToUser(Long userId, Long plantId) {
         // Felhasználó lekérése az ID alapján
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -63,9 +63,9 @@ public class UserService {
         userRepository.save(user);
 
         return user;
-    }
+    }*/
 
-    public User addPlantToUserByName(String username, Long plantId) {
+    /*public User addPlantToUserByName(String username, Long plantId) {
 
         User user = userRepository.findByUsername(username);
 
@@ -76,10 +76,10 @@ public class UserService {
         userRepository.save(user);
 
         return user;
-    }
+    }*/
 
     // DELETE /users/1/plants/2
-    public void removePlantFromUser(String username, Long plantId) {
+    /*public void removePlantFromUser(String username, Long plantId) {
         // Felhasználó lekérése
         User user = userRepository.findByUsername(username);
 
@@ -92,5 +92,5 @@ public class UserService {
 
         // Felhasználó mentése
         userRepository.save(user);
-    }
+    }*/
 }
