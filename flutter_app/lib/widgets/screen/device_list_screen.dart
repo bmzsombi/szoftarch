@@ -23,9 +23,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
 
   Future<List<Device>> fetchDeviceList() async {
     await Future.delayed(const Duration(seconds: 2));
-    return getDeviceList();
-
-    // TODO: manufacturerGetDevicesRequest();
+    return manufacturerGetDevicesRequest();
   }
 
   void refreshPressed() {
@@ -91,20 +89,13 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
             ListTile(
               title: const Text('My Plants'),
               onTap: () {
-                // Update the state of the app.
-                // ...
                 loadPlantListScreen();
               },
             ),
             ListTile(
               title: const Text('Sensors'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-                //loadDeviceListScreen();
-              },
+              onTap: () {},
             ),
-            const Spacer(),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton.icon(
