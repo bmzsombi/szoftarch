@@ -2,6 +2,7 @@ package backend.Controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import backend.Model.Plant;
+import backend.DTO.PlantInstanceDTO;
+import backend.DTO.UserDTO;
+import backend.Model.PlantInstance;
 import backend.Model.User;
+import backend.Service.PlantInstanceService;
 import backend.Service.UserService;
 
 @RestController
@@ -26,26 +30,43 @@ public class UserController {
     
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PlantInstanceService plantInstanceService;
     
 
-    // User hozzáadása
     @PostMapping("/addType")
-    @ResponseStatus(HttpStatus.CREATED)  // A státuszkód '201 Created' lesz
-    public User addUserType(@RequestBody User user) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public User addUserType(@RequestBody UserDTO userDTO) {
+        // DTO-ból User entitás létrehozása
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword());
+        user.setEmail(userDTO.getEmail());
+        user.setRole(userDTO.getRole());
+        user.setManufacturer_id(userDTO.getManufacturerId());
+    
+        // Az alapértelmezett lista már üres, nem kell explicit inicializálni
         return userService.addUser(user);
     }
+
+    @PostMapping("/{username}/addPlantInstance/{plantInstanceId}")
+    @ResponseStatus(HttpStatus.OK)  // 200 OK státuszkód a frissítéshez
+    public PlantInstance addExistingPlantInstanceToUser(
+        @PathVariable String username,
+        @PathVariable Long plantInstanceId) {
+    
+        // A metódus a service rétegen keresztül végzi el a hozzárendelést
+        return plantInstanceService.addExistingPlantInstanceToUser(username, plantInstanceId);
+    }
+    
+
+
 
     @GetMapping("/all")
     public List<User> getAllUser() {
         return userService.getAllUser();
     }
-
-    // http://localhost:5000/plants/getUsers?username=john_doe
-    @GetMapping("/getPlants")
-    public List<Plant> getMethodName(@RequestParam String username) {
-        return userService.findByName(username).getPlants();
-    }
-    
 
     @GetMapping("/find")
     public User getUserByName(@RequestParam String username) {
@@ -82,22 +103,4 @@ public class UserController {
         return ResponseEntity.ok(isAuthenticated);
     }
 
-    @PostMapping("/{userId}/addPlant/{plantId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public User addPlantToUser(@PathVariable Long userId, @PathVariable Long plantId) {
-        return userService.addPlantToUser(userId, plantId);
-    }
-
-    @PostMapping("/{username}/addPlantByName/{plantId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public User addPlantToUserByName(@PathVariable String username, @PathVariable Long plantId) {
-        return userService.addPlantToUserByName(username, plantId);
-    }
-
-    // DELETE /users/name/plants/2
-    @DeleteMapping("/{username}/plants/{plantId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removePlantFromUser(@PathVariable String username, @PathVariable Long plantId) {
-        userService.removePlantFromUser(username, plantId);
-    }
 }

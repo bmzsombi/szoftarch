@@ -35,20 +35,10 @@ public class Plant {
     @JsonProperty 
     private Integer max_light, min_light, max_env_humid, min_env_humid, max_soil_moist, min_soil_moist, max_temp, min_temp;
 
-    //Melyik usernek van ilyen növénye
+    /*//Melyik usernek van ilyen növénye
     @ManyToMany(mappedBy = "plants")
     @JsonIgnoreProperties("plants")
-    private List<User> users;
-
-    //sensor lista
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
+    private List<User> users;*/
 
     //Getterek setterek
     public String getScientificName() {
