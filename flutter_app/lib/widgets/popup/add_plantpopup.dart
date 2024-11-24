@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/utils/http_requests.dart';
 
 class AddPlantPopup extends StatefulWidget {
   final void Function(String plantScName, String plantCName, String plantCat, String plantMaxL,
   String plantMinL, String plantMaxEnvHum, String plantMinEnvHum, String plantMaxSoM, String plantMinSoM,
   String plantMaxTemp, String plantMintemp) onAdd;
 
-  const AddPlantPopup({super.key, required this.onAdd});
+  final VoidCallback onRefresh;
+
+  const AddPlantPopup({
+    super.key, 
+    required this.onAdd,
+    required this.onRefresh
+    });
 
   @override
   State<AddPlantPopup> createState() => _AddPlantPopupState();
@@ -52,7 +57,8 @@ class _AddPlantPopupState extends State<AddPlantPopup> {
       plantMinEnvHum, plantMaxSoM, plantMinSoM, plantMaxTemp, plantMinTemp
     );
     
-    Navigator.of(context).pop(); // Pop-up bezárása
+    widget.onRefresh();
+    Navigator.of(context).pop();
   }
 
   @override
