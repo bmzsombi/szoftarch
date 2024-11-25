@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/widgets/screen/device_instance_info_screen.dart';
-import 'package:flutter_app/utils/sensor.dart';
+import 'package:flutter_app/widgets/screen/modify_device_config_screen.dart';
+import 'package:flutter_app/utils/actuator.dart';
 
-class SensorButtonText extends StatelessWidget {
-  const SensorButtonText({
+class ActuatorButtonText extends StatelessWidget {
+  const ActuatorButtonText({
     super.key,
     required this.text,
     required this.fontSize
@@ -25,29 +25,23 @@ class SensorButtonText extends StatelessWidget {
   }
 }
 
-class SensorButton extends StatelessWidget {
-  const SensorButton({
+class ActuatorButton extends StatelessWidget {
+  const ActuatorButton({
     super.key,
-    required this.sensorId,
-    required this.sensorName,
+    required this.actuatorId,
+    required this.actuatorName,
     required this.fontSize,
     this.backgroundColor = Colors.blueAccent, // Default background color
     this.borderRadius = 8.0, // Default border radius for rounded squares
-    required this.onReturn,
-    required this.deviceid,
-    required this.chartTitle,
-    required this.valueAxisTitle
+    required this.onReturn
   });
 
-  final int sensorId;
-  final String sensorName;
+  final int actuatorId;
+  final String actuatorName;
   final double fontSize;
   final Color backgroundColor;
   final double borderRadius;
   final VoidCallback onReturn;
-  final int deviceid;
-  final String chartTitle;
-  final String valueAxisTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -63,22 +57,17 @@ class SensorButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DeviceInstanceInfoScreen(
-              deviceType: 1,
-              deviceInstanceId: deviceid,
-              sensorId: sensorId,
-              actuatorId: 0,
-              name: sensorName,
-              chartTitle: chartTitle,
-              valueAxisTitle: valueAxisTitle,          
+            builder: (context) => ModifyDeviceConfigScreen(
+              deviceId: actuatorId,
+              deviceName: actuatorName,
             ),
           ),
         ).then((_) => { onReturn });
       },
       child: Container(
         alignment: Alignment.center,
-        child: SensorButtonText(
-          text: sensorName,
+        child: ActuatorButtonText(
+          text: actuatorName,
           fontSize: fontSize,
         ),
       ),
@@ -87,8 +76,8 @@ class SensorButton extends StatelessWidget {
 }
 
 
-class SensorListView extends StatelessWidget {
-  const SensorListView({
+class ActuatorListView extends StatelessWidget {
+  const ActuatorListView({
     super.key,
     required this.devices,
     required this.padding,
@@ -98,11 +87,10 @@ class SensorListView extends StatelessWidget {
     this.mainAxisSpacing = 8.0,
     this.borderRadius = 8.0, // Default border radius for rounded squares
     this.backgroundColor = Colors.lightGreen,
-    required this.onReturn,
-    required this.deviceid,
+    required this.onReturn
   });
 
-  final List<Sensor> devices;
+  final List<Actuator> devices;
   final double padding;
   final double fontSize;
   final int crossAxisCount;
@@ -111,7 +99,6 @@ class SensorListView extends StatelessWidget {
   final double borderRadius;
   final Color backgroundColor;
   final VoidCallback onReturn;
-  final int deviceid;
 
   @override
   Widget build(BuildContext context) {
@@ -126,16 +113,13 @@ class SensorListView extends StatelessWidget {
         ),
         itemCount: devices.length,
         itemBuilder: (context, index) {
-          return SensorButton(
-            sensorId: devices[index].id,
-            sensorName: devices[index].name,
+          return ActuatorButton(
+            actuatorId: devices[index].id,
+            actuatorName: devices[index].name,
             fontSize: fontSize,
             backgroundColor: backgroundColor,
             borderRadius: borderRadius,
             onReturn: onReturn,
-            deviceid: deviceid,
-            chartTitle: devices[index].chartTitle,
-            valueAxisTitle: devices[index].valueAxisTitle,
           );
         },
       ),

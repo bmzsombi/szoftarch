@@ -75,7 +75,7 @@ Future<String> loginRequest(String username_, String password_) async {
   }
 }
 
-Future<List<Sensor>> userGetSensorRequest(String deviceid) async {
+Future<List<Sensor>> userGetSensorRequest(int deviceid) async {
   var uri = Uri.http(url, 'deviceInstance/$deviceid/sensors');
   var response = await http.get(uri);
   if (response.statusCode == 200){
@@ -83,11 +83,11 @@ Future<List<Sensor>> userGetSensorRequest(String deviceid) async {
     return jsonresponse.map((data) => Sensor.fromJson(data)).toList();
   }
   else {
-    throw Exception('Failed to load sensors');
+    throw Exception('There are no sensors assigned');
   }
 }
 
-Future<List<Actuator>> userGetActuatorRequest(String deviceid) async {
+Future<List<Actuator>> userGetActuatorRequest(int deviceid) async {
   var uri = Uri.http(url, 'deviceInstance/$deviceid/actuators');
   var response = await http.get(uri);
   if (response.statusCode == 200){
@@ -95,7 +95,7 @@ Future<List<Actuator>> userGetActuatorRequest(String deviceid) async {
     return jsonresponse.map((data) => Actuator.fromJson(data)).toList();
   }
   else {
-    throw Exception('Failed to load actuators');
+    throw Exception('There are no actuators assigned');
   }
 }
 
@@ -154,6 +154,16 @@ void userGetPlantSensorsRequest() async {
   
 }
 void userGetSensorDetailsRequest() async {}
+
+Future<int> getDeviceIdByPlant(int plantid) async {
+  var uri = Uri.http(url, 'plantInstances/$plantid/deviceInstance');
+  var response = await http.get(uri);
+
+  var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+  return decodedResponse["id"];
+  //int deviceid = jsonDecode(response.body);
+}
+
 void userAddPlantRequest(
   String scname, String cname, String cat, String maxl, String minl, String maxenvhum, 
   String minenvhum, String maxsom, String minsom, String maxtemp, String mintemp
@@ -178,9 +188,6 @@ void userAddPlantRequest(
       "min_temp": mintemp
     })
   );
-  /*List<dynamic> jsonresponse = jsonDecode(response.body);
-  List<Plant> plantList = jsonresponse.map((data) => Plant.fromJson(data)).toList();*/
-  
 }
 void userAddSensorRequest() {
 
@@ -201,8 +208,8 @@ void createUserPlantInstanceRequest(String? username, int plantid, String nick) 
   );
 }
 
-Future<List<ChartData>> getSensorMeasurement(int id) async {
-  var uri = Uri.http(url, 'sensorMeasurement/$id/measurements');
+Future<List<ChartData>> getSensorMeasurement(int deviceInstanceId, int sensorId) async {
+  var uri = Uri.http(url, 'deviceInstance/$deviceInstanceId/sensorsMeasurement5/$sensorId');
   var response = await http.get(uri,
     headers: {
       "Content-type": "application/json"
@@ -247,7 +254,7 @@ Future<List<DropdownDeviceItem>> userGetDeviceTypesRequest() async{
   }
 }
 
-Future<int> createInstanceRequest(int deviceId, String location, String? user, String name) async {
+Future<int> createInstanceRequest(int plantid, int deviceId, String location, String? user, String name) async {
   var uri = Uri.http(instance_url, instance_path);
   var response = await http.post(
     uri,
@@ -261,6 +268,17 @@ Future<int> createInstanceRequest(int deviceId, String location, String? user, S
       "name": name
     })
   );
+  var uri2 = Uri.http(url, 'plantInstances/addDevice');
+  await http.post(uri2,
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: jsonEncode({
+      "plantInstanceId": plantid,
+      "deviceId": deviceId
+    })
+  );
+
   if (response.statusCode == 201) {
     return 1;
   } else {
@@ -269,7 +287,7 @@ Future<int> createInstanceRequest(int deviceId, String location, String? user, S
 }
 
 Future<int> deleteInstanceRequest(int instanceId) async {
-  var uri = Uri.http(instance_url, '$instance_path/$instanceId');
+  var uri = Uri.http(instance_url, 'plantInstances/$instanceId');
   var response = await http.delete(
     uri,
     headers: {

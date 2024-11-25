@@ -6,7 +6,12 @@ import 'package:flutter_app/utils/toastutils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserAddDeviceScreen extends StatefulWidget {
-  const UserAddDeviceScreen({super.key});
+  const UserAddDeviceScreen({
+    required this.plantid,
+    super.key
+    });
+
+  final int plantid;
 
   @override
   State<UserAddDeviceScreen> createState() => _UserAddDeviceScreenState();
@@ -39,7 +44,7 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
         deviceLocationController.text.trim().isNotEmpty
     )
     {
-      int result = await createInstanceRequest(selectedDevice!.deviceId, deviceLocationController.text.trim(), await getUsername(), deviceNameController.text.trim());
+      int result = await createInstanceRequest(widget.plantid, selectedDevice!.deviceId, deviceLocationController.text.trim(), await getUsername(), deviceNameController.text.trim());
 
       if (result == 1) {
         ToastUtils toastUtils = ToastUtils(toastText: "Device added to plant.", context: context);
