@@ -256,7 +256,7 @@ class ConfigUploadRow extends StatelessWidget {
               child: Text(
                 fileText,
                 style: TextStyle(
-                  fontSize: fontSize / 1.5,
+                  fontSize: fontSize,
                   color: Colors.grey.shade700,
                 ),
               ),

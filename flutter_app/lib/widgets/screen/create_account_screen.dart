@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/widgets/common/custom_widgets.dart';
+import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
 import 'package:flutter_app/utils/http_requests.dart';
 import 'package:flutter_app/utils/toastutils.dart';
 
@@ -87,7 +87,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 scale: 8,
               ),
             ),
-            const LoginScreenText(text: 'App name', fontSize: 32.0),
+            const LoginScreenText(text: 'PlantMonitor', fontSize: 32.0),
             const Spacer(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),

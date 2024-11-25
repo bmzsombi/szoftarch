@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/utils/device_utils.dart';
-import 'package:flutter_app/widgets/common/custom_widgets.dart';
+import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
 import 'package:flutter_app/widgets/screen/add_new_device_screen.dart';
 import 'package:flutter_app/widgets/screen/login_screen.dart';
 import 'package:flutter_app/widgets/screen/plant_list_screen.dart';
@@ -103,11 +103,11 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
                   decoration: BoxDecoration(
                     color: Colors.lightGreen,
                   ),
-                  child: Text('My Little Plants'),
+                  child: Text('PlantMonitor'),
                 ),
                 if (role == 'manufacturer')
                   ListTile(
-                    title: const Text('Sensors'),
+                    title: const Text('Devices'),
                     onTap: () {
                       // Sensors képernyő betöltése
                     },
@@ -145,6 +145,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
             if (snapshot.hasData) {
               deviceList = snapshot.data!;
               return DeviceListView(
+                backgroundColor: Colors.greenAccent,
                 devices: deviceList,
                 padding: 4.0,
                 fontSize: 24.0,
@@ -155,6 +156,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
           }
           else {
             return DeviceListView(
+              backgroundColor: Colors.greenAccent,
               devices: searchedDeviceList,
               padding: 4.0,
               fontSize: 24.0,

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../common/custom_widgets.dart';
+import '../common/better_custom_widgets.dart';
 import '/utils/device_utils.dart';
 import 'package:flutter_app/utils/http_requests.dart';
 import 'package:flutter_app/utils/toastutils.dart';

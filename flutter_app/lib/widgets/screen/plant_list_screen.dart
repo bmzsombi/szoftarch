@@ -21,7 +21,7 @@ class PlantListScreen extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'My Little Plants'),
+      home: const MyHomePage(title: 'PlantMonitor'),
     );
   }
 }
@@ -142,19 +142,19 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: BoxDecoration(
                 color: Colors.lightGreen,
               ),
-              child: Text('My Little Plants'),
+              child: Text('PlantMonitor'),
             ),
             ListTile(
               title: const Text('My Plants'),
               onTap: () {},
             ),
-            ListTile(
-              title: const Text('Sensors'),
-              onTap: () {
-                //loadDeviceListScreen();
-                //TODO: ide jönnek a sensorok
-              },
-            ),
+            // ListTile(
+            //   title: const Text('Sensors'),
+            //   onTap: () {
+            //     //loadDeviceListScreen();
+            //     //TODO: ide jönnek a sensorok
+            //   },
+            // ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton.icon(

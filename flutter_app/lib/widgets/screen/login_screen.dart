@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/screen/create_account_screen.dart';
-import 'package:flutter_app/widgets/common/custom_widgets.dart';
+import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
 import 'package:flutter_app/utils/http_requests.dart';
 import 'package:flutter_app/widgets/screen/plant_list_screen.dart';
 import 'package:flutter_app/widgets/screen/device_list_screen.dart';
@@ -91,7 +91,7 @@ class _LoginscreenState extends State<Loginscreen> {
                 scale: 5,
               ),
             ),
-            const LoginScreenText(text: 'App name', fontSize: 32.0),
+            const LoginScreenText(text: 'PlantMonitor', fontSize: 32.0),
             const Spacer(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
