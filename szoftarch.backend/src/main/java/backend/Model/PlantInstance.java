@@ -35,7 +35,7 @@ public class PlantInstance {
     private Plant plant; // Melyik növénytípus
 
     @ManyToOne
-    @JoinColumn(name = "device_id", nullable = false) // Az eszköz id-ja
+    @JoinColumn(name = "device_id") // Az eszköz id-ja
     private Device device; // A plantInstance-hoz tartozó Device
 
     /*@OneToMany(mappedBy = "plantInstance", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -13,6 +17,7 @@ import backend.Model.Device;
 import backend.Model.Plant;
 import backend.Model.PlantInstance;
 import backend.Model.Sensor;
+import backend.Model.SensorMeasurement;
 import backend.Model.User;
 import backend.Repository.DeviceRepository;
 import backend.Repository.PlantInstanceRepository;
@@ -35,11 +40,7 @@ public class PlantInstanceService {
     private UserRepository userRepository;
 
     @Autowired
-    private SensorRepository sensorRepository;
-
-    @Autowired
     private DeviceRepository deviceRepository;
-
 
     public PlantInstance addPlantInstanceToUser(Long userId, Long plantId) {
         // User és Plant ellenőrzése és betöltése
@@ -117,17 +118,13 @@ public class PlantInstanceService {
         // Ellenőrizd, hogy a növény létezik
         Plant plant = plantRepository.findById(dto.getPlantId())
             .orElseThrow(() -> new RuntimeException("Plant not found"));
-    
-        // Ellenőrizd, hogy a készülék létezik
-        Device device = deviceRepository.findById(dto.getDeviceId())
-            .orElseThrow(() -> new RuntimeException("Device not found"));
+
     
         // Hozz létre egy új PlantInstance-t
         PlantInstance plantInstance = new PlantInstance();
         plantInstance.setUser(user);
         plantInstance.setPlant(plant);
         plantInstance.setNickname(dto.getNickname());
-        plantInstance.setDevice(device);
     
         // Ha vannak szenzor ID-k, adjuk hozzá azokat
     
@@ -135,11 +132,9 @@ public class PlantInstanceService {
         return plantInstanceRepository.save(plantInstance);
     }
     
-    
     public Optional<PlantInstance> findById(Long plantInstanceId) {
         return plantInstanceRepository.findById(plantInstanceId);
     }
-
 
     public PlantInstance addExistingPlantInstanceToUser(String username, Long plantInstanceId) {
         // Felhasználó betöltése username alapján
