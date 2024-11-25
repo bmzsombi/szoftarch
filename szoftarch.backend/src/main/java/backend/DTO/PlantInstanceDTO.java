@@ -5,7 +5,7 @@ import java.util.List;
 public class PlantInstanceDTO {
     
     private String username; // A felhasználó neve
-
+    private Long plantInstanceId;
     private Long userId; // A felhasználó ID-ja
     private Long plantId; // A növény ID-ja
     private String nickname; // Becenév
@@ -18,7 +18,12 @@ public class PlantInstanceDTO {
     public void setUsername(String username) {
         this.username = username;
     }
-
+    public Long getPlantInstanceId() {
+        return plantInstanceId;
+    }
+    public void setPlantInstanceId(Long plantInstanceId) {
+        this.plantInstanceId = plantInstanceId;
+    }
     public Long getDeviceId() {
         return deviceId;
     }

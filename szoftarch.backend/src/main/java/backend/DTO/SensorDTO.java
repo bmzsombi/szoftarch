@@ -13,16 +13,7 @@ public class SensorDTO {
     private String readEndpoint; // Az olvasási végpont
     private String valueKey;     // Az érték kulcs
     private Integer samplingInterval; // Mintavételi intervallum
-    private Long plantInstanceId;
 
-
-    public Long getPlantInstanceId() {
-        return plantInstanceId;
-    }
-
-    public void setPlantInstanceId(Long plantInstanceId) {
-        this.plantInstanceId = plantInstanceId;
-    }
 
     // Getters and Setters
     public Long getDeviceId() {

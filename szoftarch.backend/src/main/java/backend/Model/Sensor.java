@@ -59,18 +59,10 @@ public class Sensor {
     @Column(name = "sampling_interval")
     private Integer samplingInterval;
 
-    @ManyToOne
+   /*  @ManyToOne
     @JoinColumn(name = "plant_instance_id")
     @JsonBackReference
-    private PlantInstance plantInstance; 
-
-    public PlantInstance getPlantInstance() {
-        return plantInstance;
-    }
-
-    public void setPlantInstance(PlantInstance plantInstance) {
-        this.plantInstance = plantInstance;
-    }
+    private PlantInstance plantInstance; */
 
     public Device getDevice() {
         return device;
