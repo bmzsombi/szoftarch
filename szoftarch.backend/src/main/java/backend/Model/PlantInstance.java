@@ -27,7 +27,7 @@ public class PlantInstance {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonManagedReference
+    @JsonManagedReference("user-plantInstances")
     private User user; // Melyik felhasználóhoz tartozik
 
     @ManyToOne

@@ -2,6 +2,7 @@ package backend.Model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -23,6 +24,7 @@ public class ActuatorStateHistory {
 
     @ManyToOne
     @JoinColumn(name = "instance_id", nullable = false)
+    @JsonBackReference
     private DeviceInstance instance;
 
     // innen szedi a nvevét

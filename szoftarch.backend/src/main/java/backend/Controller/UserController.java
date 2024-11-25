@@ -57,7 +57,6 @@ public class UserController {
         user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole());
-        user.setManufacturer_id(userDTO.getManufacturerId());
     
         // Az alapértelmezett lista már üres, nem kell explicit inicializálni
         return userService.addUser(user);
@@ -108,11 +107,20 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody User loginRequest) {
-        boolean isAuthenticated = userService.isAuthenticated(loginRequest.getUsername(), loginRequest.getPassword());
-        return ResponseEntity.ok(isAuthenticated);
+    public ResponseEntity<UserDTO> login(@RequestBody UserDTO loginRequest) {
+        Optional<User> user = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        if (user.isPresent()) {
+            User foundUser = user.get();
+            UserDTO responseDTO = new UserDTO(
+                foundUser.getUsername(),
+                foundUser.getPassword(), 
+                foundUser.getEmail(),
+                foundUser.getRole()
+            );
+            return ResponseEntity.ok(responseDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
-
-
 
 }

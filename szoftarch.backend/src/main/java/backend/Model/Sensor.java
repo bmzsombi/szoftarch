@@ -60,7 +60,7 @@ public class Sensor {
     private Integer samplingInterval;
 
     @ManyToOne
-    @JoinColumn(name = "plant_instance_id", nullable = false)
+    @JoinColumn(name = "plant_instance_id")
     @JsonBackReference
     private PlantInstance plantInstance; 
 
