@@ -21,6 +21,7 @@ import backend.DTO.PlantInstanceDTO;
 import backend.DTO.UserDTO;
 import backend.Model.Plant;
 import backend.Model.PlantInstance;
+import backend.Model.Sensor;
 import backend.Model.User;
 import backend.Service.PlantInstanceService;
 import backend.Service.UserService;
