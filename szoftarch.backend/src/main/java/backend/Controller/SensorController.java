@@ -31,9 +31,6 @@ public class SensorController {
     @Autowired
     private DeviceService deviceService;
 
-    @Autowired
-    private PlantInstanceService plantInstanceService;
-
     @PostMapping("/addType")
     @ResponseStatus(HttpStatus.CREATED)  // A státuszkód '201 Created' lesz
     public Sensor addSensorType(@RequestBody SensorDTO sensorDTO) {

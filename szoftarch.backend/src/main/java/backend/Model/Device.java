@@ -24,14 +24,6 @@ public class Device {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     @Column(nullable = false)
     private String manufacturer;
 
@@ -65,6 +57,14 @@ public class Device {
         return manufacturer;
     }
 
+    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
