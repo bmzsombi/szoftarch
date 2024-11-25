@@ -5,38 +5,17 @@ class Device {
   final int id;
   final String name;
 
-  Device(this.id, this.name);
-}
+  Device({
+    required this.id,
+    required this.name
+  });
 
-List<Device> getDeviceList() {
-  final deviceList = <Device>[];
-
-  deviceList.add(Device(1, 'a'));
-  deviceList.add(Device(2, 'aa'));
-  deviceList.add(Device(3, 'aaa'));
-  deviceList.add(Device(4, 'aaaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(5, 'aaeaa'));
-  deviceList.add(Device(1, 'aaa'));
-  deviceList.add(Device(2, 'aa'));
-  deviceList.add(Device(3, 'a'));
-
-  return deviceList; 
+  factory Device.fromJson(Map<String, dynamic> json){
+    return Device(
+      id: json['id'],
+      name: json['model']
+    );
+  }
 }
 
 Future<File?> pickConfigFile() async {
@@ -70,4 +49,32 @@ List<Device> searchDevices(String term, List<Device> allDevices) {
     }
   }
   return searchedDevices;
+}
+
+class DropdownDeviceItem {
+  final int deviceId;
+  final String manufacturer;
+  final String model;
+  final String firmwareVersion;
+
+  DropdownDeviceItem({
+    required this.deviceId,
+    required this.manufacturer,
+    required this.model,
+    required this.firmwareVersion,
+  });
+
+  @override
+  String toString() {
+    return '$manufacturer $model ($firmwareVersion)';
+  }
+
+  factory DropdownDeviceItem.fromJson(Map<String, dynamic> json) {
+    return DropdownDeviceItem(
+      deviceId: json["id"],
+      manufacturer: json['manufacturer'],
+      model: json['model'],
+      firmwareVersion: json['firmwareVersion'],
+    );
+  }
 }
