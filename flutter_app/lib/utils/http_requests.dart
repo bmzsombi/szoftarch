@@ -15,7 +15,7 @@ const String plantsPath = 'plants/all';
 const String addPlantPath = 'plants/addType';
 const String url = 'localhost:5000';
 const String createAccountPath = 'users/addType';
-const String loginPath = 'users/loginFull';
+const String loginPath = 'users/login';
 const String deviceTypesPath = 'device/all';
 const String deletePlantPath = 'plants/delete';
 const String deviceInstancesPath = 'deviceInstance/all';
@@ -100,7 +100,6 @@ Future<Map<String, dynamic>> manufacturerAddDeviceRequest(File configFile) async
 
   return jsonDecode(response.body);
 }
-void manufacturerModifyDeviceRequest() {}
 
 Future<List<Plant>> userGetPlantsRequest(String? user) async {
   var uri = Uri.http(backend_url, '$plantsPath/$user');
@@ -152,8 +151,8 @@ void userAddPlantRequest(
       "min_temp": mintemp
     })
   );
-  List<dynamic> jsonresponse = jsonDecode(response.body);
-  List<Plant> plantList = jsonresponse.map((data) => Plant.fromJson(data)).toList();
+  /*List<dynamic> jsonresponse = jsonDecode(response.body);
+  List<Plant> plantList = jsonresponse.map((data) => Plant.fromJson(data)).toList();*/
   
 }
 void userAddSensorRequest() {
