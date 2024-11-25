@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/utils/actuator.dart';
 import 'package:flutter_app/utils/http_requests.dart';
+import 'package:flutter_app/utils/sensor.dart';
 import 'package:flutter_app/widgets/screen/user_add_device_screen.dart';
 import 'package:flutter_app/utils/toastutils.dart';
-
+import 'package:flutter_app/widgets/screen/add_device_to_plant_screen.dart';
+import 'package:flutter_app/widgets/common/sensors_list.dart';
+import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
 
 class PlantDetails extends StatefulWidget {
   /*final Plant plant;*/
@@ -15,19 +19,39 @@ class PlantDetails extends StatefulWidget {
     required this.plantScName,
     required this.id,
     required this.onRefresh
-    /*, required this.plant*/});
+    /*, required this.plant*/
+  });
 
   @override
   _PlantDetailsState createState() => _PlantDetailsState();
 }
 
 class _PlantDetailsState extends State<PlantDetails> {
+  bool shouldFetch = true;
+  List<Sensor> sensorList = [];
+
+  void refreshPressed() {
+    setState(() {
+      shouldFetch = true;
+    });
+  }
+
   void deletePlant(){
     userDeletePlantRequest(widget.id);
     Navigator.pop(context);
     ToastUtils toastUtils = ToastUtils(toastText: "Plant deleted.", context: context);
     toastUtils.showToast();
     widget.onRefresh();
+  }
+
+  Future<List<Sensor>> fetchSensorList(String deviceid) async {
+    await Future.delayed(const Duration(seconds: 2));
+    return userGetSensorRequest(deviceid);
+  }
+
+  Future<List<Actuator>> fetchActuatorList(String deviceid) async {
+    await Future.delayed(const Duration(seconds: 2));
+    return userGetActuatorRequest(deviceid);
   }
 
   void addDeviceToPlant(){
@@ -51,7 +75,40 @@ class _PlantDetailsState extends State<PlantDetails> {
       appBar: AppBar(
         title: const Text('Plant Details'),
       ),
-      body: Center(
+      body: FutureBuilder(
+        future: shouldFetch ? fetchSensorList() : null,
+        builder: (context, snapshot) {
+          if (shouldFetch) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            shouldFetch = false;
+            if (snapshot.hasError) {
+              return Center(child: ErrorText(errorText: snapshot.error.toString(), fontSize: 24.0));
+            }
+            if (snapshot.hasData) {
+              sensorList = snapshot.data!;
+              return SensorListView(
+                devices: sensorList,
+                padding: 4.0,
+                fontSize: 24.0,
+                onReturn: refreshPressed,
+              );
+            }
+            return const Center(child: Text("No devices available"));
+          }
+          else {
+            return SensorListView(
+              devices: sensorList,//searchedDeviceList,
+              padding: 4.0,
+              fontSize: 24.0,
+              onReturn: () => {},
+            );
+          }
+        }
+      ),
+/*
+      Center(
         child: SizedBox(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -74,7 +131,7 @@ class _PlantDetailsState extends State<PlantDetails> {
             ),
           ),
         ),
-      ),
+      ),*/
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,

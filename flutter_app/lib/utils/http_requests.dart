@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:flutter_app/utils/actuator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:flutter_app/utils/device_utils.dart';
 import 'package:flutter_app/utils/plant.dart';
 import 'package:flutter_app/utils/chart_utils.dart';
+import 'package:flutter_app/utils/sensor.dart';
 
 const String backend_url = 'localhost:5000';
 const String validator_url = 'localhost:5001';
@@ -70,6 +72,30 @@ Future<String> loginRequest(String username_, String password_) async {
   }
   else {
     return "-1"; // user/manufacturer not found
+  }
+}
+
+Future<List<Sensor>> userGetSensorRequest(String deviceid) async {
+  var uri = Uri.http(url, 'deviceInstance/$deviceid/sensors');
+  var response = await http.get(uri);
+  if (response.statusCode == 200){
+    List<dynamic> jsonresponse = jsonDecode(response.body);
+    return jsonresponse.map((data) => Sensor.fromJson(data)).toList();
+  }
+  else {
+    throw Exception('Failed to load sensors');
+  }
+}
+
+Future<List<Actuator>> userGetActuatorRequest(String deviceid) async {
+  var uri = Uri.http(url, 'deviceInstance/$deviceid/actuators');
+  var response = await http.get(uri);
+  if (response.statusCode == 200){
+    List<dynamic> jsonresponse = jsonDecode(response.body);
+    return jsonresponse.map((data) => Actuator.fromJson(data)).toList();
+  }
+  else {
+    throw Exception('Failed to load actuators');
   }
 }
 

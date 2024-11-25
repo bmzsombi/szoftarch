@@ -81,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
       throw Exception('Username not found');
     }
     return userGetPlantsRequest(username);
+    //return userGetPlantTypesRequest();
   }
 
   void exitPressed(){
