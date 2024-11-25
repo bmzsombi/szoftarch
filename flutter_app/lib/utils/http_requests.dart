@@ -188,9 +188,6 @@ void userAddPlantRequest(
       "min_temp": mintemp
     })
   );
-  /*List<dynamic> jsonresponse = jsonDecode(response.body);
-  List<Plant> plantList = jsonresponse.map((data) => Plant.fromJson(data)).toList();*/
-  
 }
 void userAddSensorRequest() {
 
@@ -257,7 +254,7 @@ Future<List<DropdownDeviceItem>> userGetDeviceTypesRequest() async{
   }
 }
 
-Future<int> createInstanceRequest(int deviceId, String location, String? user, String name) async {
+Future<int> createInstanceRequest(int plantid, int deviceId, String location, String? user, String name) async {
   var uri = Uri.http(instance_url, instance_path);
   var response = await http.post(
     uri,
@@ -271,6 +268,17 @@ Future<int> createInstanceRequest(int deviceId, String location, String? user, S
       "name": name
     })
   );
+  var uri2 = Uri.http(url, 'plantInstances/addDevice');
+  await http.post(uri2,
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: jsonEncode({
+      "plantInstanceId": plantid,
+      "deviceId": deviceId
+    })
+  );
+
   if (response.statusCode == 201) {
     return 1;
   } else {
@@ -279,7 +287,7 @@ Future<int> createInstanceRequest(int deviceId, String location, String? user, S
 }
 
 Future<int> deleteInstanceRequest(int instanceId) async {
-  var uri = Uri.http(instance_url, '$instance_path/$instanceId');
+  var uri = Uri.http(instance_url, 'plantInstances/$instanceId');
   var response = await http.delete(
     uri,
     headers: {
