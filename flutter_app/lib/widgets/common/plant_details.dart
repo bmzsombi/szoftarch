@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/utils/http_requests.dart';
-import 'package:flutter_app/widgets/screen/add_device_to_plant_screen.dart';
 import 'package:flutter_app/widgets/screen/user_add_device_screen.dart';
 import 'package:flutter_app/utils/toastutils.dart';
 
