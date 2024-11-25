@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:flutter_app/utils/device_utils.dart';
 import 'package:flutter_app/utils/plant.dart';
+import 'package:flutter_app/utils/chart_utils.dart';
 
 const String backend_url = 'localhost:5000';
 const String validator_url = 'localhost:5001';
@@ -160,6 +161,34 @@ void userAddSensorRequest() {
 }
 
 void createUserPlantInstanceRequest(String? username, int plantid, String nick) async {
+  var uri = Uri.http(url, 'plantInstances/addType');
+  var response = await http.post(
+    uri,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: jsonEncode({
+      "username": username,
+      "plantId": plantid,
+      "nickname": nick
+    })
+  );
+}
+
+Future<List<ChartData>> getSensorMeasurement(int id) async {
+  var uri = Uri.http(url, 'sensorMeasurement/$id/measurements');
+  var response = await http.get(uri,
+    headers: {
+      "Content-type": "application/json"
+    }
+  );
+  if (response.statusCode == 200) {
+    List<ChartData> data = convertToChartData(jsonDecode(response.body));
+    return data;
+  }
+  else {
+    return [];
+  }
 
 }
 

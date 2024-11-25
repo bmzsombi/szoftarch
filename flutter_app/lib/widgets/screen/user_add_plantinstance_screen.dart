@@ -38,8 +38,7 @@ class _UserAddPlantInstanceScreenState extends State<UserAddPlantInstanceScreen>
 
   void addDevicePressed() async {
     if (selectedDevice != null &&
-        deviceNameController.text.trim().isNotEmpty &&
-        deviceLocationController.text.trim().isNotEmpty
+        deviceNameController.text.trim().isNotEmpty
     )
     {
       createUserPlantInstanceRequest(await getUsername(), selectedDevice!.id, deviceNameController.text.trim());
