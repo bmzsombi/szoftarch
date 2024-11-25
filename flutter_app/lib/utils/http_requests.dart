@@ -11,11 +11,10 @@ const String instance_path = 'api/instances';
 const String validatorPath = 'api/validate';
 const String devicesPath= 'device/all';
 const String usersPath = 'api/users';
-const String plantsPath = 'plants/all';
 const String addPlantPath = 'plants/addType';
 const String url = 'localhost:5000';
 const String createAccountPath = 'users/addType';
-const String loginPath = 'users/login';
+const String loginPath = 'users/loginFull';
 const String deviceTypesPath = 'device/all';
 const String deletePlantPath = 'plants/delete';
 const String deviceInstancesPath = 'deviceInstance/all';
@@ -102,7 +101,7 @@ Future<Map<String, dynamic>> manufacturerAddDeviceRequest(File configFile) async
 }
 
 Future<List<Plant>> userGetPlantsRequest(String? user) async {
-  var uri = Uri.http(backend_url, '$plantsPath/$user');
+  var uri = Uri.http(backend_url, 'users/$user/plantInstances');
   var response = await http.get(uri);
 
   if (response.statusCode == 200){
