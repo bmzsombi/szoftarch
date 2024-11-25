@@ -3,6 +3,7 @@ package backend.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -35,10 +36,8 @@ public class User {
     private String password;
     private String email;
     private String role;
-    private Integer manufacturer_id;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("user") 
     private List<PlantInstance> plantInstances = new ArrayList<>();
 
     public List<PlantInstance> getPlantInstances() {
@@ -81,14 +80,6 @@ public class User {
         this.role = role;
     }
 
-    public Integer getManufacturer_id() {
-        return manufacturer_id;
-    }
-
-    public void setManufacturer_id(Integer manufacturer_id) {
-        this.manufacturer_id = manufacturer_id;
-    }
-
     public User(){}
 
     public User(String username, String email, String password, String role, Integer manufacturer_id) {
@@ -96,6 +87,5 @@ public class User {
         this.password = password;
         this.email = email;
         this.role = role;
-        this.manufacturer_id = manufacturer_id;
     }
 }

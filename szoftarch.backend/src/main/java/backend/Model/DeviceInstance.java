@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -26,7 +28,6 @@ public class DeviceInstance {
 
     @ManyToOne
     @JoinColumn(name = "device_id", nullable = false)
-    @JsonIgnore
     private Device device;
 
     private String name;
@@ -40,9 +41,11 @@ public class DeviceInstance {
     private LocalDateTime installationDate = LocalDateTime.now();
 
     @OneToMany(mappedBy = "instance", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<SensorMeasurement> sensorMeasurements;
 
     @OneToMany(mappedBy = "instance", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<ActuatorStateHistory> actuatorStateHistories;
 
     public Long getId() {

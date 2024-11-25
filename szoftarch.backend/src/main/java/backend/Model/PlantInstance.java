@@ -3,7 +3,9 @@ package backend.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -25,7 +27,7 @@ public class PlantInstance {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnoreProperties("plantInstances")
+    @JsonManagedReference("user-plantInstances")
     private User user; // Melyik felhasználóhoz tartozik
 
     @ManyToOne
@@ -33,10 +35,22 @@ public class PlantInstance {
     private Plant plant; // Melyik növénytípus
 
     @OneToMany(mappedBy = "plantInstance", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("plantInstance")
     private List<Sensor> sensors = new ArrayList<>(); // A növényhez tartozó szenzorok
 
+    
+    @OneToMany(mappedBy = "plantInstance", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    private List<OwnActuator> ownActuators = new ArrayList<>(); // A növényhez tartozó aktorok
+     
     private String nickname;
+
+    public List<OwnActuator> getOwnActuators() {
+        return ownActuators;
+    }
+
+    public void setOwnActuators(List<OwnActuator> ownActuators) {
+        this.ownActuators = ownActuators;
+    }
 
     public String getNickname() {
         return nickname;

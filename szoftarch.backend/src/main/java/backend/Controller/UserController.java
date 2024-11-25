@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import backend.DTO.PlantInstanceDTO;
 import backend.DTO.UserDTO;
+import backend.Model.Plant;
 import backend.Model.PlantInstance;
 import backend.Model.User;
 import backend.Service.PlantInstanceService;
@@ -34,6 +35,18 @@ public class UserController {
     @Autowired
     private PlantInstanceService plantInstanceService;
     
+    @GetMapping("/{username}/plantInstances")
+    public List<Plant> getPlantInstancesByUsername(@PathVariable String username) {
+        // User keresése username alapján
+        User user = userService.findByName(username);
+
+        // A user-hez tartozó PlantInstance-ok listájából csak a Plant adatokat kiválasztjuk
+        List<Plant> plants = user.getPlantInstances().stream()
+                .map(PlantInstance::getPlant)  // Minden PlantInstance-ból kiválasztjuk a Plant-ot
+                .collect(Collectors.toList()); // Összegyűjtjük a Plant-eket egy listába
+
+        return plants;  // Visszaadjuk a Plant-ek listáját
+    }
 
     @PostMapping("/addType")
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,7 +57,6 @@ public class UserController {
         user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole());
-        user.setManufacturer_id(userDTO.getManufacturerId());
     
         // Az alapértelmezett lista már üres, nem kell explicit inicializálni
         return userService.addUser(user);
@@ -59,9 +71,6 @@ public class UserController {
         // A metódus a service rétegen keresztül végzi el a hozzárendelést
         return plantInstanceService.addExistingPlantInstanceToUser(username, plantInstanceId);
     }
-    
-
-
 
     @GetMapping("/all")
     public List<User> getAllUser() {
@@ -98,9 +107,20 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody User loginRequest) {
-        boolean isAuthenticated = userService.isAuthenticated(loginRequest.getUsername(), loginRequest.getPassword());
-        return ResponseEntity.ok(isAuthenticated);
+    public ResponseEntity<UserDTO> login(@RequestBody UserDTO loginRequest) {
+        Optional<User> user = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        if (user.isPresent()) {
+            User foundUser = user.get();
+            UserDTO responseDTO = new UserDTO(
+                foundUser.getUsername(),
+                foundUser.getPassword(), 
+                foundUser.getEmail(),
+                foundUser.getRole()
+            );
+            return ResponseEntity.ok(responseDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
 }

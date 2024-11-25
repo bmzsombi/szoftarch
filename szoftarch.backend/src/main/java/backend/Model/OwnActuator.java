@@ -1,6 +1,9 @@
 package backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,7 +40,7 @@ public class OwnActuator {
 
     @ManyToOne
     @JoinColumn(name = "device_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Device device;
 
     @Column(nullable = false)
@@ -46,6 +49,19 @@ public class OwnActuator {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ActuatorType type;
+
+    @ManyToOne
+    @JoinColumn(name = "plant_instance_id")  // A kapcsolódó PlantInstance
+    @JsonBackReference
+    private PlantInstance plantInstance;
+
+    public PlantInstance getPlantInstance() {
+        return plantInstance;
+    }
+
+    public void setPlantInstance(PlantInstance plantInstance) {
+        this.plantInstance = plantInstance;
+    }
 
     @Column(nullable = false, name = "status_endpoint")
     private String statusEndpoint;

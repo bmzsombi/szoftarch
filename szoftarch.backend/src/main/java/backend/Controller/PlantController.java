@@ -31,20 +31,7 @@ public class PlantController {
     public List<Plant> getAllPlants() {
         return plantService.getAllPlants();
     }
-
-    /*//http://localhost:5000/plants/getUsers?id=2
-    @GetMapping("/getUsers")
-    public List<User> getUsers(@RequestParam Long id) {
-        Optional<Plant> optionalPlant = plantService.findById(id);
-    
-        if (optionalPlant.isPresent()) {
-            return optionalPlant.get().getUsers();
-        } else {
-            // Ha nincs ilyen növény, akkor üres lista visszaadása
-            return Collections.emptyList();
-        }
-    }*/
-    
+   
 
     // Növény hozzáadása mint plant típus
     @PostMapping("/addType")
