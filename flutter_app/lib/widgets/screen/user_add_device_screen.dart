@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/widgets/common/custom_widgets.dart';
+import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
 import 'package:flutter_app/utils/device_utils.dart';
 import 'package:flutter_app/utils/http_requests.dart';
+import 'package:flutter_app/utils/toastutils.dart';
 
 
 class UserAddDeviceScreen extends StatefulWidget {
@@ -26,13 +27,33 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
     });
   }
 
-  void addDevicePressed() {
+  void addDevicePressed() async {
     if (selectedDevice != null &&
         deviceNameController.text.trim().isNotEmpty &&
         deviceLocationController.text.trim().isNotEmpty
-    ) {
-      createInstanceRequest(selectedDevice!.deviceId, deviceLocationController.text.trim(), "exampleUser", deviceNameController.text.trim());
+    )
+    {
+      int result = await createInstanceRequest(selectedDevice!.deviceId, deviceLocationController.text.trim(), "exampleUser", deviceNameController.text.trim());
+
+      if (result == 1) {
+        ToastUtils toastUtils = ToastUtils(toastText: "Device added to plant.", context: context);
+        toastUtils.showToast();
+      }
+
+      else if (result == -1) {
+        setErrorText("Device couldn't be added!");
+      }
+
       Navigator.pop(context);
+    }
+    else if (selectedDevice == null) {
+      setErrorText("Select a device type!");
+    }
+    else if (deviceNameController.text.trim().isEmpty) {
+      setErrorText("Device name can't be empty!");
+    }
+    else if (deviceLocationController.text.trim().isEmpty) {
+      setErrorText("Device location can't be empty!");
     }
   }
 
@@ -119,7 +140,7 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
                 ),
               );
             }
-            return const Center(child: Text("No devices available"));
+            return const Center(child: ErrorText(errorText: "No devices available"));
           }
           else {
             return Center(
@@ -175,6 +196,8 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
                   ),
                   const Spacer(),
                   AppButton(text: 'Add device', onPressed: addDevicePressed, fontSize: 24.0, textColor: Colors.black, backgroundColor: Colors.white),
+                  const Spacer(),
+                  ErrorText(errorText: errorText),
                   const Spacer()
                 ],
               ),

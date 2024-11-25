@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/widgets/common/custom_widgets.dart';
+import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
 import 'package:flutter_app/utils/http_requests.dart';
 import 'package:flutter_app/utils/toastutils.dart';
 
@@ -55,14 +55,16 @@ class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(),
-              AppText(text: widget.name, fontSize: 32.0, textColor: Colors.black),
-              const Spacer(),
-              AppText(text: widget.location, fontSize: 24.0, textColor: Colors.black),
-              const AppText(text: 'ide mi kell még? xddd', fontSize: 16.0, textColor: Colors.black),
-              const Spacer(),
-              AppButton(text: 'Remove device', onPressed: () => {deleteInstancePressed(context)}, fontSize: 32.0, textColor: Colors.black, backgroundColor: Colors.white),
-              const Spacer(),
+                LineChartWidget(
+                  chartTitle: "example chart",
+                  dates: [
+                    DateTime(2024, 1, 1),
+                    DateTime(2024, 1, 2),
+                    DateTime(2024, 1, 3),
+                    DateTime(2024, 1, 4),
+                  ],
+                  values: [10, 20, 15, 25],
+                )
             ],
           ),
         );
