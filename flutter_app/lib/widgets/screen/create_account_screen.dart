@@ -84,7 +84,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               borderRadius: BorderRadius.circular(30),
               child: Image.asset(
                 'assets/app_logo.jpeg',
-                scale: 5,
+                scale: 8,
               ),
             ),
             const LoginScreenText(text: 'App name', fontSize: 32.0),
@@ -152,7 +152,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 0.0),
               child: Row(
                 children: <Widget>[
                   const LoginScreenText(text: 'Manufacturer', fontSize: 24.0),
