@@ -9,8 +9,14 @@ public class PlantInstanceDTO {
     private Long userId; // A felhasználó ID-ja
     private Long plantId; // A növény ID-ja
     private String nickname; // Becenév
-    private Long deviceId;
+    private Long deviceInstanceId;
     
+    public Long getDeviceInstanceId() {
+        return deviceInstanceId;
+    }
+    public void setDeviceInstanceId(Long deviceInstanceId) {
+        this.deviceInstanceId = deviceInstanceId;
+    }
     //private List<Long> sensorIds; // A szenzorok ID-i (ha előre definiáltak)
     public String getUsername() {
         return username;
@@ -24,12 +30,7 @@ public class PlantInstanceDTO {
     public void setPlantInstanceId(Long plantInstanceId) {
         this.plantInstanceId = plantInstanceId;
     }
-    public Long getDeviceId() {
-        return deviceId;
-    }
-    public void setDeviceId(Long deviceId) {
-        this.deviceId = deviceId;
-    }
+
     public Long getUserId() {
         return userId;
     }

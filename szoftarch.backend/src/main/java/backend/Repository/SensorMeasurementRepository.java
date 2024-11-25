@@ -3,6 +3,8 @@ package backend.Repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import backend.Model.Sensor;
 import backend.Model.SensorMeasurement;
@@ -13,5 +15,6 @@ public interface SensorMeasurementRepository extends JpaRepository<SensorMeasure
         // Lekérdezés a SensorMeasurement-ek lekérésére Sensor ID alapján
         List<SensorMeasurement> findBySensor_IdIn(List<Long> sensorIds);
 
+        List<SensorMeasurement> findTop5BySensorOrderByTimestampDesc(@Param("sensor") Sensor sensor);
 }
 

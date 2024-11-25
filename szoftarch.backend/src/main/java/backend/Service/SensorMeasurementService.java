@@ -36,11 +36,10 @@ public class SensorMeasurementService {
         sensorMeasurementRepository.deleteById(id);
     }
 
-    public List<SensorMeasurement> getSensorMeasurements(Long sensorId) {
+    public List<SensorMeasurement> getTop5SensorMeasurements(Long sensorId) {
         Sensor sensor = sensorRepository.findById(sensorId)
                 .orElseThrow(() -> new RuntimeException("Sensor not found"));
-
-        return sensorMeasurementRepository.findBySensor(sensor); // A repository-n keresztül lekérdezi a méréseket
+        return sensorMeasurementRepository.findTop5BySensorOrderByTimestampDesc(sensor);
     }
 
 }
