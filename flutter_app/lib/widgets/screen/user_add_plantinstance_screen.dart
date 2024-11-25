@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
-import 'package:flutter_app/utils/device_utils.dart';
 import 'package:flutter_app/utils/http_requests.dart';
-import 'package:flutter_app/utils/toastutils.dart';
 import 'package:flutter_app/utils/plant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

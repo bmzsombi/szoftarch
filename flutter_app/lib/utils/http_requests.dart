@@ -211,8 +211,8 @@ void createUserPlantInstanceRequest(String? username, int plantid, String nick) 
   );
 }
 
-Future<List<ChartData>> getSensorMeasurement(int id) async {
-  var uri = Uri.http(url, 'sensorMeasurement/$id/measurements');
+Future<List<ChartData>> getSensorMeasurement(int deviceInstanceId, int sensorId) async {
+  var uri = Uri.http(url, 'deviceInstance/$deviceInstanceId/sensorsMeasurement5/$sensorId');
   var response = await http.get(uri,
     headers: {
       "Content-type": "application/json"

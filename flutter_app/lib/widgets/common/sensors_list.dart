@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/screen/device_instance_info_screen.dart';
-import 'package:flutter_app/widgets/screen/modify_device_config_screen.dart';
-import 'package:flutter_app/utils/device_utils.dart';
 import 'package:flutter_app/utils/sensor.dart';
 
 class SensorButtonText extends StatelessWidget {
