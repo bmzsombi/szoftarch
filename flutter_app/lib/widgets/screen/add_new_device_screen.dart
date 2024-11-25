@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../common/custom_widgets.dart';
 import '/utils/device_utils.dart';
+import 'package:flutter_app/utils/http_requests.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 class AddNewDeviceScreen extends StatefulWidget {
@@ -29,7 +31,31 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
     }
   }
 
-  void uploadDevicePressed() {}
+  void uploadDevicePressed(BuildContext context) async {
+    if (deviceNameController.text.trim().isNotEmpty) {
+      Map<String, dynamic> result = await manufacturerAddDeviceRequest(configFile!);
+      if (result["success"] == true && context.mounted){
+        //widget.onRefresh();
+        Navigator.pop(context);
+        // Fluttertoast.showToast(
+        //   msg: "Success",
+        //   toastLength: Toast.LENGTH_SHORT,
+        //   gravity: ToastGravity.CENTER,
+        //   timeInSecForIosWeb: 1,
+        //   backgroundColor: Colors.red,
+        //   textColor: Colors.white,
+        //   fontSize: 16.0
+        // );
+      }
+      else {
+        
+        setErrorText(result["message"]);
+      }
+    }
+    else {
+      setErrorText("Device name can't be empty!");
+    }
+  }
 
   void setErrorText(String e) {
     setState(() {
@@ -53,6 +79,7 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
               child: TextField(
+                onChanged: (text) { setErrorText(''); },
                 controller: deviceNameController,
                 decoration: const InputDecoration(
                   labelText: "Device name",
@@ -80,7 +107,7 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
               ),
             ),
             const Spacer(),
-            AppButton(text: 'Upload device', onPressed: uploadDevicePressed, fontSize: 24.0, textColor: Colors.black, backgroundColor: Colors.white),
+            AppButton(text: 'Upload device', onPressed: () => {uploadDevicePressed(context)}, fontSize: 24.0, textColor: Colors.black, backgroundColor: Colors.white),
             const Spacer(),
             ErrorText(errorText: errorText, fontSize: 24.0),
             const Spacer()

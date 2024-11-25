@@ -13,14 +13,13 @@ services:
       - "3306:3306"
     networks:
       szoftarch-nw:
-        aliases:
-          - backend
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pdavid"]
       interval: 10s
       timeout: 5s
       retries: 5
-  szoftarch-backend:
+
+  backend:
     build:
       context: ./szoftarch.backend
     image: backend:latest
@@ -28,16 +27,99 @@ services:
       - "5000:5000"
     networks:
       szoftarch-nw:
-        aliases:
-          - szoftarch-db
     depends_on:
       szoftarch-db:
         condition: service_healthy
     environment:
       DB_URL: jdbc:mysql://szoftarch-db:3306/plant_care
       DB_USER: user
-      DB_PASSWORD: teszt  
+      DB_PASSWORD: teszt
 
+  device-validator:
+    build:
+      context: ./iotdevices
+      dockerfile: ./Dockerfile.validator
+    image: validator
+    ports:
+      - "5001:5001"
+    networks:
+      szoftarch-nw:
+    depends_on:
+      szoftarch-db:
+        condition: service_healthy
+
+  actuator-api:
+    build:
+      context: ./iotdevices
+      dockerfile: ./Dockerfile.actuator
+    image: actuator
+    container_name: szoftarch-actuator-api
+    ports:
+      - "5003:5003"
+    networks:
+      - szoftarch-nw
+    depends_on:
+      szoftarch-db:
+        condition: service_healthy
+      device-simulator-builder:
+        condition: service_completed_successfully
+      device-monitor-builder:
+        condition: service_completed_successfully
+    environment:
+      DB_HOST: szoftarch-db
+      DB_PORT: 3306
+      DB_NAME: plant_care
+      DB_USER: user
+      DB_PASSWORD: teszt
+
+  instance-manager:
+    build:
+      context: ./iotdevices
+      dockerfile: ./Dockerfile.instance-manager
+    image: instance-manager:latest
+    ports:
+      - "5002:5002"
+    networks:
+      szoftarch-nw:
+    depends_on:
+      szoftarch-db:
+        condition: service_healthy
+      device-simulator-builder:
+        condition: service_completed_successfully
+      device-monitor-builder:
+        condition: service_completed_successfully
+    environment:
+      DB_HOST: szoftarch-db
+      DB_PORT: 3306
+      DB_NAME: plant_care
+      DB_USER: user
+      DB_PASSWORD: teszt
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        bind:
+          create_host_path: true
+    # Override the socket path for Windows if needed
+    profiles:
+      - linux
+      - windows
+
+  # Build-only services
+  device-simulator-builder:
+    build:
+      context: ./iotdevices
+      dockerfile: ./Dockerfile.device-simulator
+    image: device-simulator:latest
+    entrypoint: ["true"]
+
+  device-monitor-builder:
+    build:
+      context: ./iotdevices
+      dockerfile: ./Dockerfile.monitor
+    image: device-monitor:latest
+    entrypoint: ["true"]
+      
 networks:
   szoftarch-nw:
     driver: bridge

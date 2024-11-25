@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/screen/create_account_screen.dart';
 import 'package:flutter_app/widgets/common/custom_widgets.dart';
-import 'package:flutter_app/widgets/screen/device_list_screen.dart';
+import 'package:flutter_app/utils/http_requests.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
@@ -24,16 +24,19 @@ class _LoginscreenState extends State<Loginscreen> {
   }
 
   void loginButtonPressed() {
-
-    if (userNameController.text == 'user' && passwordController.text == 'pass') {
-      Navigator.push(context, MaterialPageRoute(
-        builder: (context) => const DeviceListScreen(),
-      ));
+    if (userNameController.text.trim().isNotEmpty && passwordController.text.trim().isNotEmpty) {
+      if (switchOn) {
+        // TODO: manufacturerLoginRequest();
+      }
+      else {
+        // TODO: userLoginRequest();
+      }
     }
-    else {
-      setState(() {
-        errorText = "Example error test";
-      });
+    else if (userNameController.text.trim().isEmpty) {
+      setErrorText("Username can't be empty!");
+    }
+    else if (passwordController.text.trim().isEmpty) {
+      setErrorText("Password can't be empty!");
     }
   }
 

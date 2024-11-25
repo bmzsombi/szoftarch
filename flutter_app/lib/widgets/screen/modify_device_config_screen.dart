@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../common/custom_widgets.dart';
 import '/utils/device_utils.dart';
+import 'package:flutter_app/utils/http_requests.dart';
 
 class ModifyDeviceConfigScreen extends StatefulWidget {
   const ModifyDeviceConfigScreen({
@@ -32,7 +33,9 @@ class _ModifyDeviceConfigScreenState extends State<ModifyDeviceConfigScreen> {
     }
   }
 
-  void modifyDevicePressed() {}
+  void modifyDevicePressed() {
+    // TODO: manufacturerModifyDeviceRequest();
+  }
 
   void setErrorText(String e) {
     setState(() {
