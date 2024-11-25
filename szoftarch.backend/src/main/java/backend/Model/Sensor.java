@@ -1,5 +1,6 @@
 package backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -19,7 +20,6 @@ import jakarta.persistence.Table;
 @Table(name = "sensor")
 public class Sensor {
 
-    // Üres konstruktor a Hibernate-hez
     public Sensor() {}
    
     public enum DataType {
@@ -30,11 +30,9 @@ public class Sensor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-
     @ManyToOne
     @JoinColumn(name = "device_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Device device;
 
     @Column(nullable = false)
@@ -63,7 +61,7 @@ public class Sensor {
 
     @ManyToOne
     @JoinColumn(name = "plant_instance_id", nullable = false)
-    @JsonIgnoreProperties({"user", "sensors"})
+    @JsonBackReference
     private PlantInstance plantInstance; 
 
     public PlantInstance getPlantInstance() {

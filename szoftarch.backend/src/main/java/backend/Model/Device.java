@@ -2,6 +2,10 @@ package backend.Model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,12 +51,15 @@ public class Device {
     private Boolean discoveryEnabled = true;
 
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Sensor> sensors;
 
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<OwnActuator> actuators;
 
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<DeviceInstance> deviceInstances;
 
     public String getManufacturer() {

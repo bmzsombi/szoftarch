@@ -11,6 +11,15 @@ public class OwnActuatorDTO {
     private String offDownValue;
     private String onUpEndpoint;
     private String offDownEndpoint;
+    private Long plantInstanceId;
+
+    public Long getPlantInstanceId() {
+        return plantInstanceId;
+    }
+
+    public void setPlantInstanceId(Long plantInstanceId) {
+        this.plantInstanceId = plantInstanceId;
+    }
 
     // Getters and Setters
     public Long getDeviceId() {
