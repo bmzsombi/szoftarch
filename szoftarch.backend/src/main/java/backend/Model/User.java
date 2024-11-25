@@ -1,11 +1,16 @@
 package backend.Model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.awt.*;
@@ -18,11 +23,31 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     private String username;
     private String password;
     private String email;
     private String role;
     private Integer manufacturer_id;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("user") 
+    private List<PlantInstance> plantInstances = new ArrayList<>();
+
+    public List<PlantInstance> getPlantInstances() {
+        return plantInstances;
+    }
+
+    public void setPlantInstances(List<PlantInstance> plantInstances) {
+        this.plantInstances = plantInstances;
+    }
 
     public String getUsername() {
         return username;

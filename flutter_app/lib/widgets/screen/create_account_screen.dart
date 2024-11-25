@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/common/custom_widgets.dart';
 import 'package:flutter_app/utils/http_requests.dart';
+import 'package:flutter_app/utils/toastutils.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({super.key});
@@ -37,8 +38,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       int createResult = await createAccountRequest(username_, email_, password_, manufacturer_);
 
       if (createResult == 1) {
+        ToastUtils toastUtils = ToastUtils(toastText: "Account created!", context: context);
+        toastUtils.showToast();
         Navigator.pop(context);
-        // TODO: toast uzenet
       }
       else if (createResult == -1) {
         setErrorText("Account couldn't be created! Username already exists.");
@@ -82,7 +84,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               borderRadius: BorderRadius.circular(30),
               child: Image.asset(
                 'assets/app_logo.jpeg',
-                scale: 5,
+                scale: 8,
               ),
             ),
             const LoginScreenText(text: 'App name', fontSize: 32.0),
@@ -150,7 +152,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 0.0),
               child: Row(
                 children: <Widget>[
                   const LoginScreenText(text: 'Manufacturer', fontSize: 24.0),

@@ -18,6 +18,7 @@ const String createAccountPath = 'users/addType';
 const String loginPath = 'users/loginFull';
 const String deviceTypesPath = 'device/all';
 const String deletePlantPath = 'plants/delete';
+const String deviceInstancesPath = 'deviceInstance/all';
 
 Future<int> createAccountRequest(String username_, String email_, String password_, bool manufacturer_) async {
   var uri = Uri.http(url, createAccountPath);
@@ -41,7 +42,7 @@ Future<int> createAccountRequest(String username_, String email_, String passwor
   }
 }
 
-Future<int> loginRequest(String username_, String password_) async {
+Future<String> loginRequest(String username_, String password_) async {
   var uri = Uri.http(url, loginPath);
     var response = await http.post(
     uri,
@@ -57,17 +58,17 @@ Future<int> loginRequest(String username_, String password_) async {
   if (response.statusCode == 200) {
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     if (decodedResponse["role"] == "user") {   // user found
-      return 1;
+      return "user";
     }
     else if (decodedResponse["role"] == "manufacturer") { // manufacturer found
-      return 2;
+      return "manufacturer";
     }
     else {
-      return 0;   // "role" attribute is incorrect
+      return "0";   // "role" attribute is incorrect
     }
   }
   else {
-    return -1; // user/manufacturer not found
+    return "-1"; // user/manufacturer not found
   }
 }
 
@@ -101,8 +102,8 @@ Future<Map<String, dynamic>> manufacturerAddDeviceRequest(File configFile) async
 }
 void manufacturerModifyDeviceRequest() {}
 
-Future<List<Plant>> userGetPlantsRequest() async {
-  var uri = Uri.http(backend_url, plantsPath);
+Future<List<Plant>> userGetPlantsRequest(String? user) async {
+  var uri = Uri.http(backend_url, '$plantsPath/$user');
   var response = await http.get(uri);
 
   if (response.statusCode == 200){
@@ -120,7 +121,12 @@ void userDeletePlantRequest(int id) async {
 }
 
 void userGetPlantDetailsRequest() {}
-void userGetPlantSensorsRequest() {}
+void userGetPlantSensorsRequest() async {
+  var uri = Uri.http(backend_url, deviceInstancesPath);
+  var response = await http.get(uri);
+  
+  
+}
 void userGetSensorDetailsRequest() async {}
 void userAddPlantRequest(
   String scname, String cname, String cat, String maxl, String minl, String maxenvhum, 

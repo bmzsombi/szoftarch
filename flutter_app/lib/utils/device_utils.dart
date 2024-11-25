@@ -71,7 +71,7 @@ class DropdownDeviceItem {
 
   factory DropdownDeviceItem.fromJson(Map<String, dynamic> json) {
     return DropdownDeviceItem(
-      deviceId: json["device_id"],
+      deviceId: json["id"],
       manufacturer: json['manufacturer'],
       model: json['model'],
       firmwareVersion: json['firmwareVersion'],

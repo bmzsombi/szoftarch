@@ -1,6 +1,7 @@
 package backend.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,6 +29,8 @@ public class Sensor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
 
     @ManyToOne
     @JoinColumn(name = "device_id", nullable = false)
@@ -57,6 +60,19 @@ public class Sensor {
 
     @Column(name = "sampling_interval")
     private Integer samplingInterval;
+
+    @ManyToOne
+    @JoinColumn(name = "plant_instance_id", nullable = false)
+    @JsonIgnoreProperties({"user", "sensors"})
+    private PlantInstance plantInstance; 
+
+    public PlantInstance getPlantInstance() {
+        return plantInstance;
+    }
+
+    public void setPlantInstance(PlantInstance plantInstance) {
+        this.plantInstance = plantInstance;
+    }
 
     public Device getDevice() {
         return device;
@@ -138,7 +154,13 @@ public class Sensor {
         this.samplingInterval = samplingInterval;
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
 
 

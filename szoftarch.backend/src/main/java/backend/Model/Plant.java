@@ -1,11 +1,17 @@
 package backend.Model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,6 +34,11 @@ public class Plant {
     private String  scientificName, common_name, category;
     @JsonProperty 
     private Integer max_light, min_light, max_env_humid, min_env_humid, max_soil_moist, min_soil_moist, max_temp, min_temp;
+
+    /*//Melyik usernek van ilyen növénye
+    @ManyToMany(mappedBy = "plants")
+    @JsonIgnoreProperties("plants")
+    private List<User> users;*/
 
     //Getterek setterek
     public String getScientificName() {
