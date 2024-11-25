@@ -268,18 +268,20 @@ Future<int> createInstanceRequest(int plantid, int deviceId, String location, St
       "name": name
     })
   );
-  var uri2 = Uri.http(url, 'plantInstances/addDevice');
-  await http.post(uri2,
-    headers: {
-      "Content-type": "application/json"
-    },
-    body: jsonEncode({
-      "plantInstanceId": plantid,
-      "deviceId": deviceId
-    })
-  );
+  
 
   if (response.statusCode == 201) {
+    await Future.delayed(const Duration(seconds: 5));
+    var uri2 = Uri.http(url, 'plantInstances/addDevice');
+    await http.post(uri2,
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: jsonEncode({
+        "plantInstanceId": plantid,
+        "deviceId": deviceId
+      })
+    );
     return 1;
   } else {
     return -1;

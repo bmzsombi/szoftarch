@@ -59,8 +59,8 @@ class PlantButton extends StatelessWidget {
     required this.id,
     required this.fontSize,
     required this.onRefresh,
-    this.backgroundColor = Colors.blueAccent, // Default background color
-    this.borderRadius = 8.0, // Default border radius for rounded squares
+    this.backgroundColor = Colors.blueAccent,
+    this.borderRadius = 8.0,
   });
 
   final VoidCallback onRefresh;
@@ -76,9 +76,9 @@ class PlantButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius), // Rounded corners
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
-        padding: EdgeInsets.zero, // Remove default padding for custom sizing
+        padding: EdgeInsets.zero, 
       ),
       onPressed: () {
         Navigator.push(
