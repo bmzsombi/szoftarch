@@ -1,5 +1,6 @@
 package backend.Controller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,6 +81,26 @@ public class DeviceInstanceController {
         }
     }
 
+    @GetMapping("/{deviceInstanceId}/sensorsMeasurement5/{sensorId}")
+    public ResponseEntity<List<SensorMeasurement>> getFiveSensorMeasurementByDeviceInstanceIdAndSensorId(
+            @PathVariable Long deviceInstanceId, 
+            @PathVariable Long sensorId) {
+        
+        DeviceInstance deviceInstance = deviceInstanceRepository.findById(deviceInstanceId)
+            .orElseThrow(() -> new RuntimeException("DeviceInstance not found"));
+    
+        List<SensorMeasurement> filteredMeasurements = deviceInstance.getSensorMeasurements().stream()
+            .filter(sensorMeasurement -> sensorMeasurement.getSensor().getId().equals(sensorId)) 
+            .collect(Collectors.toList());
+    
+        // Ellenőrzés, hogy több mint 5 elem van-e a listában
+        List<SensorMeasurement> result = filteredMeasurements.size() > 5 
+            ? filteredMeasurements.subList(filteredMeasurements.size() - 5, filteredMeasurements.size()) 
+            : filteredMeasurements;
+    
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping("/{deviceInstanceId}/actuatorStateHistory")
     public ResponseEntity<List<ActuatorStateHistory>> getActuatorStateHistoryByDeviceInstanceId(@PathVariable Long deviceInstanceId) {
         // Keresd meg a DeviceInstance-t az id alapján
@@ -114,6 +135,29 @@ public class DeviceInstanceController {
         // Ha vannak aktor állapotok, add vissza őket, különben üres választ adunk
         if (!filteredActuatorStateHistories.isEmpty()) {
             return ResponseEntity.ok(filteredActuatorStateHistories);
+        } else {
+            return ResponseEntity.noContent().build(); // Ha nincs találat
+        }
+    }
+
+    @GetMapping("/{deviceInstanceId}/lastActuatorStateHistory/{actuatorId}")
+    public ResponseEntity<ActuatorStateHistory> getLastActuatorStateHistoryByDeviceInstanceIdAndActuatorId(
+            @PathVariable Long deviceInstanceId, 
+            @PathVariable Long actuatorId) {
+
+        // Keresd meg a DeviceInstance-t az id alapján
+        DeviceInstance deviceInstance = deviceInstanceRepository.findById(deviceInstanceId)
+                .orElseThrow(() -> new RuntimeException("DeviceInstance not found"));
+
+        // Szűrd le az ActuatorStateHistory-t a megadott actuatorId alapján
+        List<ActuatorStateHistory> filteredActuatorStateHistories = deviceInstance.getActuatorStateHistories().stream()
+                .filter(actuatorStateHistory -> actuatorStateHistory.getActuator().getId().equals(actuatorId))
+                .collect(Collectors.toList());
+
+        // Ha van egyáltalán elem, add vissza az utolsó elemet
+        if (!filteredActuatorStateHistories.isEmpty()) {
+            // Az utolsó elem visszaadása
+            return ResponseEntity.ok(filteredActuatorStateHistories.get(filteredActuatorStateHistories.size() - 1));
         } else {
             return ResponseEntity.noContent().build(); // Ha nincs találat
         }
