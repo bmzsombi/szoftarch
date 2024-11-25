@@ -154,6 +154,16 @@ void userGetPlantSensorsRequest() async {
   
 }
 void userGetSensorDetailsRequest() async {}
+
+Future<int> getDeviceIdByPlant(int plantid) async {
+  var uri = Uri.http(url, 'plantInstances/$plantid/deviceInstance');
+  var response = await http.get(uri);
+
+  var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+  return decodedResponse["id"];
+  //int deviceid = jsonDecode(response.body);
+}
+
 void userAddPlantRequest(
   String scname, String cname, String cat, String maxl, String minl, String maxenvhum, 
   String minenvhum, String maxsom, String minsom, String maxtemp, String mintemp

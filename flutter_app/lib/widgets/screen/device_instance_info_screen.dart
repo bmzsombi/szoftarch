@@ -3,8 +3,6 @@ import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
 import 'package:flutter_app/utils/http_requests.dart';
 import 'package:flutter_app/utils/chart_utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class DeviceInstanceInfoScreen extends StatefulWidget {
   const DeviceInstanceInfoScreen({
@@ -14,7 +12,6 @@ class DeviceInstanceInfoScreen extends StatefulWidget {
     required this.sensorId,
     required this.actuatorId,
     required this.name,
-    required this.location,
     required this.chartTitle,
     required this.valueAxisTitle
 });
@@ -23,7 +20,6 @@ class DeviceInstanceInfoScreen extends StatefulWidget {
   final int sensorId;
   final int actuatorId;
   final String name;
-  final String location;
   final int deviceType;
   final String chartTitle;
   final String valueAxisTitle;
@@ -37,22 +33,6 @@ class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
   bool shouldFetch = true;
   String errorText = '';
   List<ChartData> chartData = [];
-
-  Future<List<ChartData>> getSensorMeasurement(int deviceInstanceId, int sensorId) async {
-    var uri = Uri.http(url, 'deviceInstance/$deviceInstanceId/sensorsMeasurement5/$sensorId');
-    var response = await http.get(uri,
-      headers: {
-        "Content-type": "application/json"
-      }
-    );
-    if (response.statusCode == 200) {
-      List<ChartData> data = convertToChartData(jsonDecode(response.body));
-      return data;
-    }
-    else {
-      return [];
-    }
-  }
 
 
   // Future<List<ChartData>> fetchSensorData() async {   //TODO: http
@@ -101,7 +81,7 @@ class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       AppText(text: widget.name, fontSize: 32.0, textColor: Colors.black),
-                      AppText(text: widget.location, fontSize: 24.0, textColor: Colors.black),
+                      //AppText(text: widget.location, fontSize: 24.0, textColor: Colors.black),
                       Expanded(
                         child: SfCartesianChart(
                           primaryXAxis: const DateTimeAxis(

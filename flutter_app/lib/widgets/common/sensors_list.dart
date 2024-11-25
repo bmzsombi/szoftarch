@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/widgets/screen/device_instance_info_screen.dart';
 import 'package:flutter_app/widgets/screen/modify_device_config_screen.dart';
 import 'package:flutter_app/utils/device_utils.dart';
 import 'package:flutter_app/utils/sensor.dart';
@@ -34,7 +35,10 @@ class SensorButton extends StatelessWidget {
     required this.fontSize,
     this.backgroundColor = Colors.blueAccent, // Default background color
     this.borderRadius = 8.0, // Default border radius for rounded squares
-    required this.onReturn
+    required this.onReturn,
+    required this.deviceid,
+    required this.chartTitle,
+    required this.valueAxisTitle
   });
 
   final int sensorId;
@@ -43,6 +47,9 @@ class SensorButton extends StatelessWidget {
   final Color backgroundColor;
   final double borderRadius;
   final VoidCallback onReturn;
+  final int deviceid;
+  final String chartTitle;
+  final String valueAxisTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +65,14 @@ class SensorButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ModifyDeviceConfigScreen(
-              deviceId: sensorId,
-              deviceName: sensorName,
+            builder: (context) => DeviceInstanceInfoScreen(
+              deviceType: 1,
+              deviceInstanceId: deviceid,
+              sensorId: sensorId,
+              actuatorId: 0,
+              name: sensorName,
+              chartTitle: chartTitle,
+              valueAxisTitle: valueAxisTitle,          
             ),
           ),
         ).then((_) => { onReturn });
@@ -88,7 +100,8 @@ class SensorListView extends StatelessWidget {
     this.mainAxisSpacing = 8.0,
     this.borderRadius = 8.0, // Default border radius for rounded squares
     this.backgroundColor = Colors.lightGreen,
-    required this.onReturn
+    required this.onReturn,
+    required this.deviceid,
   });
 
   final List<Sensor> devices;
@@ -100,6 +113,7 @@ class SensorListView extends StatelessWidget {
   final double borderRadius;
   final Color backgroundColor;
   final VoidCallback onReturn;
+  final int deviceid;
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +135,9 @@ class SensorListView extends StatelessWidget {
             backgroundColor: backgroundColor,
             borderRadius: borderRadius,
             onReturn: onReturn,
+            deviceid: deviceid,
+            chartTitle: devices[index].chartTitle,
+            valueAxisTitle: devices[index].valueAxisTitle,
           );
         },
       ),

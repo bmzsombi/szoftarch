@@ -12,12 +12,14 @@ class PlantDetails extends StatefulWidget {
   /*final Plant plant;*/
   final String plantScName;
   final int id;
+  //final int deviceid;
   final VoidCallback onRefresh;
 
   const PlantDetails({
     super.key,
     required this.plantScName,
     required this.id,
+    //required this.deviceid,
     required this.onRefresh
     /*, required this.plant*/
   });
@@ -30,11 +32,16 @@ class _PlantDetailsState extends State<PlantDetails> {
   bool shouldFetch = true;
   List<Sensor> sensorList = [];
   List<Actuator> actuatorList = [];
+  int deviceid = 0;
 
   void refreshPressed() {
     setState(() {
       shouldFetch = true;
     });
+  }
+
+  void getDeviceId() async {
+    deviceid = await getDeviceIdByPlant(widget.id);
   }
 
   void deletePlant(){
@@ -111,6 +118,7 @@ class _PlantDetailsState extends State<PlantDetails> {
                       padding: 4.0,
                       fontSize: 24.0,
                       onReturn: refreshPressed,
+                      deviceid: deviceid,
                     );
                   }
 
