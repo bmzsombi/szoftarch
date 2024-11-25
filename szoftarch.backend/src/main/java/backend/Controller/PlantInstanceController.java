@@ -53,10 +53,16 @@ public class PlantInstanceController {
         plantInstanceService.deletePlantInstanceById(id);
     }
 
+    @PostMapping("/addTypeById")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PlantInstance createPlantInstanceById(@RequestBody PlantInstanceDTO plantInstanceDTO) {
+        return plantInstanceService.createPlantInstanceFromDTO(plantInstanceDTO);
+    }
+
     @PostMapping("/addType")
     @ResponseStatus(HttpStatus.CREATED)
     public PlantInstance createPlantInstance(@RequestBody PlantInstanceDTO plantInstanceDTO) {
-        return plantInstanceService.createPlantInstanceFromDTO(plantInstanceDTO);
+        return plantInstanceService.createPlantInstanceFromDTOByName(plantInstanceDTO);
     }
 
         // Összes PlantInstance lekérése

@@ -110,6 +110,32 @@ public class PlantInstanceService {
         return plantInstanceRepository.save(plantInstance);
     }
 
+    public PlantInstance createPlantInstanceFromDTOByName(PlantInstanceDTO dto) {
+        // Ellenőrizd, hogy a felhasználó létezik a username alapján
+        User user = userRepository.findByUsername(dto.getUsername());
+    
+        // Ellenőrizd, hogy a növény létezik
+        Plant plant = plantRepository.findById(dto.getPlantId())
+            .orElseThrow(() -> new RuntimeException("Plant not found"));
+    
+        // Ellenőrizd, hogy a készülék létezik
+        Device device = deviceRepository.findById(dto.getDeviceId())
+            .orElseThrow(() -> new RuntimeException("Device not found"));
+    
+        // Hozz létre egy új PlantInstance-t
+        PlantInstance plantInstance = new PlantInstance();
+        plantInstance.setUser(user);
+        plantInstance.setPlant(plant);
+        plantInstance.setNickname(dto.getNickname());
+        plantInstance.setDevice(device);
+    
+        // Ha vannak szenzor ID-k, adjuk hozzá azokat
+    
+        // Mentés az adatbázisba
+        return plantInstanceRepository.save(plantInstance);
+    }
+    
+    
     public Optional<PlantInstance> findById(Long plantInstanceId) {
         return plantInstanceRepository.findById(plantInstanceId);
     }
