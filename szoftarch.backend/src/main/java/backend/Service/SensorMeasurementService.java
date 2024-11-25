@@ -43,12 +43,5 @@ public class SensorMeasurementService {
         return sensorMeasurementRepository.findBySensor(sensor); // A repository-n keresztül lekérdezi a méréseket
     }
 
-    public List<SensorMeasurement> getLastFiveSensorMeasurements(Long sensorId) {
-        Sensor sensor = sensorRepository.findById(sensorId)
-                .orElseThrow(() -> new RuntimeException("Sensor not found"));
-
-        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("timestamp")));
-        return sensorMeasurementRepository.findLastFiveBySensor(sensor, pageable);
-    }
 }
 

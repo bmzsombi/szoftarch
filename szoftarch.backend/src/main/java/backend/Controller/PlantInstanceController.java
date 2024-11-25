@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import backend.DTO.PlantInstanceDTO;
 import backend.Model.Device;
-import backend.Model.OwnActuator;
 import backend.Model.PlantInstance;
-import backend.Model.Sensor;
 import backend.Model.SensorMeasurement;
 import backend.Repository.DeviceRepository;
 import backend.Repository.PlantInstanceRepository;
@@ -59,26 +57,35 @@ public class PlantInstanceController {
         return plantInstance.getOwnActuators();  // A PlantInstance-ban lévő sensorokat adjuk vissza
     }*/
 
-    @PostMapping("/addDevice")
-    public ResponseEntity<PlantInstance> addDeviceToPlantInstance(@RequestParam Long plantInstanceId, @RequestParam Long deviceId) {
-        // Ellenőrizd, hogy létezik a PlantInstance
-        PlantInstance plantInstance = plantInstanceRepository.findById(plantInstanceId)
-            .orElseThrow(() -> new RuntimeException("PlantInstance not found"));
-
-        // Ellenőrizd, hogy létezik a Device
-        Device device = deviceRepository.findById(deviceId)
-            .orElseThrow(() -> new RuntimeException("Device not found"));
-
-        // Állítsd be a Device-t a PlantInstance-hoz
-        plantInstance.setDevice(device);
-
-        // Mentsd el a módosított PlantInstance-t
-        PlantInstance updatedPlantInstance = plantInstanceRepository.save(plantInstance);
-
-        // Válasz a módosított PlantInstance-tel
-        return ResponseEntity.ok(updatedPlantInstance);
+    @GetMapping("/{id}/sensorMeasurements")
+    public ResponseEntity<List<SensorMeasurement>> getSensorMeasurements(@PathVariable Long id) {
+        List<SensorMeasurement> sensorMeasurements = plantInstanceService.getSensorMeasurementsByPlantInstance(id);
+        if (sensorMeasurements.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Ha nincsenek mérési adatok
+        }
+        return ResponseEntity.ok(sensorMeasurements);
     }
 
+    @PostMapping("/addDevice")
+    public ResponseEntity<PlantInstance> addDeviceToPlantInstance(@RequestBody PlantInstanceDTO dto) {
+        // Ellenőrizd, hogy létezik a PlantInstance az id alapján
+        PlantInstance plantInstance = plantInstanceRepository.findById(dto.getPlantInstanceId())
+            .orElseThrow(() -> new RuntimeException("PlantInstance not found"));
+    
+        // Ellenőrizd, hogy létezik a Device az id alapján
+        Device device = deviceRepository.findById(dto.getDeviceId())
+            .orElseThrow(() -> new RuntimeException("Device not found"));
+    
+        // Állítsd be a Device-t a PlantInstance-hoz
+        plantInstance.setDevice(device);
+    
+        // Mentsd el a módosított PlantInstance-t
+        plantInstanceRepository.save(plantInstance);
+    
+        // Válasz a módosított PlantInstance-tel
+        return ResponseEntity.ok(plantInstance);
+    }
+    
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)  // 204 No Content válasz státusz
     public void deletePlantInstance(@PathVariable Long id) {

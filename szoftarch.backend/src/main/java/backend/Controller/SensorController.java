@@ -41,10 +41,6 @@ public class SensorController {
         // A Device entitás betöltése az ID alapján
         Device device = deviceService.findById(sensorDTO.getDeviceId());
 
-        // A PlantInstance entitás betöltése az ID alapján
-        PlantInstance plantInstance = plantInstanceService.findById(sensorDTO.getPlantInstanceId())
-        .orElseThrow(() -> new RuntimeException("PlantInstance not found with id: " + sensorDTO.getPlantInstanceId()));
-
         // Új Sensor objektum létrehozása és kitöltése
         Sensor sensor = new Sensor();
         sensor.setDevice(device);  // Beállítjuk a kapcsolódó Device-ot
@@ -57,7 +53,6 @@ public class SensorController {
         sensor.setReadEndpoint(sensorDTO.getReadEndpoint());  // Beállítjuk az olvasási végpontot
         sensor.setValueKey(sensorDTO.getValueKey());  // Beállítjuk az érték kulcsot
         sensor.setSamplingInterval(sensorDTO.getSamplingInterval());  // Beállítjuk a mintavételi intervallumot
-        sensor.setPlantInstance(plantInstance);  // Hozzárendeljük a PlantInstance objektumot
 
         // Az objektum mentése
         return sensorService.addSensor(sensor);

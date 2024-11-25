@@ -1,16 +1,15 @@
 package backend.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
+
 
 import backend.DTO.PlantInstanceDTO;
 import backend.Model.Device;
@@ -23,7 +22,7 @@ import backend.Repository.DeviceRepository;
 import backend.Repository.PlantInstanceRepository;
 import backend.Repository.PlantRepository;
 import backend.Repository.SensorMeasurementRepository;
-import backend.Repository.SensorRepository;
+
 import backend.Repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -41,6 +40,26 @@ public class PlantInstanceService {
 
     @Autowired
     private DeviceRepository deviceRepository;
+
+    @Autowired
+    private SensorMeasurementRepository sensorMeasurementRepository;
+
+    public List<SensorMeasurement> getSensorMeasurementsByPlantInstance(Long plantInstanceId) {
+        // Először a PlantInstance alapján lekérjük a Device-ot
+        Optional<PlantInstance> plantInstanceOpt = plantInstanceRepository.findById(plantInstanceId);
+        if (plantInstanceOpt.isPresent()) {
+            Device device = plantInstanceOpt.get().getDevice();
+            
+            // A Device-hez tartozó összes Sensor ID lekérése
+            List<Long> sensorIds = device.getSensors().stream()
+                                          .map(Sensor::getId)
+                                          .collect(Collectors.toList());
+            
+            // A lekért Sensor ID-k alapján lekérjük a SensorMeasurement-eket
+            return sensorMeasurementRepository.findBySensor_IdIn(sensorIds);
+        }
+        return Collections.emptyList(); // Ha a PlantInstance nem létezik
+    }
 
     public PlantInstance addPlantInstanceToUser(Long userId, Long plantId) {
         // User és Plant ellenőrzése és betöltése

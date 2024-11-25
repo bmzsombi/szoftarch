@@ -1,13 +1,20 @@
 package backend.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import backend.Model.Device;
 import backend.Model.DeviceInstance;
+import backend.Model.PlantInstance;
 import backend.Model.Sensor;
+import backend.Model.SensorMeasurement;
+import backend.Repository.PlantInstanceRepository;
+import backend.Repository.SensorMeasurementRepository;
 import backend.Repository.SensorRepository;
 
 @Service
