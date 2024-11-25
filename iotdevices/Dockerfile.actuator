@@ -3,11 +3,11 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy requirements first to leverage Docker cache
-COPY requirements-validator.txt .
-RUN pip install --no-cache-dir -r requirements-validator.txt
+COPY requirements-actuator.txt .
+RUN pip install --no-cache-dir -r requirements-actuator.txt
 
 # Copy the application
-COPY validator_api.py .
+COPY actuator_api.py .
 
 # Environment variables for MySQL connection
 ENV DB_HOST=szoftarch-db
@@ -19,4 +19,4 @@ ENV DB_PORT=3306
 EXPOSE 5001
 
 # Command to run the API
-ENTRYPOINT ["uvicorn", "validator_api:app", "--host", "0.0.0.0", "--port", "5001"]
+ENTRYPOINT ["uvicorn", "actuator_api:app", "--host", "0.0.0.0", "--port", "5003"]

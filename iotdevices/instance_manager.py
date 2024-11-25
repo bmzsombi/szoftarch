@@ -6,7 +6,7 @@ import docker
 import os
 from datetime import datetime
 from flask import Flask, request, jsonify
-from typing import Tuple
+from typing import Tuple, List, Dict
 
 # Database configuration
 DB_CONFIG = {
@@ -33,6 +33,99 @@ class InstanceManager:
         self.ensure_network_exists()
         self.ensure_db_in_network()
         self.ensure_monitor_running()
+        self.recover_existing_instances()
+
+    def get_existing_instances(self) -> List[Dict]:
+        """Retrieve all existing instances from the database."""
+        conn = mysql.connector.connect(**DB_CONFIG)
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT di.id, di.device_id, di.location, di.username, di.name
+                FROM device_instance di
+                JOIN device d ON di.device_id = d.id
+                WHERE d.id IS NOT NULL
+            """)
+            instances = cursor.fetchall()
+            return instances
+        finally:
+            conn.close()
+
+    def recover_existing_instances(self):
+        """Recover all existing instances from the database and ensure their containers are running."""
+        logger.info("Starting recovery of existing instances...")
+        instances = self.get_existing_instances()
+        
+        # First, clean up any orphaned containers
+        self.cleanup_orphaned_containers()
+        
+        # Then recreate containers for all existing instances
+        for instance in instances:
+            container_name = f"device_instance_{instance['id']}"
+            try:
+                # Check if container already exists
+                try:
+                    container = self.docker_client.containers.get(container_name)
+                    if container.status == 'running':
+                        logger.info(f"Container {container_name} already running, skipping")
+                        continue
+                    else:
+                        container.remove()
+                except docker.errors.NotFound:
+                    pass
+
+                # Create new container
+                container = self.docker_client.containers.run(
+                    "device-simulator:latest",
+                    command=str(instance['device_id']),
+                    name=container_name,
+                    hostname=str(instance['id']),
+                    network=DOCKER_NETWORK,
+                    detach=True,
+                    environment={
+                        "DEVICE_ID": str(instance['device_id']),
+                        "INSTANCE_ID": str(instance['id']),
+                        "DB_HOST": "szoftarch-db",
+                        "DB_PORT": "3306",
+                        "DB_NAME": "plant_care",
+                        "DB_USER": "user",
+                        "DB_PASSWORD": "teszt"
+                    }
+                )
+                logger.info(f"Recovered instance {instance['id']} in container {container_name}")
+            
+            except Exception as e:
+                logger.error(f"Failed to recover instance {instance['id']}: {str(e)}")
+                # Don't remove from database if recovery fails - we'll try again on next startup
+                continue
+
+        logger.info(f"Instance recovery complete. Recovered {len(instances)} instances")
+
+    def cleanup_orphaned_containers(self):
+        """Remove any orphaned device instance containers."""
+        try:
+            containers = self.docker_client.containers.list(
+                all=True,
+                filters={"name": "device_instance_"}
+            )
+            
+            for container in containers:
+                try:
+                    instance_id = int(container.name.split('_')[-1])
+                    # Check if instance exists in database
+                    conn = mysql.connector.connect(**DB_CONFIG)
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT id FROM device_instance WHERE id = %s", (instance_id,))
+                    if not cursor.fetchone():
+                        logger.info(f"Removing orphaned container {container.name}")
+                        container.remove(force=True)
+                    conn.close()
+                except (ValueError, Exception) as e:
+                    logger.warning(f"Error checking container {container.name}: {str(e)}")
+                    continue
+                    
+        except Exception as e:
+            logger.error(f"Error during orphaned container cleanup: {str(e)}")
 
     def ensure_network_exists(self):
         """Ensure the Docker network exists."""
@@ -125,6 +218,12 @@ class InstanceManager:
                     "DB_PASSWORD": "teszt"
                 }
             )
+            
+            # Ensure actuator API is in the network
+            try:
+                self.ensure_container_in_network('szoftarch-actuator-api')
+            except docker.errors.NotFound:
+                logger.warning("Actuator API container not found")
             
             logger.info(f"Started device instance {instance_id} in container {container_name}")
             return instance_id
