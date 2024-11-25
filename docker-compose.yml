@@ -49,12 +49,34 @@ services:
       - "5001:5001"
     networks:
       szoftarch-nw:
-        aliases:
-          - "szoftarch-validator"
     depends_on:
       szoftarch-db:
         condition: service_healthy
-        
+
+  actuator-api:
+    build:
+      context: ./iotdevices
+      dockerfile: ./Dockerfile.actuator
+    image: actuator
+    container_name: szoftarch-actuator-api
+    ports:
+      - "5003:5003"
+    networks:
+      - szoftarch-nw
+    depends_on:
+      szoftarch-db:
+        condition: service_healthy
+      device-simulator-builder:
+        condition: service_completed_successfully
+      device-monitor-builder:
+        condition: service_completed_successfully
+    environment:
+      DB_HOST: szoftarch-db
+      DB_PORT: 3306
+      DB_NAME: plant_care
+      DB_USER: user
+      DB_PASSWORD: teszt
+
   instance-manager:
     build:
       context: ./iotdevices

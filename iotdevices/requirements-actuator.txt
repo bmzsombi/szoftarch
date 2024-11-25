@@ -1,0 +1,4 @@
+uvicorn>=0.15.0
+fastapi>=0.68.0
+mysql-connector-python>=8.0.26
+aiocoap==0.4.7

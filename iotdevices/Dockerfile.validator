@@ -10,11 +10,11 @@ RUN pip install --no-cache-dir -r requirements-validator.txt
 COPY validator_api.py .
 
 # Environment variables for MySQL connection
-ENV MYSQL_HOST=szoftarch-db
-ENV MYSQL_USER=user
-ENV MYSQL_PASSWORD=teszt
-ENV MYSQL_DATABASE=plant_care
-ENV MYSQL_PORT=3306
+ENV DB_HOST=szoftarch-db
+ENV DB_USER=user
+ENV DB_PASSWORD=teszt
+ENV DB_NAME=plant_care
+ENV DB_PORT=3306
 
 EXPOSE 5001
 

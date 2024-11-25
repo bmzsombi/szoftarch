@@ -42,7 +42,7 @@ sensors:
     sampling:
       interval: 600
 
-asdactuators:
+actuators:
   - type: PUMP
     name: "water_pump"
     endpoints:
