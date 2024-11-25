@@ -37,14 +37,12 @@ public class UserController {
     private PlantInstanceService plantInstanceService;
     
     @GetMapping("/{username}/plantInstances")
-    public List<Plant> getPlantInstancesByUsername(@PathVariable String username) {
+    public List<PlantInstance> getPlantInstancesByUsername(@PathVariable String username) {
         // User keresése username alapján
         User user = userService.findByName(username);
 
         // A user-hez tartozó PlantInstance-ok listájából csak a Plant adatokat kiválasztjuk
-        List<Plant> plants = user.getPlantInstances().stream()
-                .map(PlantInstance::getPlant)  // Minden PlantInstance-ból kiválasztjuk a Plant-ot
-                .collect(Collectors.toList()); // Összegyűjtjük a Plant-eket egy listába
+        List<PlantInstance> plants = user.getPlantInstances();
 
         return plants;  // Visszaadjuk a Plant-ek listáját
     }
