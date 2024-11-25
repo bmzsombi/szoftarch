@@ -27,6 +27,11 @@ class Plant {
     required this.mintemp,
   });
 
+  @override
+  String toString() {
+    return '$scname $cname ($cat)';
+  }
+
   factory Plant.fromJson(Map<String, dynamic> json){
     return Plant(
       id: json['id'],

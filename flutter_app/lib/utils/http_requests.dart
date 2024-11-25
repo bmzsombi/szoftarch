@@ -8,13 +8,14 @@ const String backend_url = 'localhost:5000';
 const String validator_url = 'localhost:5001';
 const String instance_url = 'localhost:5002';
 const String instance_path = 'api/instances';
+const String allPlantsPath = 'plants/all';
 const String validatorPath = 'api/validate';
 const String devicesPath= 'device/all';
 const String usersPath = 'api/users';
 const String addPlantPath = 'plants/addType';
 const String url = 'localhost:5000';
 const String createAccountPath = 'users/addType';
-const String loginPath = 'users/loginFull';
+const String loginPath = 'users/login';
 const String deviceTypesPath = 'device/all';
 const String deletePlantPath = 'plants/delete';
 const String deviceInstancesPath = 'deviceInstance/all';
@@ -158,6 +159,23 @@ void userAddSensorRequest() {
 
 }
 
+void createUserPlantInstanceRequest(String? username, int plantid, String nick) async {
+
+}
+
+Future<List<Plant>> userGetPlantTypesRequest() async {
+  var uri = Uri.http(url, allPlantsPath);
+  var response = await http.get(uri, headers: {
+      "Content-Type": "application/json",
+  });
+  if (response.statusCode == 200) {
+    List<dynamic> jsonList = jsonDecode(response.body);
+    return jsonList.map((json) => Plant.fromJson(json)).toList();
+  }
+  else {
+    return [];
+  }
+}
 
 
 Future<List<DropdownDeviceItem>> userGetDeviceTypesRequest() async{
@@ -174,7 +192,7 @@ Future<List<DropdownDeviceItem>> userGetDeviceTypesRequest() async{
   }
 }
 
-Future<int> createInstanceRequest(int deviceId, String location, String user, String name) async {
+Future<int> createInstanceRequest(int deviceId, String location, String? user, String name) async {
   var uri = Uri.http(instance_url, instance_path);
   var response = await http.post(
     uri,

@@ -3,23 +3,25 @@ import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
 import 'package:flutter_app/utils/device_utils.dart';
 import 'package:flutter_app/utils/http_requests.dart';
 import 'package:flutter_app/utils/toastutils.dart';
+import 'package:flutter_app/utils/plant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserAddDeviceScreen extends StatefulWidget {
-  const UserAddDeviceScreen({super.key});
+
+class UserAddPlantInstanceScreen extends StatefulWidget {
+  const UserAddPlantInstanceScreen({super.key});
 
   @override
-  State<UserAddDeviceScreen> createState() => _UserAddDeviceScreenState();
+  State<UserAddPlantInstanceScreen> createState() => _UserAddPlantInstanceScreenState();
 }
 
-class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
+class _UserAddPlantInstanceScreenState extends State<UserAddPlantInstanceScreen> {
   String errorText = '';
   final TextEditingController deviceNameController = TextEditingController();
   final TextEditingController deviceLocationController = TextEditingController();
 
-  List<DropdownDeviceItem> deviceList = [];
+  List<Plant> deviceList = [];
   bool shouldFetch = true;
-  DropdownDeviceItem? selectedDevice;
+  Plant? selectedDevice;
 
   void setErrorText(String e) {
     setState(() {
@@ -33,33 +35,31 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
     return action;
   }
 
+
   void addDevicePressed() async {
     if (selectedDevice != null &&
         deviceNameController.text.trim().isNotEmpty &&
         deviceLocationController.text.trim().isNotEmpty
     )
     {
-      int result = await createInstanceRequest(selectedDevice!.deviceId, deviceLocationController.text.trim(), await getUsername(), deviceNameController.text.trim());
+      createUserPlantInstanceRequest(await getUsername(), selectedDevice!.id, deviceNameController.text.trim());
 
-      if (result == 1) {
-        ToastUtils toastUtils = ToastUtils(toastText: "Device added to plant.", context: context);
-        toastUtils.showToast();
-      }
+      // if (result == 1) {
+      //   ToastUtils toastUtils = ToastUtils(toastText: "Device added to plant.", context: context);
+      //   toastUtils.showToast();
+      // }
 
-      else if (result == -1) {
-        setErrorText("Device couldn't be added!");
-      }
+      // else if (result == -1) {
+      //   setErrorText("Device couldn't be added!");
+      // }
 
       Navigator.pop(context);
     }
     else if (selectedDevice == null) {
-      setErrorText("Select a device type!");
+      setErrorText("Select a plant type!");
     }
     else if (deviceNameController.text.trim().isEmpty) {
-      setErrorText("Device name can't be empty!");
-    }
-    else if (deviceLocationController.text.trim().isEmpty) {
-      setErrorText("Device location can't be empty!");
+      setErrorText("Plant name can't be empty!");
     }
   }
 
@@ -74,7 +74,7 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
     return Scaffold(
       appBar: AppBar(),
       body: FutureBuilder(
-        future: shouldFetch ? userGetDeviceTypesRequest() : null,
+        future: shouldFetch ? userGetPlantTypesRequest() : null,
         builder: (context, snapshot) {
           if (shouldFetch) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -91,7 +91,7 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     const Spacer(),
-                    const AppText(text: "Add device", fontSize: 32.0, textColor: Colors.black),
+                    const AppText(text: "Add plant", fontSize: 32.0, textColor: Colors.black),
                     const Spacer(),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
@@ -100,22 +100,7 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
                         controller: deviceNameController,
                         decoration: const InputDecoration(
                           labelText: "Name",
-                          hintText: "Enter device name",
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(),
-                            borderRadius: BorderRadius.all(Radius.circular(10.0))
-                          )
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
-                      child: TextField(
-                        onChanged: (text) { setErrorText(''); },
-                        controller: deviceLocationController,
-                        decoration: const InputDecoration(
-                          labelText: "Location",
-                          hintText: "Enter device location",
+                          hintText: "Enter plant nickname",
                           border: OutlineInputBorder(
                             borderSide: BorderSide(),
                             borderRadius: BorderRadius.all(Radius.circular(10.0))
@@ -124,29 +109,29 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
                       ),
                     ),
                     const Spacer(),
-                    DropdownButton<DropdownDeviceItem>(
+                    DropdownButton<Plant>(
                       value: selectedDevice,
-                      hint: const Text('Select a Device'),
+                      hint: const Text('Select a Plant'),
                       items: deviceList.map((device) {
-                          return DropdownMenuItem<DropdownDeviceItem>(
+                          return DropdownMenuItem<Plant>(
                             value: device,
                             child: Text(device.toString()), // Customize display here
                           );
                         }).toList(),
-                      onChanged: (DropdownDeviceItem? newValue) {
+                      onChanged: (Plant? newValue) {
                         setState(() {
                           selectedDevice = newValue;
                         });
                       },
                     ),
                     const Spacer(),
-                    AppButton(text: 'Add device', onPressed: () => {}, fontSize: 24.0, textColor: Colors.black, backgroundColor: Colors.white),
+                    AppButton(text: 'Add Plant', onPressed: () => {}, fontSize: 24.0, textColor: Colors.black, backgroundColor: Colors.white),
                     const Spacer()
                   ],
                 ),
               );
             }
-            return const Center(child: ErrorText(errorText: "No devices available"));
+            return const Center(child: ErrorText(errorText: "No plants available"));
           }
           else {
             return Center(
@@ -154,7 +139,7 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Spacer(),
-                  const AppText(text: "Add device", fontSize: 32.0, textColor: Colors.black),
+                  const AppText(text: "Add plant", fontSize: 32.0, textColor: Colors.black),
                   const Spacer(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
@@ -162,21 +147,7 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
                       controller: deviceNameController,
                       decoration: const InputDecoration(
                         labelText: "Name",
-                        hintText: "Enter device name",
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(),
-                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                        )
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
-                    child: TextField(
-                      controller: deviceLocationController,
-                      decoration: const InputDecoration(
-                        labelText: "Location",
-                        hintText: "Enter device location",
+                        hintText: "Enter plant name",
                         border: OutlineInputBorder(
                           borderSide: BorderSide(),
                           borderRadius: BorderRadius.all(Radius.circular(10.0))
@@ -185,23 +156,23 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
                     ),
                   ),
                   const Spacer(),
-                  DropdownButton<DropdownDeviceItem>(
+                  DropdownButton<Plant>(
                     value: selectedDevice,
-                    hint: const Text('Select a Device'),
+                    hint: const Text('Select a Plant'),
                     items: deviceList.map((device) {
-                        return DropdownMenuItem<DropdownDeviceItem>(
+                        return DropdownMenuItem<Plant>(
                           value: device,
                           child: Text(device.toString()), // Customize display here
                         );
                       }).toList(),
-                    onChanged: (DropdownDeviceItem? newValue) {
+                    onChanged: (Plant? newValue) {
                       setState(() {
                         selectedDevice = newValue;
                       });
                     },
                   ),
                   const Spacer(),
-                  AppButton(text: 'Add device', onPressed: addDevicePressed, fontSize: 24.0, textColor: Colors.black, backgroundColor: Colors.white),
+                  AppButton(text: 'Add plant', onPressed: addDevicePressed, fontSize: 24.0, textColor: Colors.black, backgroundColor: Colors.white),
                   const Spacer(),
                   ErrorText(errorText: errorText),
                   const Spacer()
