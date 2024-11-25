@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/screen/create_account_screen.dart';
 import 'package:flutter_app/widgets/common/custom_widgets.dart';
 import 'package:flutter_app/utils/http_requests.dart';
+import 'package:flutter_app/widgets/screen/plant_list_screen.dart';
+import 'package:flutter_app/widgets/screen/device_list_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
@@ -17,19 +20,38 @@ class _LoginscreenState extends State<Loginscreen> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  void saveLoginInfo(String username, String role) async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+    await prefs.setString('role', role);
+  }
+
   void toggleSwitch(bool value) {
     setState(() {
       switchOn = value;
     });
   }
 
-  void loginButtonPressed() {
+  void loginButtonPressed() async {
     if (userNameController.text.trim().isNotEmpty && passwordController.text.trim().isNotEmpty) {
-      if (switchOn) {
-        // TODO: manufacturerLoginRequest();
-      }
-      else {
-        // TODO: userLoginRequest();
+      String username = userNameController.text.trim();
+      String password = passwordController.text.trim();
+
+      String loginResult = await loginRequest(username, password);
+      switch (loginResult) {
+        case "0":
+        case "user": Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => const PlantListScreen(),
+                )); 
+                saveLoginInfo(username, loginResult);
+                break;
+        case "manufacturer": Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => const DeviceListScreen(),
+                ));
+                saveLoginInfo(username, loginResult);
+                break;
+        case "-1": setErrorText('User not found!');
+        default: setErrorText('default'); break;
       }
     }
     else if (userNameController.text.trim().isEmpty) {
@@ -102,16 +124,16 @@ class _LoginscreenState extends State<Loginscreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 10.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 64.0, vertical: 10.0),
               child: Row(
                 children: <Widget>[
-                  const LoginScreenText(text: 'Manufacturer', fontSize: 24.0),
-                  const Spacer(),
-                  Switch(
-                    value: switchOn,
-                    onChanged: (value) { toggleSwitch(value); setErrorText(''); },
-                  )
+                  //LoginScreenText(text: 'Manufacturer', fontSize: 24.0),
+                  Spacer(),
+                  // Switch(
+                  //   value: switchOn,
+                  //   onChanged: (value) { toggleSwitch(value); setErrorText(''); },
+                  // )
                 ],
               ),
             ),

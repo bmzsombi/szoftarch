@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../common/custom_widgets.dart';
 import '/utils/device_utils.dart';
 import 'package:flutter_app/utils/http_requests.dart';
+import 'package:flutter_app/utils/toastutils.dart';
 
 class ModifyDeviceConfigScreen extends StatefulWidget {
   const ModifyDeviceConfigScreen({
@@ -33,8 +34,16 @@ class _ModifyDeviceConfigScreenState extends State<ModifyDeviceConfigScreen> {
     }
   }
 
-  void modifyDevicePressed() {
-    // TODO: manufacturerModifyDeviceRequest();
+  void modifyDevicePressed() async {
+    Map<String, dynamic> result = await manufacturerAddDeviceRequest(configFile!);
+      if (result["success"] == true && context.mounted){
+        Navigator.pop(context);
+        ToastUtils toastUtils = ToastUtils(toastText: "Device modified.", context: context);
+        toastUtils.showToast();
+      }
+      else {
+        setErrorText(result["message"]);
+      }
   }
 
   void setErrorText(String e) {

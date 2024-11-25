@@ -4,13 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
+    <list default="true" id="54baaed2-bb11-45f5-8fec-4d3512bca4c2" name="Changes" comment="" />
+=======
     <list default="true" id="54baaed2-bb11-45f5-8fec-4d3512bca4c2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../flutter_app/lib/utils/http_requests.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/utils/http_requests.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/common/plant_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/common/plant_details.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/common/plant_list_widgets.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/common/plant_list_widgets.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/popup/add_plantpopup.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/popup/add_plantpopup.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/device_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/device_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/create_account_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/create_account_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/login_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/login_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/plant_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_app/lib/widgets/screen/plant_list_screen.dart" afterDir="false" />
     </list>
+>>>>>>> 5f0921b1fa1b18c803592a80cdedc5d13e3468ee
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,7 +46,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "zsombor__grind",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/bmzso.JENKINS.000/asd/szoftarch/szoftarch.backend",
     "node.js.detected.package.eslint": "true",
@@ -83,7 +88,7 @@
       <workItem from="1732372437179" duration="192000" />
       <workItem from="1732372637216" duration="37000" />
       <workItem from="1732372690565" duration="6869000" />
-      <workItem from="1732388093588" duration="606000" />
+      <workItem from="1732388093588" duration="1200000" />
     </task>
     <servers />
   </component>

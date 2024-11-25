@@ -11,7 +11,7 @@ class AddPlantPopup extends StatefulWidget {
     super.key, 
     required this.onAdd,
     required this.onRefresh
-    });
+  });
 
   @override
   State<AddPlantPopup> createState() => _AddPlantPopupState();

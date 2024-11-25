@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import '../common/custom_widgets.dart';
 import '/utils/device_utils.dart';
 import 'package:flutter_app/utils/http_requests.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_app/utils/toastutils.dart';
 
 
 class AddNewDeviceScreen extends StatefulWidget {
@@ -16,7 +19,8 @@ class AddNewDeviceScreen extends StatefulWidget {
 }
 
 class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
-  final TextEditingController deviceNameController = TextEditingController();
+
+  //final TextEditingController deviceNameController = TextEditingController();
   String errorText = '';
   File? configFile;
   String configFileName = '';
@@ -32,35 +36,41 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
   }
 
   void uploadDevicePressed(BuildContext context) async {
-    if (deviceNameController.text.trim().isNotEmpty) {
+    //if (deviceNameController.text.trim().isNotEmpty) {
       Map<String, dynamic> result = await manufacturerAddDeviceRequest(configFile!);
       if (result["success"] == true && context.mounted){
-        //widget.onRefresh();
         Navigator.pop(context);
-        // Fluttertoast.showToast(
-        //   msg: "Success",
-        //   toastLength: Toast.LENGTH_SHORT,
-        //   gravity: ToastGravity.CENTER,
-        //   timeInSecForIosWeb: 1,
-        //   backgroundColor: Colors.red,
-        //   textColor: Colors.white,
-        //   fontSize: 16.0
-        // );
+        ToastUtils toastUtils = ToastUtils(toastText: "Device uploaded.", context: context);
+        toastUtils.showToast();
       }
       else {
-        
         setErrorText(result["message"]);
       }
-    }
-    else {
+    //}
+    /*else {
       setErrorText("Device name can't be empty!");
-    }
+    }*/
   }
 
   void setErrorText(String e) {
     setState(() {
       errorText = e;
     });
+  }
+
+  Future<void> downloadLocalPdf() async {
+    try {
+      final ByteData data = await rootBundle.load('assets/device-yaml-docs.pdf');
+      
+      final Directory tempDir = await getTemporaryDirectory();
+      final File tempFile = File('${tempDir.path}/device-yaml-docs.pdf');
+
+      await tempFile.writeAsBytes(data.buffer.asUint8List());
+
+      await OpenFile.open(tempFile.path);
+    } catch (e) {
+      setErrorText("Could not open the PDF file.");
+    }
   }
 
   @override
@@ -76,7 +86,7 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
             const AppText(text: 'Add new device', fontSize: 32.0, textColor: Colors.black),
             const Spacer(),
             const Spacer(),
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
               child: TextField(
                 onChanged: (text) { setErrorText(''); },
@@ -90,7 +100,7 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
                   )
                 ),
               ),
-            ),
+            ),*/
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
               child: Column(
@@ -104,6 +114,19 @@ class _AddNewDeviceScreenState extends State<AddNewDeviceScreen> {
                   ),
                   ConfigUploadRow(text: 'Browse', onPressed: browseFilePressed, fontSize: 12.0, textColor: Colors.white, backgroundColor: Colors.black, fileText: configFileName)
                 ],
+              ),
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: downloadLocalPdf,
+              child: const Text(
+                "Formatting requirements",
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 25, 85, 134),
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
             const Spacer(),
