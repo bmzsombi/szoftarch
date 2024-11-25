@@ -131,10 +131,9 @@ void userGetSensorDetailsRequest() async {}
 void userAddPlantRequest(
   String scname, String cname, String cat, String maxl, String minl, String maxenvhum, 
   String minenvhum, String maxsom, String minsom, String maxtemp, String mintemp
-  ) 
-async {
+  ) async {
   var uri = Uri.http(backend_url, addPlantPath);
-  await http.post(
+  var response = await http.post(
     uri,
     headers: {
       "Content-Type": "application/json"
@@ -153,8 +152,13 @@ async {
       "min_temp": mintemp
     })
   );
+  List<dynamic> jsonresponse = jsonDecode(response.body);
+  List<Plant> plantList = jsonresponse.map((data) => Plant.fromJson(data)).toList();
+  
 }
-void userAddSensorRequest() {}
+void userAddSensorRequest() {
+
+}
 
 
 
