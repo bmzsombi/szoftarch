@@ -4,19 +4,25 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import backend.DTO.PlantInstanceDTO;
+import backend.Model.Device;
 import backend.Model.OwnActuator;
 import backend.Model.PlantInstance;
 import backend.Model.Sensor;
+import backend.Model.SensorMeasurement;
+import backend.Repository.DeviceRepository;
+import backend.Repository.PlantInstanceRepository;
 import backend.Service.PlantInstanceService;
 
 @RestController
@@ -25,6 +31,12 @@ public class PlantInstanceController {
     
     @Autowired
     private PlantInstanceService plantInstanceService;
+
+    @Autowired
+    private PlantInstanceRepository plantInstanceRepository;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     // adja vissza a sensorokat
     /*@GetMapping("/{plantInstanceId}/sensors")
@@ -46,6 +58,26 @@ public class PlantInstanceController {
         // Visszaadjuk a PlantInstance-hoz tartozó szenzorok listáját
         return plantInstance.getOwnActuators();  // A PlantInstance-ban lévő sensorokat adjuk vissza
     }*/
+
+    @PostMapping("/addDevice")
+    public ResponseEntity<PlantInstance> addDeviceToPlantInstance(@RequestParam Long plantInstanceId, @RequestParam Long deviceId) {
+        // Ellenőrizd, hogy létezik a PlantInstance
+        PlantInstance plantInstance = plantInstanceRepository.findById(plantInstanceId)
+            .orElseThrow(() -> new RuntimeException("PlantInstance not found"));
+
+        // Ellenőrizd, hogy létezik a Device
+        Device device = deviceRepository.findById(deviceId)
+            .orElseThrow(() -> new RuntimeException("Device not found"));
+
+        // Állítsd be a Device-t a PlantInstance-hoz
+        plantInstance.setDevice(device);
+
+        // Mentsd el a módosított PlantInstance-t
+        PlantInstance updatedPlantInstance = plantInstanceRepository.save(plantInstance);
+
+        // Válasz a módosított PlantInstance-tel
+        return ResponseEntity.ok(updatedPlantInstance);
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)  // 204 No Content válasz státusz
