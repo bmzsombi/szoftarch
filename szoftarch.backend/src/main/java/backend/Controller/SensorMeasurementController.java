@@ -65,4 +65,9 @@ public class SensorMeasurementController {
     public List<SensorMeasurement> getSensorMeasurements(@PathVariable Long sensorId) {
         return sensorMeasurementService.getSensorMeasurements(sensorId);
     }
+
+    @GetMapping("/{sensorId}/measurements/last5")
+    public List<SensorMeasurement> getLastFiveSensorMeasurements(@PathVariable Long sensorId) {
+        return sensorMeasurementService.getLastFiveSensorMeasurements(sensorId);
+    }
 }

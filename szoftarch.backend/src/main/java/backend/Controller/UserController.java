@@ -124,4 +124,16 @@ public class UserController {
         }
     }
 
+    @PostMapping("/loginTeszt")
+    public ResponseEntity<User> loginteszt(@RequestBody UserDTO loginRequest) {
+        Optional<User> user = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        if (user.isPresent()) {
+            User foundUser = user.get();
+            
+            return ResponseEntity.ok(foundUser);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
 }
