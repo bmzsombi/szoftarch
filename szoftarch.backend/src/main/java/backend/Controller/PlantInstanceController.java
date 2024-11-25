@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import backend.DTO.PlantInstanceDTO;
 import backend.Model.Device;
+import backend.Model.DeviceInstance;
 import backend.Model.PlantInstance;
 import backend.Model.SensorMeasurement;
+import backend.Repository.DeviceInstanceRepository;
 import backend.Repository.DeviceRepository;
 import backend.Repository.PlantInstanceRepository;
 import backend.Service.PlantInstanceService;
@@ -33,37 +35,18 @@ public class PlantInstanceController {
     @Autowired
     private PlantInstanceRepository plantInstanceRepository;
 
+
     @Autowired
-    private DeviceRepository deviceRepository;
+    private DeviceInstanceRepository deviceInstanceRepository;
 
-    // adja vissza a sensorokat
-    /*@GetMapping("/{plantInstanceId}/sensors")
-    public List<Sensor> getSensorsByPlantInstanceId(@PathVariable Long plantInstanceId) {
-        // PlantInstance keresése ID alapján
-        PlantInstance plantInstance = plantInstanceService.getById(plantInstanceId)
-                .orElseThrow(() -> new RuntimeException("PlantInstance not found with id: " + plantInstanceId));
-
-        // Visszaadjuk a PlantInstance-hoz tartozó szenzorok listáját
-        return plantInstance.getSensors();  // A PlantInstance-ban lévő sensorokat adjuk vissza
-    }*/
-
-    /*@GetMapping("/{plantInstanceId}/actuators")
-    public List<OwnActuator> getActuatorsByPlantInstanceId(@PathVariable Long plantInstanceId) {
-        // PlantInstance keresése ID alapján
-        PlantInstance plantInstance = plantInstanceService.getById(plantInstanceId)
-                .orElseThrow(() -> new RuntimeException("PlantInstance not found with id: " + plantInstanceId));
-
-        // Visszaadjuk a PlantInstance-hoz tartozó szenzorok listáját
-        return plantInstance.getOwnActuators();  // A PlantInstance-ban lévő sensorokat adjuk vissza
-    }*/
-
-    @GetMapping("/{id}/sensorMeasurements")
-    public ResponseEntity<List<SensorMeasurement>> getSensorMeasurements(@PathVariable Long id) {
-        List<SensorMeasurement> sensorMeasurements = plantInstanceService.getSensorMeasurementsByPlantInstance(id);
-        if (sensorMeasurements.isEmpty()) {
-            return ResponseEntity.noContent().build(); // Ha nincsenek mérési adatok
+    @GetMapping("/{plantInstanceId}/deviceInstance")
+    public ResponseEntity<DeviceInstance> getDeviceInstance(@PathVariable Long plantInstanceId) {
+        DeviceInstance deviceInstance = plantInstanceService.getDeviceInstanceByPlantInstanceId(plantInstanceId);
+        if (deviceInstance != null) {
+            return ResponseEntity.ok(deviceInstance);
+        } else {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(sensorMeasurements);
     }
 
     @PostMapping("/addDevice")
@@ -73,11 +56,11 @@ public class PlantInstanceController {
             .orElseThrow(() -> new RuntimeException("PlantInstance not found"));
     
         // Ellenőrizd, hogy létezik a Device az id alapján
-        Device device = deviceRepository.findById(dto.getDeviceId())
+        DeviceInstance device = deviceInstanceRepository.findById(dto.getDeviceInstanceId())
             .orElseThrow(() -> new RuntimeException("Device not found"));
     
         // Állítsd be a Device-t a PlantInstance-hoz
-        plantInstance.setDevice(device);
+        plantInstance.setDeviceInstance(device);
     
         // Mentsd el a módosított PlantInstance-t
         plantInstanceRepository.save(plantInstance);
@@ -85,17 +68,11 @@ public class PlantInstanceController {
         // Válasz a módosított PlantInstance-tel
         return ResponseEntity.ok(plantInstance);
     }
-    
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)  // 204 No Content válasz státusz
     public void deletePlantInstance(@PathVariable Long id) {
         plantInstanceService.deletePlantInstanceById(id);
-    }
-
-    @PostMapping("/addTypeById")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PlantInstance createPlantInstanceById(@RequestBody PlantInstanceDTO plantInstanceDTO) {
-        return plantInstanceService.createPlantInstanceFromDTO(plantInstanceDTO);
     }
 
     @PostMapping("/addType")
