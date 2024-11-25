@@ -21,6 +21,7 @@ import backend.DTO.PlantInstanceDTO;
 import backend.DTO.UserDTO;
 import backend.Model.Plant;
 import backend.Model.PlantInstance;
+import backend.Model.Sensor;
 import backend.Model.User;
 import backend.Service.PlantInstanceService;
 import backend.Service.UserService;
@@ -118,6 +119,18 @@ public class UserController {
                 foundUser.getRole()
             );
             return ResponseEntity.ok(responseDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @PostMapping("/loginTeszt")
+    public ResponseEntity<User> loginteszt(@RequestBody UserDTO loginRequest) {
+        Optional<User> user = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        if (user.isPresent()) {
+            User foundUser = user.get();
+            
+            return ResponseEntity.ok(foundUser);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

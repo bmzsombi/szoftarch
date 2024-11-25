@@ -3,10 +3,15 @@ package backend.Service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import backend.Model.Sensor;
 import backend.Model.SensorMeasurement;
 import backend.Repository.SensorMeasurementRepository;
+import backend.Repository.SensorRepository;
 
 @Service
 public class SensorMeasurementService {
@@ -14,6 +19,9 @@ public class SensorMeasurementService {
 
     @Autowired
     private SensorMeasurementRepository sensorMeasurementRepository;
+
+    @Autowired
+    private SensorRepository sensorRepository; 
 
     // Növény hozzáadása
     public SensorMeasurement addSensorMeasurement(SensorMeasurement sensorMeasurement) {
@@ -26,6 +34,21 @@ public class SensorMeasurementService {
 
     public void deleteSensorMeasurement(Long id) {
         sensorMeasurementRepository.deleteById(id);
+    }
+
+    public List<SensorMeasurement> getSensorMeasurements(Long sensorId) {
+        Sensor sensor = sensorRepository.findById(sensorId)
+                .orElseThrow(() -> new RuntimeException("Sensor not found"));
+
+        return sensorMeasurementRepository.findBySensor(sensor); // A repository-n keresztül lekérdezi a méréseket
+    }
+
+    public List<SensorMeasurement> getLastFiveSensorMeasurements(Long sensorId) {
+        Sensor sensor = sensorRepository.findById(sensorId)
+                .orElseThrow(() -> new RuntimeException("Sensor not found"));
+
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("timestamp")));
+        return sensorMeasurementRepository.findLastFiveBySensor(sensor, pageable);
     }
 }
 

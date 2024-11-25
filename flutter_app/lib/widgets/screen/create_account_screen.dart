@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/common/custom_widgets.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter_app/utils/http_requests.dart';
+import 'package:flutter_app/utils/toastutils.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({super.key});
@@ -17,32 +17,47 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   void backButtonPressed() {
     Navigator.pop(context);
   }
 
   void createAccountButtonPressed() async {
-    var url = Uri.http('127.0.0.1:5000', 'api/users');
-    var response = await http.post(
-        url,
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: jsonEncode({
-          "username": "doodle",
-          "password": "blue",
-          "email": "asd@asd",
-          "role": "manufacturer"
-        })
-    );
-    print('Response status: ${response.statusCode}');
-    //print('Response body: ${response.body}');
+    if (
+      userNameController.text.trim().isNotEmpty &&
+      emailController.text.trim().isNotEmpty &&
+      passwordController.text.trim().isNotEmpty &&
+      confirmPasswordController.text.trim().isNotEmpty &&
+      passwordController.text.trim() == confirmPasswordController.text.trim()
+    ) {
+      String username_ = userNameController.text.trim();
+      String email_ = userNameController.text.trim();
+      String password_ = passwordController.text.trim();
+      bool manufacturer_ = switchOn;
+      int createResult = await createAccountRequest(username_, email_, password_, manufacturer_);
 
-    setState(() {
-      errorText = "Example error text";
-      
-    });
+      if (createResult == 1) {
+        ToastUtils toastUtils = ToastUtils(toastText: "Account created!", context: context);
+        toastUtils.showToast();
+        Navigator.pop(context);
+      }
+      else if (createResult == -1) {
+        setErrorText("Account couldn't be created! Username already exists.");
+      }
+    }
+    else if (userNameController.text.trim().isEmpty) {
+      setErrorText("Username can't be empty!");
+    }
+    else if (emailController.text.trim().isEmpty) {
+      setErrorText("Email address can't be empty!");
+    }
+    else if (passwordController.text.trim().isEmpty && confirmPasswordController.text.trim().isEmpty) {
+      setErrorText("Password can't be empty!");
+    }
+    else if (passwordController.text.trim() != confirmPasswordController.text.trim()) {
+      setErrorText("Passwords don't match!");
+    }
   }
 
   void toggleSwitch(bool value) {
@@ -69,7 +84,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               borderRadius: BorderRadius.circular(30),
               child: Image.asset(
                 'assets/app_logo.jpeg',
-                scale: 5,
+                scale: 8,
               ),
             ),
             const LoginScreenText(text: 'App name', fontSize: 32.0),
@@ -82,6 +97,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 decoration: const InputDecoration(
                   labelText: "Username",
                   hintText: "Enter your username",
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(),
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                  )
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 3.0),
+              child: TextField(
+                onChanged: (text) { setErrorText(''); },
+                controller: emailController,
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  hintText: "Enter your email address",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(),
                     borderRadius: BorderRadius.all(Radius.circular(10.0))
@@ -122,7 +152,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 0.0),
               child: Row(
                 children: <Widget>[
                   const LoginScreenText(text: 'Manufacturer', fontSize: 24.0),

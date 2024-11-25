@@ -4,6 +4,8 @@ import 'package:flutter_app/widgets/common/custom_widgets.dart';
 import 'package:flutter_app/widgets/screen/add_new_device_screen.dart';
 import 'package:flutter_app/widgets/screen/login_screen.dart';
 import 'package:flutter_app/widgets/screen/plant_list_screen.dart';
+import 'package:flutter_app/utils/http_requests.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DeviceListScreen extends StatefulWidget {
   const DeviceListScreen({super.key});
@@ -15,6 +17,12 @@ class DeviceListScreen extends StatefulWidget {
 class _DeviceListScreenState extends State<DeviceListScreen> {
 
   final TextEditingController searchTextController = TextEditingController();
+  
+  Future<String?> getRole() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? action = prefs.getString('role');
+    return action;
+  }
 
   List<Device> deviceList = [];
   List<Device> searchedDeviceList = [];
@@ -22,7 +30,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
 
   Future<List<Device>> fetchDeviceList() async {
     await Future.delayed(const Duration(seconds: 2));
-    return getDeviceList();
+    return manufacturerGetDevicesRequest();
   }
 
   void refreshPressed() {
@@ -34,7 +42,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
   void addPressed() {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) => const AddNewDeviceScreen()
-    ));
+    )).then((_) => { refreshPressed() });
   }
 
   void exitPressed(){
@@ -76,48 +84,51 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
         ],
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.lightGreen,
-              ),
-              child: Text('My Little Plants'),
-            ),
-            ListTile(
-              title: const Text('My Plants'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-                loadPlantListScreen();
-              },
-            ),
-            ListTile(
-              title: const Text('Sensors'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-                //loadDeviceListScreen();
-              },
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  //Navigator.pop(context); // Kilépés a képernyőről
-                  exitPressed();
-                },
-                icon: const Icon(Icons.logout),
-                label: const Text('Logout'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  minimumSize: const Size(double.infinity, 50), // Gomb szélesség kitöltése
+        child: FutureBuilder<String?>(
+          future: getRole(), // A szerepkör lekérése
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator()); // Betöltési állapot
+            }
+
+            if (snapshot.hasError) {
+              return const Center(child: Text('Error loading role.'));
+            }
+
+            String? role = snapshot.data; // A lekért szerepkör
+            return ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.lightGreen,
+                  ),
+                  child: Text('My Little Plants'),
                 ),
-              ),
-            ),
-          ],
+                if (role == 'manufacturer')
+                  ListTile(
+                    title: const Text('Sensors'),
+                    onTap: () {
+                      // Sensors képernyő betöltése
+                    },
+                  ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      exitPressed();
+                    },
+                    icon: const Icon(Icons.logout),
+                    label: const Text('Logout'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      minimumSize: const Size(double.infinity, 50), // Gomb szélesség kitöltése
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
       body: FutureBuilder(
@@ -137,6 +148,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
                 devices: deviceList,
                 padding: 4.0,
                 fontSize: 24.0,
+                onReturn: refreshPressed,
               );
             }
             return const Center(child: Text("No devices available"));
@@ -146,6 +158,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
               devices: searchedDeviceList,
               padding: 4.0,
               fontSize: 24.0,
+              onReturn: () => {},
             );
           }
         }

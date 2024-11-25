@@ -36,7 +36,7 @@ public class OwnActuatorController {
     private PlantInstanceService plantInstanceService;
 
         // OwnActuator hozzáadása egy meglévő PlantInstance-hoz
-    @PostMapping("/addToPlantInstance/{plantInstanceId}/{ownActuatorId}")
+    /*@PostMapping("/addToPlantInstance/{plantInstanceId}/{ownActuatorId}")
     public ResponseEntity<String> addOwnActuatorToPlantInstance(
         @PathVariable Long plantInstanceId,
         @PathVariable Long ownActuatorId
@@ -61,7 +61,7 @@ public class OwnActuatorController {
         plantInstanceService.savePlantInstance(plantInstance);
 
         return ResponseEntity.status(HttpStatus.OK).body("OwnActuator successfully added to PlantInstance");
-    }
+    }*/
 
     @PostMapping("/addType")
     @ResponseStatus(HttpStatus.CREATED)  // A státuszkód '201 Created' lesz

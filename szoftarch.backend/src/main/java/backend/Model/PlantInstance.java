@@ -27,22 +27,42 @@ public class PlantInstance {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonManagedReference("user-plantInstances")
+    @JsonBackReference
     private User user; // Melyik felhasználóhoz tartozik
 
     @ManyToOne
     @JoinColumn(name = "plant_id", nullable = false)
     private Plant plant; // Melyik növénytípus
 
-    @OneToMany(mappedBy = "plantInstance", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
+    @JoinColumn(name = "device_id", nullable = false) // Az eszköz id-ja
+    private Device device; // A plantInstance-hoz tartozó Device
+
+    /*@OneToMany(mappedBy = "plantInstance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sensor> sensors = new ArrayList<>(); // A növényhez tartozó szenzorok
 
     
     @OneToMany(mappedBy = "plantInstance", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
-    private List<OwnActuator> ownActuators = new ArrayList<>(); // A növényhez tartozó aktorok
+    private List<OwnActuator> ownActuators = new ArrayList<>(); // A növényhez tartozó aktorok*/
      
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
+    }
+
     private String nickname;
+
+    /*public List<Sensor> getSensors() {
+        return sensors;
+    }
+
+    public void setSensors(List<Sensor> sensors) {
+        this.sensors = sensors;
+    }
 
     public List<OwnActuator> getOwnActuators() {
         return ownActuators;
@@ -50,7 +70,7 @@ public class PlantInstance {
 
     public void setOwnActuators(List<OwnActuator> ownActuators) {
         this.ownActuators = ownActuators;
-    }
+    }*/
 
     public String getNickname() {
         return nickname;
@@ -60,13 +80,7 @@ public class PlantInstance {
         this.nickname = nickname;
     }
 
-    public List<Sensor> getSensors() {
-        return sensors;
-    }
 
-    public void setSensors(List<Sensor> sensors) {
-        this.sensors = sensors;
-    }
 
     public Long getId() {
         return id;

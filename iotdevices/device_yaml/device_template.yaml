@@ -1,0 +1,56 @@
+#this yaml file is used to create the device schema for an iot device that uses CoAP protocol, to provide support for it in our plant monitoring application. 
+#the yaml file has to be uploaded on the manufacturer portal, and after succesful validation, the device will be supported and end users can instantiate devices of this type.
+# if there is an error while parsing and checking the file, the system will display a meaningful error message, so that the manufacturer can correct the yaml schema.
+
+version: "1.0" # optional, but might be required in the future if the yaml schema changes
+
+device_info: # required, this identifies the device
+  manufacturer: string # required
+  model: string # required
+  description: string #optional, but highly recommended, briefly describe here what the device does
+  firmware_version: string #required
+
+network: # optional
+  default_port: 5683  # if omitted, it will default to 5683
+  discovery_enabled: boolean # optional, defaults to true
+
+# at least 1 sensor or actuator is required
+# a sensor is an entity that can only report a numerical value, and cannot have its state changed by the system, only queried
+sensors: 
+  - name: string # required, preferably something meaningful, that can identify what sensor this is by looking at it
+    type: enum    # optional, but recommended. the suggested format is the type of sensor withour any sensor suffix. i.e.: LIGHT, HUMIDITY, TEMPERATURE
+    measurement: # required
+      unit: string  # required, this will be displayed to the user
+      data_type: enum  #required, allowed values: INTEGER or FLOAT
+      range: # optional
+        min: number #lowes value that the sensor can report
+        max: number # highest value the sensor can report
+    coap_endpoints: # required
+      read: # required
+        path: string # the CoAP endpoint, where the device status can be queried
+        content_format: string # optional, but it should be "application/json"
+        value_key: string  # the key under which the sensor data is reported in the response
+    sampling: # optional
+      interval: number # sampling rate of the sensor in seconds, defaults to 60 
+
+      #actuators are devices that have a state, which can be manipulated by the system. currently supported actuators are: pumps, lights and blinds.
+actuators: 
+  - type: enum    #required, has to be PUMP or LIGHT or BLIND
+    name: string  #required, preferably something meaningful, that can identify what actuator this is by looking at it
+    endpoints: # required
+      status: string  # the endpoint where the devices status can be queried
+      
+      turn_on: string  # the endpoint where the device can be turned on
+      turn_off: string # the endpoint where the device can be turned off
+      
+      open: string    # the endpoint where the blind can be turned opened
+      close: string  # the endpoint where the blind can be turned closed
+    state: #required
+      value_key: string  # required, the key of the device state that is in the response provided under
+      data_type: enum  # required, can be BOOLEAN or ENUM. if the device supports only 2 states, BOOLEAN is the recommended value. 
+      possible_values: [string]  # a list of comma separated values, which the device can report back. if data_type is enum, and on_value and off_value are not set, it is assumed, that the first value is the on_value or the open_value, based on the actuator type
+      on_value: string #optional, if data_type is not boolean or if not the first item on possible_values is the on_value.
+      off_value: string #optional, if data_type is not boolean or if not the first item on possible_values is the off_value.
+      open_value: string #optional, if data_type is not boolean or if not the first item on possible_values is the open_value.
+      closed_value: string #optional, if data_type is not boolean or if not the first item on possible_values is the closed_value.
+ 
