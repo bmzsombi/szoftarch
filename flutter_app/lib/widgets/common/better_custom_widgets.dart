@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/screen/modify_device_config_screen.dart';
 import 'package:flutter_app/utils/device_utils.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:flutter_app/utils/chart_utils.dart';
 
 class LoginScreenText extends StatelessWidget {
   const LoginScreenText({
@@ -448,6 +450,43 @@ class DeviceListView extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class LineChartWidget extends StatelessWidget {
+  final List<DateTime> dates;
+  final List<double> values;
+  final String chartTitle;
+
+  LineChartWidget({required this.chartTitle ,required this.dates, required this.values, Key? key})
+      : assert(dates.length == values.length,
+            'Dates and values lists must have the same length.'),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Prepare the data
+    final List<ChartData> chartData = List.generate(
+      dates.length,
+      (index) => ChartData(dates[index], values[index]),
+    );
+
+    return SfCartesianChart(
+      primaryXAxis: const DateTimeAxis(), // Date-time axis for X
+      primaryYAxis: const NumericAxis(), // Numeric axis for Y
+      title: ChartTitle(text: chartTitle),
+      tooltipBehavior: TooltipBehavior(enable: true),
+      // Explicitly define the type for the series
+      series: <CartesianSeries<ChartData, DateTime>>[
+        LineSeries<ChartData, DateTime>(
+          dataSource: chartData,
+          xValueMapper: (ChartData data, _) => data.date,
+          yValueMapper: (ChartData data, _) => data.value,
+          name: 'Value',
+          markerSettings: const MarkerSettings(isVisible: true),
+        ),
+      ],
     );
   }
 }
