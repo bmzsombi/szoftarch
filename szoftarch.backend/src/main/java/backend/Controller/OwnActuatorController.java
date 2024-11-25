@@ -69,9 +69,6 @@ public class OwnActuatorController {
 
         // A Device entitás betöltése az ID alapján
         Device device = deviceService.findById(actuatorDTO.getDeviceId());
-
-        PlantInstance plantInstance = plantInstanceService.findById(actuatorDTO.getPlantInstanceId())
-        .orElseThrow(() -> new RuntimeException("PlantInstance not found with id: " + actuatorDTO.getPlantInstanceId()));
         
         // Új OwnActuator objektum létrehozása és kitöltése
         OwnActuator actuator = new OwnActuator();
@@ -84,7 +81,6 @@ public class OwnActuatorController {
         actuator.setOffDownValue(actuatorDTO.getOffDownValue());
         actuator.setOnUpEndpoint(actuatorDTO.getOnUpEndpoint());
         actuator.setOffDownEndpoint(actuatorDTO.getOffDownEndpoint());
-        actuator.setPlantInstance(plantInstance);
         // Az objektum mentése
         return ownActuatorService.addActuator(actuator);
     }

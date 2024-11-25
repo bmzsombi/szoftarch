@@ -50,19 +50,6 @@ public class OwnActuator {
     @Enumerated(EnumType.STRING)
     private ActuatorType type;
 
-    @ManyToOne
-    @JoinColumn(name = "plant_instance_id")  // A kapcsolódó PlantInstance
-    @JsonBackReference
-    private PlantInstance plantInstance;
-
-    public PlantInstance getPlantInstance() {
-        return plantInstance;
-    }
-
-    public void setPlantInstance(PlantInstance plantInstance) {
-        this.plantInstance = plantInstance;
-    }
-
     @Column(nullable = false, name = "status_endpoint")
     private String statusEndpoint;
 

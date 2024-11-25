@@ -3,10 +3,15 @@ import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
 import 'package:flutter_app/utils/device_utils.dart';
 import 'package:flutter_app/utils/http_requests.dart';
 import 'package:flutter_app/utils/toastutils.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserAddDeviceScreen extends StatefulWidget {
-  const UserAddDeviceScreen({super.key});
+  const UserAddDeviceScreen({
+    required this.plantid,
+    super.key
+    });
+
+  final int plantid;
 
   @override
   State<UserAddDeviceScreen> createState() => _UserAddDeviceScreenState();
@@ -27,13 +32,19 @@ class _UserAddDeviceScreenState extends State<UserAddDeviceScreen> {
     });
   }
 
+  Future<String?> getUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? action = prefs.getString('username');
+    return action;
+  }
+
   void addDevicePressed() async {
     if (selectedDevice != null &&
         deviceNameController.text.trim().isNotEmpty &&
         deviceLocationController.text.trim().isNotEmpty
     )
     {
-      int result = await createInstanceRequest(selectedDevice!.deviceId, deviceLocationController.text.trim(), "exampleUser", deviceNameController.text.trim());
+      int result = await createInstanceRequest(widget.plantid, selectedDevice!.deviceId, deviceLocationController.text.trim(), await getUsername(), deviceNameController.text.trim());
 
       if (result == 1) {
         ToastUtils toastUtils = ToastUtils(toastText: "Device added to plant.", context: context);

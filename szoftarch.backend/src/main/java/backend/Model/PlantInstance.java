@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,9 +35,10 @@ public class PlantInstance {
     @JoinColumn(name = "plant_id", nullable = false)
     private Plant plant; // Melyik növénytípus
 
-    @ManyToOne
-    @JoinColumn(name = "device_id") // Az eszköz id-ja
-    private Device device; // A plantInstance-hoz tartozó Device
+    @OneToOne
+    @JoinColumn(name = "device_instance_id", referencedColumnName = "id", nullable = true)
+    private DeviceInstance deviceInstance; // A PlantInstance-hez rendelt eszköz
+
 
     /*@OneToMany(mappedBy = "plantInstance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sensor> sensors = new ArrayList<>(); // A növényhez tartozó szenzorok
@@ -46,12 +48,13 @@ public class PlantInstance {
     @JsonBackReference
     private List<OwnActuator> ownActuators = new ArrayList<>(); // A növényhez tartozó aktorok*/
      
-    public Device getDevice() {
-        return device;
+
+    public DeviceInstance getDeviceInstance() {
+        return deviceInstance;
     }
 
-    public void setDevice(Device device) {
-        this.device = device;
+    public void setDeviceInstance(DeviceInstance deviceInstance) {
+        this.deviceInstance = deviceInstance;
     }
 
     private String nickname;

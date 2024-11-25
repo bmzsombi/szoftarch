@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
 import 'package:flutter_app/utils/http_requests.dart';
-import 'package:flutter_app/utils/toastutils.dart';
+import 'package:flutter_app/utils/chart_utils.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class DeviceInstanceInfoScreen extends StatefulWidget {
   const DeviceInstanceInfoScreen({
     super.key,
     required this.deviceType,
-    required this.instanceId,
+    required this.deviceInstanceId,
+    required this.sensorId,
+    required this.actuatorId,
     required this.name,
-    required this.location
-  });
+    required this.chartTitle,
+    required this.valueAxisTitle
+});
 
+  final int deviceInstanceId;
+  final int sensorId;
+  final int actuatorId;
   final String name;
-  final String location;
   final int deviceType;
-  final int instanceId;
+  final String chartTitle;
+  final String valueAxisTitle;
 
   @override
   State<DeviceInstanceInfoScreen> createState() => _DeviceInstanceInfoScreenState();
@@ -23,7 +30,26 @@ class DeviceInstanceInfoScreen extends StatefulWidget {
 
 class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
 
+  bool shouldFetch = true;
   String errorText = '';
+  List<ChartData> chartData = [];
+
+
+  // Future<List<ChartData>> fetchSensorData() async {   //TODO: http
+  //   await Future.delayed(Duration(seconds: 2));
+  //   return [
+  //     ChartData(DateTime(2023, 1, 1), 10),
+  //     ChartData(DateTime(2023, 2, 1), 20),
+  //     ChartData(DateTime(2023, 3, 1), 15),
+  //     ChartData(DateTime(2023, 4, 1), 30),
+  //   ];
+  // }
+
+  void refreshPressed() {
+    setState(() {
+      shouldFetch = true;
+    });
+  }
 
   void setErrorText(String e) {
     setState(() {
@@ -31,53 +57,85 @@ class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
     });
   }
 
-  void deleteInstancePressed(BuildContext context) async {
-    int result = await deleteInstanceRequest(widget.instanceId);
-
-    if (result == 1 && context.mounted) {
-      Navigator.pop(context);
-      ToastUtils toastUtils = ToastUtils(toastText: "Sensor removed.", context: context);
-      toastUtils.showToast();
-    } 
-    else if (result == -1) {
-      setErrorText("Couldn't delete device!");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Widget content;
 
-    // Use switch to determine the content based on deviceType
     switch (widget.deviceType) {
       case 1:
-        content = Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-                LineChartWidget(
-                  chartTitle: "example chart",
-                  dates: [
-                    DateTime(2024, 1, 1),
-                    DateTime(2024, 1, 2),
-                    DateTime(2024, 1, 3),
-                    DateTime(2024, 1, 4),
-                  ],
-                  values: [10, 20, 15, 25],
-                )
-            ],
-          ),
+        content = FutureBuilder(
+          future: shouldFetch ? getSensorMeasurement(widget.deviceInstanceId, widget.sensorId) : null,
+          builder: (context, snapshot) {
+            if (shouldFetch) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              shouldFetch = false;
+              if (snapshot.hasError) {
+                return Center(child: ErrorText(errorText: snapshot.error.toString(), fontSize: 24.0));
+              }
+              if (snapshot.hasData) {
+                chartData = snapshot.data!;
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AppText(text: widget.name, fontSize: 32.0, textColor: Colors.black),
+                      //AppText(text: widget.location, fontSize: 24.0, textColor: Colors.black),
+                      Expanded(
+                        child: SfCartesianChart(
+                          primaryXAxis: const DateTimeAxis(
+                            title: AxisTitle(text: 'Date'),
+                          ),
+                          primaryYAxis: NumericAxis(
+                            title: AxisTitle(text: widget.valueAxisTitle),
+                          ),
+                          title: ChartTitle(text: widget.chartTitle),
+                          legend: const Legend(isVisible: true),
+                          tooltipBehavior: TooltipBehavior(enable: true),
+                          series: <CartesianSeries<ChartData, DateTime>>[
+                            LineSeries<ChartData, DateTime>(
+                              dataSource: chartData,
+                              xValueMapper: (ChartData data, _) => data.date,
+                              yValueMapper: (ChartData data, _) => data.value,
+                              name: 'Values',
+                              markerSettings: const MarkerSettings(isVisible: true),
+                              dataLabelSettings: const DataLabelSettings(isVisible: true),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]
+                  ),
+                );
+              }
+              return const Center(child: ErrorText(errorText: "No sensor data available"));
+            }
+            else {
+              return const Center(child: ErrorText(errorText: "No sensor data available"));
+            }
+          }
         );
         break;
+      case 2:
+        content = const ErrorText(errorText: 'nem szenzor');
+        break;
       default:
-        content = Text(
-          'Unknown Device Type',
-          style: TextStyle(fontSize: 24, color: Colors.red),
+        content = const ErrorText(
+          errorText: 'Unknown sensor type',
         );
     }
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+          actions: [
+          IconButton(
+            onPressed: refreshPressed,
+            icon: const Icon(Icons.refresh),
+            iconSize: 32.0,
+          ),
+        ]
+      ),
       body: Center(
         child: content,
       ),

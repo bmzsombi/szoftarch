@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import backend.DTO.PlantInstanceDTO;
 import backend.Model.Device;
+import backend.Model.DeviceInstance;
 import backend.Model.Plant;
 import backend.Model.PlantInstance;
 import backend.Model.Sensor;
@@ -43,23 +44,6 @@ public class PlantInstanceService {
 
     @Autowired
     private SensorMeasurementRepository sensorMeasurementRepository;
-
-    public List<SensorMeasurement> getSensorMeasurementsByPlantInstance(Long plantInstanceId) {
-        // Először a PlantInstance alapján lekérjük a Device-ot
-        Optional<PlantInstance> plantInstanceOpt = plantInstanceRepository.findById(plantInstanceId);
-        if (plantInstanceOpt.isPresent()) {
-            Device device = plantInstanceOpt.get().getDevice();
-            
-            // A Device-hez tartozó összes Sensor ID lekérése
-            List<Long> sensorIds = device.getSensors().stream()
-                                          .map(Sensor::getId)
-                                          .collect(Collectors.toList());
-            
-            // A lekért Sensor ID-k alapján lekérjük a SensorMeasurement-eket
-            return sensorMeasurementRepository.findBySensor_IdIn(sensorIds);
-        }
-        return Collections.emptyList(); // Ha a PlantInstance nem létezik
-    }
 
     public PlantInstance addPlantInstanceToUser(Long userId, Long plantId) {
         // User és Plant ellenőrzése és betöltése
@@ -102,31 +86,6 @@ public class PlantInstanceService {
     }
 
     public PlantInstance savePlantInstance(PlantInstance plantInstance) {
-        return plantInstanceRepository.save(plantInstance);
-    }
-
-    public PlantInstance createPlantInstanceFromDTO(PlantInstanceDTO dto) {
-        // Ellenőrizd, hogy a user létezik
-        User user = userRepository.findById(dto.getUserId())
-            .orElseThrow(() -> new RuntimeException("User not found"));
-
-        // Ellenőrizd, hogy a növény létezik
-        Plant plant = plantRepository.findById(dto.getPlantId())
-            .orElseThrow(() -> new RuntimeException("Plant not found"));
-
-        Device device = deviceRepository.findById((dto.getDeviceId()))
-        .orElseThrow(() -> new RuntimeException("Plant not found"));
-
-        // Hozz létre egy új PlantInstance-t
-        PlantInstance plantInstance = new PlantInstance();
-        plantInstance.setUser(user);
-        plantInstance.setPlant(plant);
-        plantInstance.setNickname(dto.getNickname());
-        plantInstance.setDevice(device);
-
-        // Ha vannak szenzor ID-k, adjuk hozzá azokat
-    
-        // Mentés az adatbázisba
         return plantInstanceRepository.save(plantInstance);
     }
 
@@ -180,6 +139,11 @@ public class PlantInstanceService {
         } else {
             throw new EntityNotFoundException("PlantInstance not found with ID " + id);
         }
+    }
+
+    public DeviceInstance getDeviceInstanceByPlantInstanceId(Long plantInstanceId) {
+        Optional<PlantInstance> plantInstance = plantInstanceRepository.findById(plantInstanceId);
+        return plantInstance.map(PlantInstance::getDeviceInstance).orElse(null);
     }
 
 }

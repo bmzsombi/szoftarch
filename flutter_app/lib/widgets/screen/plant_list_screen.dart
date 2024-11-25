@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/widgets/screen/user_add_plantinstance_screen.dart';
 import '../popup/add_plantpopup.dart';
 import '../../utils/plant.dart';
 import '../screen/device_list_screen.dart';
@@ -67,7 +68,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void addPressed() {
-    showAddPlantPopup(context);
+    //showAddPlantPopup(context);
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => const UserAddPlantInstanceScreen(),
+    ));
   }
 
   Future<List<Plant>> fetchPlantList() async {
@@ -77,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
       throw Exception('Username not found');
     }
     return userGetPlantsRequest(username);
+    //return userGetPlantTypesRequest();
   }
 
   void exitPressed(){
