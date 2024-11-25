@@ -30,6 +30,7 @@ class DeviceInstanceInfoScreen extends StatefulWidget {
 
 class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
 
+  bool actuatorState = false;
   bool shouldFetch = true;
   String errorText = '';
   List<ChartData> chartData = [];
@@ -44,6 +45,23 @@ class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
   //     ChartData(DateTime(2023, 4, 1), 30),
   //   ];
   // }
+
+  Future<bool> getActuatorState(int deviceId, int actuatorId) async {
+    //var uri = //?
+    return true;
+  }
+
+
+  void turnOffActuator() {
+
+
+    refreshPressed();
+  }
+  void turnOnActuator() {
+
+    refreshPressed();
+  }
+
 
   void refreshPressed() {
     setState(() {
@@ -118,7 +136,53 @@ class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
         );
         break;
       case 2:
-        content = const ErrorText(errorText: 'nem szenzor');
+        content = FutureBuilder(
+          future: shouldFetch ? getActuatorState(widget.deviceInstanceId, widget.sensorId) : null,
+          builder: (context, snapshot) {
+            if (shouldFetch) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              shouldFetch = false;
+              if (snapshot.hasError) {
+                return Center(child: ErrorText(errorText: snapshot.error.toString(), fontSize: 24.0));
+              }
+              if (snapshot.hasData) {
+                actuatorState = snapshot.data!;
+                if (actuatorState) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AppText(text: widget.name, fontSize: 32.0, textColor: Colors.black),
+                        const Spacer(),
+                        const AppText(text: 'Current state: on', fontSize: 24.0, textColor: Colors.black),
+                        AppButton(text: 'Turn off', onPressed: turnOffActuator, fontSize: 32.0, textColor: Colors.black, backgroundColor: Colors.red)
+                      ],
+                     ),
+                    );
+                  }
+                else {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AppText(text: widget.name, fontSize: 32.0, textColor: Colors.black),
+                        const Spacer(),
+                        const AppText(text: 'Current state: off', fontSize: 24.0, textColor: Colors.black),
+                        AppButton(text: 'Turn on', onPressed: turnOnActuator, fontSize: 32.0, textColor: Colors.black, backgroundColor: Colors.green)
+                      ],
+                     ),
+                    );
+                }
+              }
+              return const ErrorText(errorText: 'Error1');
+            }
+            else {
+              return const ErrorText(errorText: 'Error2');
+            }
+          }
+        );
         break;
       default:
         content = const ErrorText(
