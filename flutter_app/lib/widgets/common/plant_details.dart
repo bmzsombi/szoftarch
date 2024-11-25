@@ -66,7 +66,7 @@ class _PlantDetailsState extends State<PlantDetails> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => UserAddDeviceScreen(
+        builder: (context) => UserAddDeviceScreen(plantid: widget.id,
           /*plantId: widget.id,
           onDeviceAdded: () {
             // Itt frissítheted az adatokat, ha szükséges
