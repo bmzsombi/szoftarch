@@ -45,6 +45,7 @@ public class DeviceInstance {
     private List<SensorMeasurement> sensorMeasurements;
 
     @OneToMany(mappedBy = "instance", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<ActuatorStateHistory> actuatorStateHistories;
 
     public Long getId() {

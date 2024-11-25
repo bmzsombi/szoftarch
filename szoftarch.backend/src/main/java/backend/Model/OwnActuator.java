@@ -51,7 +51,7 @@ public class OwnActuator {
     private ActuatorType type;
 
     @ManyToOne
-    @JoinColumn(name = "plant_instance_id", nullable = false)  // A kapcsolódó PlantInstance
+    @JoinColumn(name = "plant_instance_id")  // A kapcsolódó PlantInstance
     @JsonBackReference
     private PlantInstance plantInstance;
 
