@@ -1,6 +1,5 @@
 package backend.DTO;
 
-import java.util.List;
 
 public class UserDTO {
 
@@ -8,7 +7,13 @@ public class UserDTO {
     private String password;
     private String email;
     private String role;
-    private Integer manufacturerId;
+
+    public UserDTO(String username2, String password2, String email2, String role2) {
+        username = username2;
+        password = password2;
+        email = email2;
+        role = role2;
+    }
 
     public String getUsername() {
         return username;
@@ -40,14 +45,6 @@ public class UserDTO {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public Integer getManufacturerId() {
-        return manufacturerId;
-    }
-
-    public void setManufacturerId(Integer manufacturerId) {
-        this.manufacturerId = manufacturerId;
     }
 
 
