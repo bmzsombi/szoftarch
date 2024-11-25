@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import backend.DTO.PlantInstanceDTO;
+import backend.Model.Device;
 import backend.Model.Plant;
 import backend.Model.PlantInstance;
 import backend.Model.Sensor;
 import backend.Model.User;
+import backend.Repository.DeviceRepository;
 import backend.Repository.PlantInstanceRepository;
 import backend.Repository.PlantRepository;
 import backend.Repository.SensorMeasurementRepository;
@@ -34,6 +36,9 @@ public class PlantInstanceService {
 
     @Autowired
     private SensorRepository sensorRepository;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
 
     public PlantInstance addPlantInstanceToUser(Long userId, Long plantId) {
@@ -89,23 +94,48 @@ public class PlantInstanceService {
         Plant plant = plantRepository.findById(dto.getPlantId())
             .orElseThrow(() -> new RuntimeException("Plant not found"));
 
+        Device device = deviceRepository.findById((dto.getDeviceId()))
+        .orElseThrow(() -> new RuntimeException("Plant not found"));
+
         // Hozz létre egy új PlantInstance-t
         PlantInstance plantInstance = new PlantInstance();
         plantInstance.setUser(user);
         plantInstance.setPlant(plant);
         plantInstance.setNickname(dto.getNickname());
+        plantInstance.setDevice(device);
 
         // Ha vannak szenzor ID-k, adjuk hozzá azokat
-        if (dto.getSensorIds() != null && !dto.getSensorIds().isEmpty()) {
-            List<Sensor> sensors = sensorRepository.findAllById(dto.getSensorIds());
-            sensors.forEach(sensor -> sensor.setPlantInstance(plantInstance));
-            plantInstance.setSensors(sensors);
-        }
-
+    
         // Mentés az adatbázisba
         return plantInstanceRepository.save(plantInstance);
     }
 
+    public PlantInstance createPlantInstanceFromDTOByName(PlantInstanceDTO dto) {
+        // Ellenőrizd, hogy a felhasználó létezik a username alapján
+        User user = userRepository.findByUsername(dto.getUsername());
+    
+        // Ellenőrizd, hogy a növény létezik
+        Plant plant = plantRepository.findById(dto.getPlantId())
+            .orElseThrow(() -> new RuntimeException("Plant not found"));
+    
+        // Ellenőrizd, hogy a készülék létezik
+        Device device = deviceRepository.findById(dto.getDeviceId())
+            .orElseThrow(() -> new RuntimeException("Device not found"));
+    
+        // Hozz létre egy új PlantInstance-t
+        PlantInstance plantInstance = new PlantInstance();
+        plantInstance.setUser(user);
+        plantInstance.setPlant(plant);
+        plantInstance.setNickname(dto.getNickname());
+        plantInstance.setDevice(device);
+    
+        // Ha vannak szenzor ID-k, adjuk hozzá azokat
+    
+        // Mentés az adatbázisba
+        return plantInstanceRepository.save(plantInstance);
+    }
+    
+    
     public Optional<PlantInstance> findById(Long plantInstanceId) {
         return plantInstanceRepository.findById(plantInstanceId);
     }
@@ -129,4 +159,13 @@ public class PlantInstanceService {
     public Optional<PlantInstance> getById(Long plantInstanceId) {
         return plantInstanceRepository.findById(plantInstanceId);
     }
+
+    public void deletePlantInstanceById(Long id) {
+        if (plantInstanceRepository.existsById(id)) {
+            plantInstanceRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("PlantInstance not found with ID " + id);
+        }
+    }
+
 }
