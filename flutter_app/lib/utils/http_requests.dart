@@ -75,7 +75,7 @@ Future<String> loginRequest(String username_, String password_) async {
   }
 }
 
-Future<List<Sensor>> userGetSensorRequest(String deviceid) async {
+Future<List<Sensor>> userGetSensorRequest(int deviceid) async {
   var uri = Uri.http(url, 'deviceInstance/$deviceid/sensors');
   var response = await http.get(uri);
   if (response.statusCode == 200){
@@ -83,11 +83,11 @@ Future<List<Sensor>> userGetSensorRequest(String deviceid) async {
     return jsonresponse.map((data) => Sensor.fromJson(data)).toList();
   }
   else {
-    throw Exception('Failed to load sensors');
+    throw Exception('There are no sensors assigned');
   }
 }
 
-Future<List<Actuator>> userGetActuatorRequest(String deviceid) async {
+Future<List<Actuator>> userGetActuatorRequest(int deviceid) async {
   var uri = Uri.http(url, 'deviceInstance/$deviceid/actuators');
   var response = await http.get(uri);
   if (response.statusCode == 200){
@@ -95,7 +95,7 @@ Future<List<Actuator>> userGetActuatorRequest(String deviceid) async {
     return jsonresponse.map((data) => Actuator.fromJson(data)).toList();
   }
   else {
-    throw Exception('Failed to load actuators');
+    throw Exception('There are no actuators assigned');
   }
 }
 
