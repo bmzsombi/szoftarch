@@ -60,4 +60,9 @@ public class SensorMeasurementController {
     public void deletePlant(@PathVariable Long id) {
         sensorMeasurementService.deleteSensorMeasurement(id);
     }
+
+    @GetMapping("/{sensorId}/measurements")
+    public List<SensorMeasurement> getSensorMeasurements(@PathVariable Long sensorId) {
+        return sensorMeasurementService.getSensorMeasurements(sensorId);
+    }
 }
