@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +22,12 @@ import backend.Service.PlantInstanceService;
 @RestController
 @RequestMapping("/plantInstances")
 public class PlantInstanceController {
-
+    
     @Autowired
     private PlantInstanceService plantInstanceService;
 
     // adja vissza a sensorokat
-    @GetMapping("/{plantInstanceId}/sensors")
+    /*@GetMapping("/{plantInstanceId}/sensors")
     public List<Sensor> getSensorsByPlantInstanceId(@PathVariable Long plantInstanceId) {
         // PlantInstance keresése ID alapján
         PlantInstance plantInstance = plantInstanceService.getById(plantInstanceId)
@@ -34,9 +35,9 @@ public class PlantInstanceController {
 
         // Visszaadjuk a PlantInstance-hoz tartozó szenzorok listáját
         return plantInstance.getSensors();  // A PlantInstance-ban lévő sensorokat adjuk vissza
-    }
+    }*/
 
-    @GetMapping("/{plantInstanceId}/actuators")
+    /*@GetMapping("/{plantInstanceId}/actuators")
     public List<OwnActuator> getActuatorsByPlantInstanceId(@PathVariable Long plantInstanceId) {
         // PlantInstance keresése ID alapján
         PlantInstance plantInstance = plantInstanceService.getById(plantInstanceId)
@@ -44,6 +45,12 @@ public class PlantInstanceController {
 
         // Visszaadjuk a PlantInstance-hoz tartozó szenzorok listáját
         return plantInstance.getOwnActuators();  // A PlantInstance-ban lévő sensorokat adjuk vissza
+    }*/
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)  // 204 No Content válasz státusz
+    public void deletePlantInstance(@PathVariable Long id) {
+        plantInstanceService.deletePlantInstanceById(id);
     }
 
     @PostMapping("/addType")
@@ -78,5 +85,4 @@ public class PlantInstanceController {
         return plantInstanceService.addPlantInstanceToUserByName(username, plantId);
     }
 
-    // adja vissza a sensorokat
 }
