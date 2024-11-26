@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<List<Plant>> fetchPlantList() async {
-    await Future.delayed(const Duration(seconds: 2));
+    //await Future.delayed(const Duration(seconds: 2));
     String? username = await getUsername();
     if (username == null) {
       throw Exception('Username not found');

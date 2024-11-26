@@ -10,6 +10,7 @@ import 'package:flutter_app/utils/sensor.dart';
 const String backend_url = 'localhost:5000';
 const String validator_url = 'localhost:5001';
 const String instance_url = 'localhost:5002';
+const String actuator_url = 'localhost:5003';
 const String instance_path = 'api/instances';
 const String allPlantsPath = 'plants/all';
 const String validatorPath = 'api/validate';
@@ -75,7 +76,7 @@ Future<String> loginRequest(String username_, String password_) async {
   }
 }
 
-Future<List<Sensor>> userGetSensorRequest(int deviceid) async {
+Future<List<Sensor>> userGetSensorRequest(int? deviceid) async {
   var uri = Uri.http(url, 'deviceInstance/$deviceid/sensors');
   var response = await http.get(uri);
   if (response.statusCode == 200){
@@ -87,7 +88,7 @@ Future<List<Sensor>> userGetSensorRequest(int deviceid) async {
   }
 }
 
-Future<List<Actuator>> userGetActuatorRequest(int deviceid) async {
+Future<List<Actuator>> userGetActuatorRequest(int? deviceid) async {
   var uri = Uri.http(url, 'deviceInstance/$deviceid/actuators');
   var response = await http.get(uri);
   if (response.statusCode == 200){
@@ -208,7 +209,7 @@ void createUserPlantInstanceRequest(String? username, int plantid, String nick) 
   );
 }
 
-Future<List<ChartData>> getSensorMeasurement(int deviceInstanceId, int sensorId) async {
+Future<List<ChartData>> getSensorMeasurement(int? deviceInstanceId, int sensorId) async {
   var uri = Uri.http(url, 'deviceInstance/$deviceInstanceId/sensorsMeasurement5/$sensorId');
   var response = await http.get(uri,
     headers: {
@@ -216,13 +217,11 @@ Future<List<ChartData>> getSensorMeasurement(int deviceInstanceId, int sensorId)
     }
   );
   if (response.statusCode == 200) {
-    List<ChartData> data = convertToChartData(jsonDecode(response.body));
+    List<ChartData> data = convertToChartData(List<Map<String, dynamic>>.from(jsonDecode(response.body)));
     return data;
-  }
-  else {
+  } else {
     return [];
   }
-
 }
 
 Future<List<Plant>> userGetPlantTypesRequest() async {
@@ -268,10 +267,11 @@ Future<int> createInstanceRequest(int plantid, int deviceId, String location, St
       "name": name
     })
   );
-  
+  print ("ASDASDASDASD");
+  print(response.body);
 
   if (response.statusCode == 201) {
-    await Future.delayed(const Duration(seconds: 5));
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     var uri2 = Uri.http(url, 'plantInstances/addDevice');
     await http.post(uri2,
       headers: {
@@ -279,7 +279,7 @@ Future<int> createInstanceRequest(int plantid, int deviceId, String location, St
       },
       body: jsonEncode({
         "plantInstanceId": plantid,
-        "deviceId": deviceId
+        "deviceInstanceId": decodedResponse["instance_id"]
       })
     );
     return 1;
@@ -301,4 +301,97 @@ Future<int> deleteInstanceRequest(int instanceId) async {
   } else {
     return -1;
   }
+}
+
+Future<int?> getDeviceInstanceId(String apiUrl, int plantInstanceId) async {
+  try {
+    var uri = Uri.http(url, 'users/all');
+    // Make the HTTP GET request
+    final response = await http.get(uri, headers: {
+      "Content-Type": "application/json",
+    });
+    //final response = await http.get(Uri.parse(apiUrl));
+
+    // Check if the request was successful
+    if (response.statusCode == 200) {
+      // Decode the response body
+      final List<dynamic> data = json.decode(response.body);
+
+      // Search for the plantInstance with the given ID
+      for (var user in data) {
+        final plantInstances = user['plantInstances'] as List<dynamic>;
+        for (var plantInstance in plantInstances) {
+          if (plantInstance['id'] == plantInstanceId) {
+            // Check if a deviceInstance is associated with the plantInstance
+            final deviceInstance = plantInstance['deviceInstance'];
+            print('ASDASDASDASDASDASDAS');
+            print(deviceInstance['id']);
+            return deviceInstance != null ? deviceInstance['id'] as int : null;
+          }
+        }
+      }
+    } else {
+      print('Failed to fetch data: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('An error occurred: $e');
+  }
+  return null; // Return null if no match is found or an error occurs
+}
+
+void deleteDeviceInstance(int? deviceInstanceId) async {
+  var uri = Uri.http(instance_url, 'api/instances/$deviceInstanceId');
+  var response = await http.delete(
+      uri,
+      headers: {
+        "Content-Type": "application/json"
+      }
+  ); 
+}
+
+void turnOffActuatorRequest(int? deviceInstanceId, int actuatorId) async {
+  var uri = Uri.http(actuator_url, 'api/instances/$deviceInstanceId/actuators/$actuatorId');
+  var response = await http.put(
+      uri,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: jsonEncode({
+        "action": "off"
+    }) 
+  );
+}
+
+void turnOnActuatorRequest(int? deviceInstanceId, int actuatorId) async {
+  var uri = Uri.http(actuator_url, 'api/instances/$deviceInstanceId/actuators/$actuatorId');
+    var response = await http.put(
+      uri,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: jsonEncode({
+        "action": "on"
+    }) 
+  );
+}
+
+Future<bool?> getActuatorState(int? deviceInstanceId, int actuatorId) async {
+  var uri = Uri.http(url, 'deviceInstance/$deviceInstanceId/actuatorStateHistory/$actuatorId');
+  var response = await http.get(
+    uri,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  );
+
+  if (response.statusCode == 200) {
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    if (decodedResponse is List && decodedResponse.isNotEmpty) {
+      var lastStateHistory = decodedResponse.last;
+      if (lastStateHistory is Map && lastStateHistory.containsKey('state')) {
+        return lastStateHistory['state'] as bool;
+      }
+    }
+  }
+  return null;
 }

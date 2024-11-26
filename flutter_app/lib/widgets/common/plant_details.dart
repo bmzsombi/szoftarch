@@ -32,7 +32,7 @@ class _PlantDetailsState extends State<PlantDetails> {
   bool shouldFetch = true;
   List<Sensor> sensorList = [];
   List<Actuator> actuatorList = [];
-  int deviceid = 0;
+  late int? deviceInstanceId;
 
   void refreshPressed() {
     setState(() {
@@ -40,9 +40,9 @@ class _PlantDetailsState extends State<PlantDetails> {
     });
   }
 
-  void getDeviceId() async {
-    deviceid = await getDeviceIdByPlant(widget.id);
-  }
+  // void getDeviceId() async {
+  //   deviceid = await getDeviceIdByPlant(widget.id);
+  // }
 
   void deletePlant(){
     userDeletePlantRequest(widget.id);
@@ -52,14 +52,24 @@ class _PlantDetailsState extends State<PlantDetails> {
     widget.onRefresh();
   }
 
-  Future<List<Sensor>> fetchSensorList(int deviceid) async {
-    await Future.delayed(const Duration(seconds: 2));
-    return userGetSensorRequest(deviceid);
+  Future<List<Sensor>> fetchSensorList() async {
+    deviceInstanceId = await getDeviceInstanceId('localhost:5000/users/all', widget.id);
+
+    if (deviceInstanceId != null) {
+      return userGetSensorRequest(deviceInstanceId);
+    }
+
+    return [];
   }
 
   Future<List<Actuator>> fetchActuatorList(int deviceid) async {
-    await Future.delayed(const Duration(seconds: 2));
-    return userGetActuatorRequest(deviceid);
+    deviceInstanceId = await getDeviceInstanceId('localhost:5000/users/all', widget.id);
+
+    if (deviceInstanceId != null) {
+      return userGetActuatorRequest(deviceInstanceId);
+    }
+
+    return [];
   }
 
   void addDeviceToPlant(){
@@ -82,6 +92,13 @@ class _PlantDetailsState extends State<PlantDetails> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Plant Details'),
+        actions: [
+          IconButton(
+            onPressed: refreshPressed,
+            icon: const Icon(Icons.refresh),
+            iconSize: 32.0,
+          ),
+        ],
       ),
       body: 
       SingleChildScrollView(
@@ -91,7 +108,7 @@ class _PlantDetailsState extends State<PlantDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FutureBuilder<List<Sensor>>(
-                future: shouldFetch ? fetchSensorList(1) : Future.value(sensorList),
+                future: shouldFetch ? fetchSensorList() : Future.value(sensorList),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -110,7 +127,7 @@ class _PlantDetailsState extends State<PlantDetails> {
                     sensorList = snapshot.data!;
 
                     if (sensorList.isEmpty) {
-                      return const Center(child: Text("No sensors available."));
+                      return const Center(child: ErrorText(errorText: "No sensors available."));
                     }
 
                     return SensorListView(
@@ -118,7 +135,7 @@ class _PlantDetailsState extends State<PlantDetails> {
                       padding: 4.0,
                       fontSize: 24.0,
                       onReturn: refreshPressed,
-                      deviceid: deviceid,
+                      deviceid: deviceInstanceId,
                     );
                   }
 
@@ -146,7 +163,7 @@ class _PlantDetailsState extends State<PlantDetails> {
                     actuatorList = snapshot.data!;
 
                     if (actuatorList.isEmpty) {
-                      return const Center(child: Text("No actuators available."));
+                      return const Center(child: ErrorText(errorText: "No actuators available."));
                     }
 
                     return ActuatorListView(
@@ -154,12 +171,19 @@ class _PlantDetailsState extends State<PlantDetails> {
                       padding: 4.0,
                       fontSize: 24.0,
                       onReturn: refreshPressed,
+                      deviceId: deviceInstanceId,
                     );
                   }
 
                   return const Center(child: Text("Failed to load actuators."));
                 },
               ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: AppButton(text: 'Remove device', onPressed: ()=> {deleteDeviceInstance(deviceInstanceId)}, fontSize: 32.0, textColor: Colors.black, backgroundColor: Colors.red),
+                ),
+              )
             ],
           ),
         ),

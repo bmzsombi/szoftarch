@@ -8,7 +8,7 @@ List<ChartData> convertToChartData(List<Map<String, dynamic>> inputList) {
   return inputList.map((element) {
     return ChartData(
       DateTime.parse(element['timestamp']),
-      element['value'] as double,
+      (element['value'] as num).toDouble(),
     );
   }).toList();
 }

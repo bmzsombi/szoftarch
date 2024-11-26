@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/widgets/screen/modify_device_config_screen.dart';
+import 'package:flutter_app/widgets/screen/device_instance_info_screen.dart';
 import 'package:flutter_app/utils/actuator.dart';
 
 class ActuatorButtonText extends StatelessWidget {
@@ -33,7 +33,10 @@ class ActuatorButton extends StatelessWidget {
     required this.fontSize,
     this.backgroundColor = Colors.blueAccent, // Default background color
     this.borderRadius = 8.0, // Default border radius for rounded squares
-    required this.onReturn
+    required this.onReturn,
+    required this.deviceid,
+    required this.offDownEndpoint,
+    required this.onUpEndpoint
   });
 
   final int actuatorId;
@@ -42,6 +45,9 @@ class ActuatorButton extends StatelessWidget {
   final Color backgroundColor;
   final double borderRadius;
   final VoidCallback onReturn;
+  final int? deviceid;
+  final String onUpEndpoint;
+  final String offDownEndpoint;
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +63,16 @@ class ActuatorButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ModifyDeviceConfigScreen(
-              deviceId: actuatorId,
-              deviceName: actuatorName,
+            builder: (context) => DeviceInstanceInfoScreen(
+              deviceType: 2,
+              deviceInstanceId: deviceid,
+              sensorId: 1,
+              actuatorId: actuatorId,
+              name: actuatorName,
+              chartTitle: '',
+              valueAxisTitle: '',
+              onUpEndpoint: onUpEndpoint,
+              offDownEndpoint: offDownEndpoint,          
             ),
           ),
         ).then((_) => { onReturn });
@@ -87,7 +100,8 @@ class ActuatorListView extends StatelessWidget {
     this.mainAxisSpacing = 8.0,
     this.borderRadius = 8.0, // Default border radius for rounded squares
     this.backgroundColor = Colors.lightGreen,
-    required this.onReturn
+    required this.onReturn,
+    required this.deviceId,
   });
 
   final List<Actuator> devices;
@@ -99,6 +113,7 @@ class ActuatorListView extends StatelessWidget {
   final double borderRadius;
   final Color backgroundColor;
   final VoidCallback onReturn;
+  final int? deviceId;
 
   @override
   Widget build(BuildContext context) {
@@ -114,12 +129,15 @@ class ActuatorListView extends StatelessWidget {
         itemCount: devices.length,
         itemBuilder: (context, index) {
           return ActuatorButton(
+            deviceid: deviceId,
             actuatorId: devices[index].id,
             actuatorName: devices[index].name,
             fontSize: fontSize,
             backgroundColor: backgroundColor,
             borderRadius: borderRadius,
             onReturn: onReturn,
+            onUpEndpoint: devices[index].onUpEndpoint,
+            offDownEndpoint: devices[index].offDownEndpoint,
           );
         },
       ),

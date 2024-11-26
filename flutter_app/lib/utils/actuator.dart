@@ -1,10 +1,14 @@
 class Actuator {
   final int id;
   final String name;
+  final String onUpEndpoint;
+  final String offDownEndpoint;
 
   Actuator({
     required this.id,
     required this.name,
+    required this.onUpEndpoint,
+    required this.offDownEndpoint
   });
 
 /*
@@ -17,6 +21,8 @@ class Actuator {
     return Actuator(
       id: json['id'],
       name: json['name'],
+      offDownEndpoint: json["offDownEndpoint"],
+      onUpEndpoint: json["onUpEndpoint"]
     );
   }
 }

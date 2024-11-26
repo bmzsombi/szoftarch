@@ -29,7 +29,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
   bool shouldFetch = true;
 
   Future<List<Device>> fetchDeviceList() async {
-    await Future.delayed(const Duration(seconds: 2));
+    //await Future.delayed(const Duration(seconds: 2));
     return manufacturerGetDevicesRequest();
   }
 

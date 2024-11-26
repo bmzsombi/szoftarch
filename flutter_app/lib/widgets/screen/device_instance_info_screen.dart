@@ -3,6 +3,7 @@ import 'package:flutter_app/widgets/common/better_custom_widgets.dart';
 import 'package:flutter_app/utils/http_requests.dart';
 import 'package:flutter_app/utils/chart_utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:flutter_app/utils/toastutils.dart';
 
 class DeviceInstanceInfoScreen extends StatefulWidget {
   const DeviceInstanceInfoScreen({
@@ -13,16 +14,21 @@ class DeviceInstanceInfoScreen extends StatefulWidget {
     required this.actuatorId,
     required this.name,
     required this.chartTitle,
-    required this.valueAxisTitle
+    required this.valueAxisTitle,
+    required this.onUpEndpoint,
+    required this.offDownEndpoint
 });
 
-  final int deviceInstanceId;
+  final int? deviceInstanceId;
   final int sensorId;
   final int actuatorId;
   final String name;
   final int deviceType;
   final String chartTitle;
   final String valueAxisTitle;
+
+  final String offDownEndpoint;
+  final String onUpEndpoint;
 
   @override
   State<DeviceInstanceInfoScreen> createState() => _DeviceInstanceInfoScreenState();
@@ -34,34 +40,6 @@ class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
   bool shouldFetch = true;
   String errorText = '';
   List<ChartData> chartData = [];
-
-
-  // Future<List<ChartData>> fetchSensorData() async {   //TODO: http
-  //   await Future.delayed(Duration(seconds: 2));
-  //   return [
-  //     ChartData(DateTime(2023, 1, 1), 10),
-  //     ChartData(DateTime(2023, 2, 1), 20),
-  //     ChartData(DateTime(2023, 3, 1), 15),
-  //     ChartData(DateTime(2023, 4, 1), 30),
-  //   ];
-  // }
-
-  Future<bool> getActuatorState(int deviceId, int actuatorId) async {
-    //var uri = //?
-    return true;
-  }
-
-
-  void turnOffActuator() {
-
-
-    refreshPressed();
-  }
-  void turnOnActuator() {
-
-    refreshPressed();
-  }
-
 
   void refreshPressed() {
     setState(() {
@@ -77,6 +55,8 @@ class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ToastUtils toastUtilsActuatorDown = ToastUtils(toastText: "Turn off request sent. Please wait!", context: context);
+    ToastUtils toastUtilsActuatorUp = ToastUtils(toastText: "Turn on request sent. Please wait!", context: context);
     Widget content;
 
     switch (widget.deviceType) {
@@ -157,7 +137,14 @@ class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
                         AppText(text: widget.name, fontSize: 32.0, textColor: Colors.black),
                         const Spacer(),
                         const AppText(text: 'Current state: on', fontSize: 24.0, textColor: Colors.black),
-                        AppButton(text: 'Turn off', onPressed: turnOffActuator, fontSize: 32.0, textColor: Colors.black, backgroundColor: Colors.red)
+                        const Spacer(),
+                        AppButton(text: 'Turn off', onPressed: () => {
+                          turnOffActuatorRequest(widget.deviceInstanceId, widget.actuatorId), 
+                          refreshPressed(),
+                          toastUtilsActuatorDown.showToast()
+                        }, 
+                        fontSize: 32.0, textColor: Colors.black, backgroundColor: Colors.red),
+                        const Spacer()
                       ],
                      ),
                     );
@@ -170,16 +157,23 @@ class _DeviceInstanceInfoScreenState extends State<DeviceInstanceInfoScreen> {
                         AppText(text: widget.name, fontSize: 32.0, textColor: Colors.black),
                         const Spacer(),
                         const AppText(text: 'Current state: off', fontSize: 24.0, textColor: Colors.black),
-                        AppButton(text: 'Turn on', onPressed: turnOnActuator, fontSize: 32.0, textColor: Colors.black, backgroundColor: Colors.green)
+                        const Spacer(),
+                        AppButton(text: 'Turn on', onPressed: () => {
+                          turnOnActuatorRequest(widget.deviceInstanceId, widget.actuatorId),
+                          refreshPressed(),
+                          toastUtilsActuatorUp.showToast()
+                        },
+                        fontSize: 32.0, textColor: Colors.black, backgroundColor: Colors.green),
+                        const Spacer()
                       ],
                      ),
                     );
                 }
               }
-              return const ErrorText(errorText: 'Error1');
+              return const ErrorText(errorText: 'No data from actuator!');
             }
             else {
-              return const ErrorText(errorText: 'Error2');
+              return const ErrorText(errorText: 'No data from actuator!');
             }
           }
         );

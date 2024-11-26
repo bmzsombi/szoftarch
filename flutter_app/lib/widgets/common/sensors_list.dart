@@ -36,7 +36,9 @@ class SensorButton extends StatelessWidget {
     required this.onReturn,
     required this.deviceid,
     required this.chartTitle,
-    required this.valueAxisTitle
+    required this.valueAxisTitle,
+    required this.offDownEndpoint,
+    required this.onUpEndpoint
   });
 
   final int sensorId;
@@ -45,9 +47,11 @@ class SensorButton extends StatelessWidget {
   final Color backgroundColor;
   final double borderRadius;
   final VoidCallback onReturn;
-  final int deviceid;
+  final int? deviceid;
   final String chartTitle;
   final String valueAxisTitle;
+  final String onUpEndpoint;
+  final String offDownEndpoint;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +74,9 @@ class SensorButton extends StatelessWidget {
               actuatorId: 0,
               name: sensorName,
               chartTitle: chartTitle,
-              valueAxisTitle: valueAxisTitle,          
+              valueAxisTitle: valueAxisTitle, 
+              onUpEndpoint: onUpEndpoint,
+              offDownEndpoint: offDownEndpoint,       
             ),
           ),
         ).then((_) => { onReturn });
@@ -111,7 +117,7 @@ class SensorListView extends StatelessWidget {
   final double borderRadius;
   final Color backgroundColor;
   final VoidCallback onReturn;
-  final int deviceid;
+  final int? deviceid;
 
   @override
   Widget build(BuildContext context) {
@@ -136,6 +142,8 @@ class SensorListView extends StatelessWidget {
             deviceid: deviceid,
             chartTitle: devices[index].chartTitle,
             valueAxisTitle: devices[index].valueAxisTitle,
+            onUpEndpoint: '',
+            offDownEndpoint: '',
           );
         },
       ),
