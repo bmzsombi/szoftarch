@@ -31,7 +31,7 @@ class SensorButton extends StatelessWidget {
     required this.sensorId,
     required this.sensorName,
     required this.fontSize,
-    this.backgroundColor = Colors.blueAccent, // Default background color
+    this.backgroundColor = const Color.fromARGB(255, 0, 33, 105), // Default background color
     this.borderRadius = 8.0, // Default border radius for rounded squares
     required this.onReturn,
     required this.deviceid,
@@ -57,11 +57,12 @@ class SensorButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
+        backgroundColor: const Color.fromARGB(255, 84, 124, 255),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius), // Rounded corners
         ),
         padding: EdgeInsets.zero, // Remove default padding for custom sizing
+        elevation: 8.0,
       ),
       onPressed: () {
         Navigator.push(
@@ -81,11 +82,28 @@ class SensorButton extends StatelessWidget {
           ),
         ).then((_) => { onReturn });
       },
-      child: Container(
-        alignment: Alignment.center,
-        child: SensorButtonText(
-          text: sensorName,
-          fontSize: fontSize,
+      child: Ink(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [backgroundColor.withOpacity(0.000001), backgroundColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(borderRadius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 8.0,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Container(
+          alignment: Alignment.center,
+          child: SensorButtonText(
+            text: sensorName,
+            fontSize: fontSize,
+          ),
         ),
       ),
     );

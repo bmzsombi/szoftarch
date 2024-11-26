@@ -83,11 +83,12 @@ class PlantButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
+        backgroundColor: const Color.fromARGB(255, 0, 255, 170),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
         ),
-        padding: EdgeInsets.zero, 
+        padding: EdgeInsets.zero,
+        elevation: 8.0,
       ),
       onPressed: () {
         Navigator.push(
@@ -97,11 +98,28 @@ class PlantButton extends StatelessWidget {
           ),
         );
       },
-      child: Container(
-        alignment: Alignment.center,
-        child: PlantButtonText(
-          text: nickname,
-          fontSize: fontSize,
+      child: Ink(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [backgroundColor.withOpacity(0.000001), backgroundColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(borderRadius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 8.0,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Container(
+          alignment: Alignment.center,
+          child: PlantButtonText(
+            text: nickname,
+            fontSize: fontSize,
+          ),
         ),
       ),
     );

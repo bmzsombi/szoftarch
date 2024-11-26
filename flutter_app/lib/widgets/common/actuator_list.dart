@@ -53,11 +53,12 @@ class ActuatorButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
+        backgroundColor: const Color.fromARGB(255, 255, 202, 29),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius), // Rounded corners
         ),
         padding: EdgeInsets.zero, // Remove default padding for custom sizing
+        elevation: 8.0,
       ),
       onPressed: () {
         Navigator.push(
@@ -77,11 +78,28 @@ class ActuatorButton extends StatelessWidget {
           ),
         ).then((_) => { onReturn });
       },
-      child: Container(
-        alignment: Alignment.center,
-        child: ActuatorButtonText(
-          text: actuatorName,
-          fontSize: fontSize,
+      child: Ink(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [backgroundColor.withOpacity(0.000001), backgroundColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(borderRadius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 8.0,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Container(
+          alignment: Alignment.center,
+          child: ActuatorButtonText(
+            text: actuatorName,
+            fontSize: fontSize,
+          ),
         ),
       ),
     );

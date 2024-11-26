@@ -93,7 +93,6 @@ class _PlantDetailsState extends State<PlantDetails> {
 
   @override
   Widget build(BuildContext context) {
-    refreshPressed();
     var scName = widget.plantScName;
     var cName = widget.plantCName;
     var category = widget.plantCategory;
