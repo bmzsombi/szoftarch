@@ -10,7 +10,9 @@ import 'package:flutter_app/widgets/common/actuator_list.dart';
 
 class PlantDetails extends StatefulWidget {
   /*final Plant plant;*/
-  final String plantScName;
+  final String? plantScName;
+  final String? plantCName;
+  final String? plantCategory;
   final int id;
   //final int deviceid;
   final VoidCallback onRefresh;
@@ -18,6 +20,8 @@ class PlantDetails extends StatefulWidget {
   const PlantDetails({
     super.key,
     required this.plantScName,
+    required this.plantCName,
+    required this.plantCategory,
     required this.id,
     //required this.deviceid,
     required this.onRefresh
@@ -89,6 +93,10 @@ class _PlantDetailsState extends State<PlantDetails> {
 
   @override
   Widget build(BuildContext context) {
+    refreshPressed();
+    var scName = widget.plantScName;
+    var cName = widget.plantCName;
+    var category = widget.plantCategory;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Plant Details'),
@@ -107,6 +115,19 @@ class _PlantDetailsState extends State<PlantDetails> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AppText(text: 'Scientific name: $scName', fontSize: 30.0, textColor: Colors.black),
+                      AppText(text: 'Common name: $cName', fontSize: 30.0, textColor: Colors.black),
+                      AppText(text: 'Category: $category', fontSize: 30.0, textColor: Colors.black),
+                    ],
+                  ),
+                ),
+              ),
               FutureBuilder<List<Sensor>>(
                 future: shouldFetch ? fetchSensorList() : Future.value(sensorList),
                 builder: (context, snapshot) {

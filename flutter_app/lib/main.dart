@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       builder: FToastBuilder(),
       navigatorKey: navigatorKey,
-      title: 'Flutter Demo',
+      title: 'PlantMonitor',
       theme: ThemeData(
         // This is the theme of your application.
         //

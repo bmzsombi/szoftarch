@@ -143,7 +143,7 @@ Future<List<Plant>> userGetPlantsRequest(String? user) async {
 }
 
 void userDeletePlantRequest(int id) async {
-  var uri = Uri.http(backend_url, '$deletePlantPath/$id');
+  var uri = Uri.http(backend_url, 'plantInstances/$id');
   await http.delete(uri);
 }
 
@@ -394,4 +394,37 @@ Future<bool?> getActuatorState(int? deviceInstanceId, int actuatorId) async {
     }
   }
   return null;
+}
+
+Future<List<PlantInstance>> userGetPlantInstancesRequest(String? username) async {
+  var uri = Uri.http('localhost:5000', 'users/all');
+  var response = await http.get(
+    uri,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  );
+
+  if (response.statusCode == 200) {
+    // Decode JSON response
+    List<dynamic> users = json.decode(response.body);
+
+    // Find the user with the matching username
+    var user = users.firstWhere(
+      (user) => user['username'] == username,
+      orElse: () => null,
+    );
+
+    if (user != null) {
+      // Extract plant instances for the user
+      List<dynamic> plantInstancesJson = user['plantInstances'];
+      return plantInstancesJson.map((json) => PlantInstance.fromJson(json)).toList();
+    } else {
+      // No matching user found
+      return [];
+    }
+  } else {
+    // Handle HTTP errors
+    throw Exception('Failed to load users');
+  }
 }

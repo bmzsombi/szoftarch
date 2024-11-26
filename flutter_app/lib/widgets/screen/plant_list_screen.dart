@@ -38,8 +38,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController searchTextController = TextEditingController();
 
-  List<Plant> plantList = [];
-  List<Plant> searchedPlantList = [];
+  List<PlantInstance> plantList = [];
+  List<PlantInstance> searchedPlantList = [];
   double screenWidth = 0;
   double screenHeight = 0;
 
@@ -74,14 +74,15 @@ class _MyHomePageState extends State<MyHomePage> {
     ));
   }
 
-  Future<List<Plant>> fetchPlantList() async {
+  Future<List<PlantInstance>> fetchPlantList() async {
     //await Future.delayed(const Duration(seconds: 2));
     String? username = await getUsername();
     if (username == null) {
       throw Exception('Username not found');
     }
-    return userGetPlantsRequest(username);
+    //return userGetPlantsRequest(username);
     //return userGetPlantTypesRequest();
+    return userGetPlantInstancesRequest(username);
   }
 
   void exitPressed(){
@@ -220,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     title: TextField(
                       controller: searchTextController,
                       decoration: const InputDecoration(
-                        hintText: 'Search device'
+                        hintText: 'Search plant'
                       ),
                     ),
                     actions: [

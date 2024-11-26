@@ -65,6 +65,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    refreshPressed();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

@@ -17,7 +17,7 @@ class PlantListView extends StatelessWidget {
   });
 
   final VoidCallback onRefresh;
-  final List<Plant> plants;
+  final List<PlantInstance> plants;
   final double padding;
   final double fontSize;
   final int crossAxisCount;
@@ -39,8 +39,11 @@ class PlantListView extends StatelessWidget {
         itemCount: plants.length,
         itemBuilder: (context, index) {
           return PlantButton(
+            nickname: plants[index].nickname,
+            plantCName: plants[index].plant.commonName,
+            plantCategory: plants[index].plant.category,
             onRefresh: onRefresh,
-            plantScName: plants[index].scname,
+            plantScName: plants[index].plant.scientificName,
             id: plants[index].id,
             fontSize: fontSize,
             backgroundColor: backgroundColor,
@@ -55,16 +58,22 @@ class PlantListView extends StatelessWidget {
 class PlantButton extends StatelessWidget {
   const PlantButton({
     super.key,
+    required this.nickname,
     required this.plantScName,
+    required this.plantCategory,
     required this.id,
     required this.fontSize,
     required this.onRefresh,
+    required this.plantCName,
     this.backgroundColor = Colors.blueAccent,
     this.borderRadius = 8.0,
   });
 
+  final String? nickname;
+  final String? plantCName;
+  final String? plantCategory;
   final VoidCallback onRefresh;
-  final String plantScName;
+  final String? plantScName;
   final int id;
   final double fontSize;
   final Color backgroundColor;
@@ -84,14 +93,14 @@ class PlantButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PlantDetails(plantScName: plantScName, id: id, onRefresh: onRefresh),
+            builder: (context) => PlantDetails(plantScName: plantScName, id: id, onRefresh: onRefresh, plantCName: plantCName, plantCategory: plantCategory),
           ),
         );
       },
       child: Container(
         alignment: Alignment.center,
         child: PlantButtonText(
-          text: plantScName,
+          text: nickname,
           fontSize: fontSize,
         ),
       ),
@@ -106,13 +115,13 @@ class PlantButtonText extends StatelessWidget {
     required this.fontSize
   });
 
-  final String text;
+  final String? text;
   final double fontSize;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      text,
+      text!,
       style: TextStyle(
         fontSize: fontSize,
         color: Colors.black,
@@ -122,16 +131,18 @@ class PlantButtonText extends StatelessWidget {
   }
 }
 
-List<Plant> searchPlants(String term, List<Plant> allPlants) {
+List<PlantInstance> searchPlants(String term, List<PlantInstance> allPlants) {
 
   if (term.isEmpty) {
     return allPlants;
   } 
 
-  List<Plant> searchedPlants = [];
-  for (Plant d in allPlants) {
-    if (d.cname.contains(term)) {
-      searchedPlants.add(d);
+  List<PlantInstance> searchedPlants = [];
+  for (PlantInstance d in allPlants) {
+    if (d.nickname != null ){
+      if (d.nickname!.contains(term)) {
+        searchedPlants.add(d);
+      }
     }
   }
   return searchedPlants;
