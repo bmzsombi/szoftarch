@@ -178,12 +178,12 @@ class _PlantDetailsState extends State<PlantDetails> {
                   return const Center(child: Text("Failed to load actuators."));
                 },
               ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: AppButton(text: 'Remove device', onPressed: ()=> {deleteDeviceInstance(deviceInstanceId)}, fontSize: 32.0, textColor: Colors.black, backgroundColor: Colors.red),
-                ),
-              )
+              // Center(
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(40.0),
+              //     child: AppButton(text: 'Remove device', onPressed: ()=> {deleteDeviceInstance(deviceInstanceId)}, fontSize: 32.0, textColor: Colors.black, backgroundColor: Colors.red),
+              //   ),
+              // )
             ],
           ),
         ),
